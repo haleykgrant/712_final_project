@@ -45,6 +45,12 @@ write.csv(ss,"ss_data.csv")
 ```{r read processed data}
 ss = read_csv("ss_data.csv")
 
+table(ss$reliability_score_1_5)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(fill = Var1), stat = "identity")+
+  scale_fill_discrete(name = "Reliability Score")
+
 ```
 
 
