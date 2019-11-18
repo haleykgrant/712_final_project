@@ -22,7 +22,7 @@ library(janitor)
 
 import_raw_data = FALSE
 
-if(import_aw_data){
+if(import_raw_data){
 
 ss = read_csv("../../school_shootings.csv")
 colnames(ss) = ss[1,]

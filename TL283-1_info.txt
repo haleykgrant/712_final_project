@@ -1,0 +1,25 @@
+For more information on this publication, visit:
+Development of the RAND State Firearm Law Database and Supporting Materials
+by Samantha Cherney, Andrew R. Morral, Terry L. Schell, Sierra Smucker
+https://www.rand.org/pubs/tools/TL283-1.html
+
+----------------------
+The "Database" tab of this file contains information on state and District of Columbia firearm laws in the United States from 1979 to 2016. The database does not capture all firearm-related laws, only those of specific types.
+
+Information on the methodology for collecting state law data, the types of laws collected, the meaning of the database fields, and the sources cited in the database (unless otherwise provided) is available in the companion paper to this tool, titled Development of the RAND State Firearm Law Database and Supporting Materials.
+
+Version Release Dates
+----------------------
+For a complete list of database updates, see the "Change Notes" tab in the Excel file.
+
+Version 2.0: October 10, 2019
+Version 1.4: January 11, 2019
+Version 1.3: April 27, 2018
+Version 1.2: March 6, 2018
+Version 1.1: March 2, 2018
+Version 1.0: March 2, 2018
+
+Help Us Improve the Database
+----------------------
+RAND is making the RAND State Firearm Law Database available for use under the Open Data Commons Open Database License (ODbL). The research team asks that users send proposed corrections, updates, or expansions to FirearmLawDB@rand.org.
+
