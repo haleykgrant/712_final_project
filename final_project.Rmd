@@ -43,7 +43,30 @@ write.csv(ss,"ss_data.csv")
 ```
 
 ```{r read processed data}
-ss = read_csv("ss_data.csv")
+ss = read_csv("ss_data.csv")%>%
+  select(-X1)%>%
+  mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))
+
+
+table(ss$reliability_score_1_5)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(fill = Var1), stat = "identity")+
+  scale_fill_discrete(name = "Reliability Score")
+
+ss_counts = ss%>%
+  group_by(state,year) %>%
+  summarize(incident_count = n(), 
+            total_victims = sum(total_injured_killed_victims), 
+            total_fatalities = sum(killed_includes_shooter),
+            total_wounded = sum(wounded),
+            avg_victims = mean(total_injured_killed_victims),
+            avg_fatalities = mean(killed_includes_shooter),
+            ave_wounded = mean(wounded),
+            avg_shooter_age = mean(shooter_age),
+            avg_reliability = mean(reliability_score_1_5))
+
+
 
 ```
 
