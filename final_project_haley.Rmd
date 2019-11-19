@@ -1,0 +1,269 @@
+---
+title: "Final Project"
+date: "11/17/2019"
+output: 
+  html_document:
+    code_folding: "hide"
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r message=FALSE}
+
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(tidycensus)
+
+```
+
+
+```{r read in and clean data, message=FALSE, warning=FALSE}
+
+import_raw_data = TRUE
+
+if(import_raw_data){
+
+ss = read_csv("../../data/school_shootings.csv")
+colnames(ss) = ss[1,]
+ss = ss[-1,]%>%
+  clean_names()%>%
+  select(-c(na,na_2))
+
+ss2 = read_csv("../../data/ss_pt2.csv")%>%
+  select(-X1)
+colnames(ss2)=colnames(ss)[34:ncol(ss)]
+
+ss[(1426:nrow(ss)),(34:ncol(ss))]=ss2
+
+ss$shooter_age = as.numeric(ss$shooter_age)
+
+write.csv(ss,"ss_data.csv")
+}
+```
+
+```{r read processed data, message=FALSE, warning=FALSE}
+ss = read_csv("ss_data.csv")%>%
+  select(-X1)%>%
+  mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))
+```
+
+```{r}
+
+table(ss$reliability_score_1_5)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(fill = Var1), stat = "identity")+
+  scale_fill_discrete(name = "Reliability Score")
+
+
+
+
+
+```
+
+```{r population data, message=FALSE, warning=FALSE}
+
+states = data.frame(state.name,state.abb)
+dc = data.frame(matrix(ncol= 2, nrow = 1))
+colnames(dc)=colnames(states)
+dc$`state.name` = "District of Columbia"
+dc$`state.abb` = "DC"
+
+states = rbind(states,dc)
+states$state.name = as.character(states$state.name)
+
+if(import_raw_data){
+
+# 1980-1990
+pop8090_raw = read.delim("https://www2.census.gov/programs-surveys/popest/tables/1980-1990/state/asrh/st8090ts.txt" )%>%data.frame()
+pop8090_raw = pop8090_raw[c(8:58,64:114),]%>%data.frame()
+colnames(pop8090_raw)="var"
+pop8090 = data.frame(pop8090_raw$var[1:51],pop8090_raw$var[52:102])
+
+colnames(pop8090)=c("var1","var2")
+
+
+pop8090 = pop8090%>%
+  separate(var1, c("state",as.character(seq(1980,1984,by = 1))), extra = "merge")%>%
+  separate(var2, c("state1",as.character(seq(1985,1990,by = 1))), extra = "merge")%>%
+  select(c(state,starts_with("19")))
+  
+# 1970 - 1980
+pop7080_raw = read.delim("https://www2.census.gov/programs-surveys/popest/tables/1980-1990/state/asrh/st7080ts.txt")
+pop7080_raw = pop7080_raw[c(10:61,63:114),]%>%data.frame()
+colnames(pop7080_raw)="var"
+pop7080 = data.frame(pop7080_raw$var[1:51],pop7080_raw$var[53:103])
+
+colnames(pop7080)=c("var1","var2")
+
+pop7080 = pop7080%>%
+  separate(var1, c("blnk","id","state","1970","1971","1972","1973","1974","1975"), extra = "merge")%>%
+  separate(var2, c("blnk1","id1","state1",as.character(seq(1976,1980,by = 1))), extra = "merge")%>%
+  select(c(state,starts_with("19")))
+
+# 1990-2000
+pop90_00 = read_csv("../../data/pop_90-00.csv")%>%
+  rename(state = X1)%>%
+  select(c(state,3:13))%>%
+  filter(state != "USA")
+colnames(pop90_00)[2:ncol(pop90_00)]=as.character(seq(1990,2000,by = 1))
+pop90_00$state[30:35] = states$state.name[29:34]
+pop90_00$state[40:42] = states$state.name[39:41]
+pop90_00$state[9] = states$state.name[51]
+pop90_00$state[49] = states$state.name[48]
+
+# 2000-2010
+pop00_10 = read.csv("https://www2.census.gov/programs-surveys/popest/datasets/2000-2010/intercensal/state/st-est00int-agesex.csv")%>%
+  clean_names()%>%
+  filter(sex == 0, age == 999)%>%
+  select(c(name,starts_with("popestimate")))%>%
+  rename_at(vars(starts_with("popestimate")),funs(substr(.,start = 12, stop = 15)))%>%
+  rename(state = name)%>%
+  mutate(state = as.character(state))%>%
+  mutate(state = ifelse(state=="District of Columbia",as.character(states$state.name[51]),state))%>%
+  filter(state != "United States")
+
+# 2010-2018
+pop10_18 = read_csv("../../data/pop_2010-2018.csv")
+colnames(pop10_18)=pop10_18[1,]
+
+pop10_18 = pop10_18%>%
+  slice(-1)%>%
+  rename_at(vars(starts_with("Pop")), funs(substr(.,start = 38,stop = 41)))%>%
+  rename(state = Geography)%>%
+  select(c(state,starts_with("20")))%>%
+  mutate(state = ifelse(state=="District of Columbia",as.character(states$state.name[51]),state))
+
+# 2019
+
+pop2019 = read_csv("../../data/2019pop.csv")%>%
+  clean_names()%>%
+  select(c(state,pop))%>%
+  rename("2019"=pop)
+
+
+
+pops = left_join(pop7080,pop8090%>%select(-c("1980")), by = "state")%>%
+  left_join(states,by = c("state"="state.abb"))%>%
+  mutate(state = state.name)%>%
+  select(-state.name)%>%
+  left_join(pop90_00%>%select(-c("1990")), by = "state")%>%
+  left_join(pop00_10%>%select(-c("2000")), by = "state")%>%
+  left_join(pop10_18%>%select(-c("2010")), by = "state")%>%
+  left_join(pop2019,by = "state")%>%
+  gather(key = "year", value = "population", c(2:51))
+
+
+write.csv(pops, "state_populations.csv")
+
+}
+
+
+```
+
+
+```{r load population data, message=FALSE, warning=FALSE}
+# read in population data (include abbreviated and full state name)
+pops = read_csv("state_populations.csv")%>%
+  select(-X1)%>%
+  left_join(states, by = c("state"="state.name"))
+
+```
+
+
+
+```{r merge population data, message=FALSE, warning=FALSE}
+ss_counts = ss%>%
+  group_by(state,year) %>%
+  summarize(incident_count = n(), 
+            total_victims = sum(total_injured_killed_victims), 
+            total_fatalities = sum(killed_includes_shooter),
+            total_wounded = sum(wounded),
+            avg_victims = mean(total_injured_killed_victims),
+            avg_fatalities = mean(killed_includes_shooter),
+            ave_wounded = mean(wounded),
+            avg_shooter_age = mean(shooter_age),
+            max_shooter_age = max(shooter_age),
+            min_shooter_age = min(shooter_age),
+            avg_reliability = mean(reliability_score_1_5))%>%
+  left_join(pops%>%rename(full_state_name = state), by = c("state"="state.abb", "year"))
+
+```
+```{r policy grade data, message=FALSE, warning=FALSE}
+
+# read in state grade data
+
+if(import_raw_data){
+grades18 = read_csv("../../data/2018grades.csv")%>%
+  select(-c(X6,X7))%>%
+  clean_names()%>%
+  select(-gun_death_rate_per_100k)%>%
+  mutate(year = "2018")%>%
+  rename(grade = x2018_grade)
+
+grades17 = read_csv("../../data/2017grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2017")%>%
+  rename(grade = x2017_grade)
+
+grades16 = read_csv("../../data/2016grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2016")%>%
+  rename(grade = x2016_grade)
+
+
+grades15 = read_csv("../../data/2015grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2015")%>%
+  rename(grade = x2015_grade)
+
+grades14 = read_csv("../../data/2014grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2014")%>%
+  rename(grade = x2014_grade)
+
+grades13 = read_csv("../../data/2013grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2013")%>%
+  rename(grade = x2013_grade)
+
+grades12 = read_csv("../../data/2012grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2012")%>%
+  rename(grade = x2012_grade)
+
+
+
+
+grades = bind_rows(grades18,grades17)%>%
+  bind_rows(grades16)%>%
+  bind_rows(grades15)%>%
+  bind_rows(grades14)%>%
+  bind_rows(grades13)%>%
+  bind_rows(grades12)
+
+write.csv(grades,"state_grades.csv")
+}
+
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+
+grades = read_csv("state_grades.csv")%>%
+  select(-X1)
+
+ss_counts = ss_counts%>%
+  left_join(grades%>%select(state,grade,year),by = c("full_state_name"="state","year"))
+
+
+
+# still need to add years with no school shootings
+# I still need to get state scores for 2012 and 2013 (from maps)
+```
+
+
+
