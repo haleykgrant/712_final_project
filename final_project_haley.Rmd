@@ -56,9 +56,42 @@ table(ss$reliability_score_1_5)%>%
   data.frame()%>%
   ggplot(aes(x = Var1, y = Freq))+
   geom_bar(aes(fill = Var1), stat = "identity")+
-  scale_fill_discrete(name = "Reliability Score")
+  scale_fill_discrete(name = "Reliability Score")+
+  labs(x = "Reliability Score", y = "Count")
+
+table(ss$school_type)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(fill = Var1), stat = "identity")+
+  scale_fill_discrete(name = "School Type")+
+  labs(x = "School Type", y = "Count")
+
+ss%>%
+  filter(shooter_age<200)%>%
+  ggplot(aes(x = reorder(state, shooter_age, FUN = mean), y = shooter_age))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Age of shooter", x = "State", title = "Age of Shooter by State")
 
 
+ss%>%
+  ggplot(aes(x = reorder(state, killed_includes_shooter, FUN = mean), y = killed_includes_shooter))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Numbeer Killed (including shooter)", x = "State", title = "Fatalities")
+
+ss%>%
+  ggplot(aes(x = reorder(state, total_injured_killed_victims, FUN = mean), y = total_injured_killed_victims))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Wounded or Killed", x = "State", title = "Combined Wounded & Fatalities")
+
+table(ss$state)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(x = reorder(Var1,Freq, desc)), stat = "identity")+
+  labs(x = "State", y = "Count", "Number of incidents by State (overall)")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))
 
 
 
@@ -178,6 +211,12 @@ pops = read_csv("state_populations.csv")%>%
 
 
 ```{r merge population data, message=FALSE, warning=FALSE}
+sts = unique(ss$state)
+yrs = seq(range(ss$year)[1],range(ss$year)[2],by=1)
+
+st_yr = data.frame(state = rep(sts,length(yrs)), year = sort(rep(yrs,length(sts))))%>%
+  arrange(state)
+
 ## data set aggrgated by state and year
 ss_counts = ss%>%
   group_by(state,year) %>%
@@ -192,7 +231,11 @@ ss_counts = ss%>%
             max_shooter_age = max(shooter_age),
             min_shooter_age = min(shooter_age),
             avg_reliability = mean(reliability_score_1_5))%>%
-  left_join(pops%>%rename(full_state_name = state), by = c("state"="state.abb", "year"))
+  mutate(in_ss = TRUE)%>%
+  full_join(st_yr, by = c("state","year"))%>%
+  left_join(pops%>%rename(full_state_name = state), by = c("state"="state.abb", "year"))%>%
+  mutate(incident_count = ifelse(is.na(incident_count),0,incident_count))%>%
+  mutate(in_ss = ifelse(is.na(in_ss),FALSE,in_ss))
 
 ```
 
@@ -271,5 +314,24 @@ ss_counts = ss_counts%>%
 # I still need to get state scores for 2012 and 2013 (from maps)
 ```
 
+```{r}
 
+cc = scales::seq_gradient_pal("green", "red", "Lab")(seq(0,1,length.out=13))
+
+
+
+ss_counts%>%
+  filter(year %in% seq(2012,2018,by=1))%>%
+  ggplot(aes(x = incident_count , fill = grade))+
+  geom_histogram(binwidth = 1)+
+  facet_wrap(.~year)+
+  scale_fill_manual(values = cc)+
+  scale_x_continuous(breaks = seq(0,35,by=5))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4))+
+  theme_bw()+
+  labs(x= "Number of School Shootings")
+
+
+
+```
 
