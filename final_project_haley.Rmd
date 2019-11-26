@@ -15,6 +15,7 @@ library(tidyverse)
 library(ggplot2)
 library(janitor)
 library(tidycensus)
+library(viridis) 
 
 ```
 
@@ -47,7 +48,8 @@ write.csv(ss,"ss_data.csv")
 # ss is csv file with school shooting data (individual incidents)
 ss = read_csv("ss_data.csv")%>%
   select(-X1)%>%
-  mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))
+  mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))%>%
+  mutate(state = ifelse(state == "St. Croix, US Virgin Islands","St.Croix",state))
 ```
 
 ```{r}
@@ -79,6 +81,14 @@ ss%>%
   geom_boxplot()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
   labs(y = "Numbeer Killed (including shooter)", x = "State", title = "Fatalities")
+
+
+ss%>%
+  ggplot(aes(x = reorder(state, wounded, FUN = mean), y = total_injured_killed_victims))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Wounded ", x = "State", title = "Number Wounded")
+
 
 ss%>%
   ggplot(aes(x = reorder(state, total_injured_killed_victims, FUN = mean), y = total_injured_killed_victims))+
@@ -310,26 +320,94 @@ ss_counts = ss_counts%>%
 
 
 
-# still need to add years with no school shootings
-# I still need to get state scores for 2012 and 2013 (from maps)
+
 ```
 
-```{r}
+```{r fig.height = 8, fig.width = 10, warning=FALSE}
 
-cc = scales::seq_gradient_pal("green", "red", "Lab")(seq(0,1,length.out=13))
+cc = scales::seq_gradient_pal("green", "red", "Lab")(seq(0,1,length.out=12))
 
 
 
+# This will handle the ordering
+d <- ss_counts %>% 
+  filter(year %in% seq(2012,2018,by=1))%>%
+  ungroup() %>%   # As a precaution / handle in a separate .grouped_df method
+  arrange(year, incident_count) %>%   # arrange by facet variables and continuous values
+  mutate(.r = row_number()) # Add a row number variable
+
+ggplot(d, aes(x = .r, y= incident_count, fill = grade)) +  # Use .r instead of x
+  geom_point(data = d%>%filter(incident_count==0),
+             aes(x = .r, y= incident_count, color = grade),
+             size = 0.7) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~ year, scales = "free_x") +  # Should free scales (though could be left to user)
+  scale_x_continuous(  # This handles replacement of .r for x
+    breaks = d$.r,     # notice need to reuse data frame
+    labels = d$state
+  )+
+  scale_fill_manual(values = cc, name = "Grade")+
+  scale_color_manual(values = cc, guide = FALSE)+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5), legend.position = c(0.7,.15), legend.direction = "horizontal",legend.key.size = unit(1.5,"line"), legend.text = element_text(size = 8), legend.title = element_text(size = 10))
+
+
+```
+
+```{r warning=FALSE}
 ss_counts%>%
   filter(year %in% seq(2012,2018,by=1))%>%
+  filter(!is.na(grade))%>%
   ggplot(aes(x = incident_count , fill = grade))+
   geom_histogram(binwidth = 1)+
   facet_wrap(.~year)+
   scale_fill_manual(values = cc)+
   scale_x_continuous(breaks = seq(0,35,by=5))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5))+
   theme_bw()+
   labs(x= "Number of School Shootings")
+
+
+
+ss_counts%>%
+  filter(year %in% seq(2012,2018,by=1))%>%
+  filter(!is.na(grade))%>%
+  ggplot(aes(x = grade, y = incident_count, color = grade))+
+  geom_boxplot()+
+  facet_wrap(.~year)+
+  theme_bw()+
+  scale_color_manual(values = cc)+
+  labs(y= "Number of School Shootings", x = "Grade")
+
+
+
+ss_counts%>%
+  filter(year %in% seq(2012,2018,by=1))%>%
+  ggplot()+
+  geom_bar(aes(x = reorder(state,population), y = incident_count), stat = "identity")+
+  geom_point(aes(x = state, y = log(population), color = "population"), size = .4)+
+  theme_bw()+
+  labs(x = "State", y = "Number of School Shootings", title = "Number of School Shooting and Population by State")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5), legend.position = c(.7, 0), legend.justification = c(1, 0))+
+  facet_wrap(.~year)+
+  scale_color_discrete(name = NULL, labels = "Population (log)")
+
+
+ss_counts%>%
+  filter(year %in% seq(2012,2018,by=1))%>%
+  group_by(state) %>%
+  mutate(ordr = mean(avg_victims, na.rm = T))%>%
+  filter(ordr!="NaN")%>%
+  ungroup()%>%
+  arrange(desc(ordr))%>%
+  ggplot(aes(x = reorder(state,ordr), y = avg_victims, color = year))+
+  geom_point(size = 0.6, position = "jitter")+
+  labs(x = "State", y = "Average number of victims per incident", title ="Victims per School Shooting")+
+  scale_color_viridis(option = "D")+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))
+
+
 
 
 
