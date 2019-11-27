@@ -49,7 +49,8 @@ write.csv(ss,"ss_data.csv")
 ss = read_csv("ss_data.csv")%>%
   select(-X1)%>%
   mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))%>%
-  mutate(state = ifelse(state == "St. Croix, US Virgin Islands","St.Croix",state))
+  mutate(state = ifelse(state == "St. Croix, US Virgin Islands","St.Croix",state))%>%
+  distinct()
 ```
 
 ```{r}
