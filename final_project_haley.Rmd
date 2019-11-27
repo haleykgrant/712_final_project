@@ -412,4 +412,16 @@ ss_counts%>%
 
 
 ```
+```{r warning=FALSE}
+
+media = read_csv("media_data.csv")%>%
+  separate(`Year-Month`, into = c("year","month"), sep = "-")%>%
+  clean_names()%>%
+  select(-starts_with("x"))%>%
+  group_by(year) %>%
+  mutate(yearly_articles = sum(articles_shootings_excluding_firearm_laws_and_regulations)) # add column with summed article count by year
+
+
+
+```
 
