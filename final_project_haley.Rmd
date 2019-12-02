@@ -26,13 +26,14 @@ import_raw_data = FALSE
 
 if(import_raw_data){
 
-ss = read_csv("../../data/school_shootings.csv")
+ss = read_csv("../../data_1/school_shootings.csv")
 colnames(ss) = ss[1,]
 ss = ss[-1,]%>%
   clean_names()%>%
-  select(-c(na,na_2))
+  select(-c(na,na_2))%>%
+  filter(reliability_score_1_5!=1)
 
-ss2 = read_csv("../../data/ss_pt2.csv")%>%
+ss2 = read_csv("../../data_1/ss_pt2.csv")%>%
   select(-X1)
 colnames(ss2)=colnames(ss)[34:ncol(ss)]
 
