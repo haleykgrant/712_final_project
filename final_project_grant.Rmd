@@ -1,0 +1,42 @@
+---
+title: "final_project_grant"
+author: "Grant Schumock"
+date: "12/2/2019"
+  html_document:
+    code_folding: "hide"
+    toc: TRUE
+    toc_float: TRUE
+---
+
+Adding and cleaning Census Poverty Data
+
+```{r,message=FALSE}
+library(tidyverse)
+data=read.csv("census_poverty_data.csv",stringsAsFactors = FALSE)
+data=filter(data,State!="      United States"&State!="     United States"& State!="District of Columbia"&State!="United States")
+
+names(data)[1:2]<-c("state","poverty")
+names(data)[4]<-"year"
+
+skel=expand_grid(sort(unique(data$state)),min(data$year):(max(data$year)+2))
+names(skel)<-c("state","year")
+
+
+
+sk1=filter(skel,year==2007|year==2008|year==2009)
+sk1=left_join(sk1,filter(data,year==2007),by="state")
+
+sk2=filter(skel,year==2010|year==2011|year==2012)
+sk2=left_join(sk2,filter(data,year==2010),by="state")
+
+sk3=filter(skel,year==2013|year==2014|year==2015)
+sk3=left_join(sk3,filter(data,year==2013),by="state")
+
+sk4=filter(skel,year==2016|year==2017|year==2018)
+sk4=left_join(sk4,filter(data,year==2016),by="state")
+
+data=rbind(sk1,sk2,sk3,sk4)
+data=data[,1:3]
+names(data)<-c("state","year","poverty")
+
+```
