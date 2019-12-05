@@ -1,0 +1,52 @@
+States,Prohibiting statement,Definition,Scope,Protected groups,District policy requirement,Reporting and investigations,Consequences,Communication of policy,Safeguards and supports,Review and update of local policies,Prevention education,Staff training,Parent engament,total_score,state.abb
+Alabama,1,1,1,1,1,1,1,1,1,1,1,1,0,12,AL
+Alaska,1,1,1,0,1,1,1,1,0,0,0,0,1,8,AK
+Arizona,1,0,1,0,1,1,1,0,1,0,0,0,0,6,AZ
+Arkansas,1,1,1,1,1,1,1,1,1,1,1,1,1,13,AR
+California,1,1,1,1,1,1,1,1,1,1,1,1,1,13,CA
+Colorado,0,1,0,1,1,0,1,0,0,1,1,0,1,7,CO
+Connecticut,1,1,1,1,1,1,1,1,1,1,1,1,1,13,CT
+Delaware,1,1,1,1,1,1,1,1,1,1,1,1,1,13,DE
+District of Columbia,1,1,1,1,1,1,1,1,1,1,1,1,1,13,DC
+Florida,1,1,1,0,1,1,1,1,1,1,1,1,1,12,FL
+Georgia,1,1,1,0,1,1,1,1,0,1,1,0,1,10,GA
+Hawaii,1,1,1,1,1,1,1,1,0,0,0,0,0,8,HI
+Idaho,1,1,1,0,1,1,1,1,1,1,1,1,0,11,ID
+Illinois,1,1,1,1,1,1,1,1,1,1,1,0,1,12,IL
+Indiana,1,1,1,0,1,1,1,1,1,1,1,1,1,12,IN
+Iowa,1,1,1,1,1,1,1,1,0,1,1,1,1,12,IA
+Kansas,1,1,1,0,1,0,0,0,0,0,1,1,0,6,KS
+Kentucky,1,1,1,0,1,1,1,1,0,0,0,1,0,8,KY
+Louisiana,1,1,1,0,1,1,1,1,1,1,1,1,1,12,LA
+Maine,1,1,1,1,1,1,1,1,1,0,0,1,1,11,ME
+Maryland,1,1,1,1,1,1,1,1,1,1,1,1,1,13,MD
+Massachusetts,1,1,1,1,1,1,1,1,1,1,1,1,1,13,MA
+Michigan,1,1,1,0,1,1,1,1,0,1,1,1,1,11,MI
+Minnesota,1,1,1,1,1,1,1,1,1,1,1,1,1,13,MN
+Mississippi,1,1,1,1,1,1,1,0,1,0,1,0,1,10,MS
+Missouri,1,1,1,0,1,1,1,1,1,1,1,1,0,11,MO
+Montana,1,1,1,0,1,1,1,0,1,0,0,0,1,8,MT
+Nebraska,0,1,1,0,1,0,1,0,0,1,0,0,0,5,NE
+Nevada,1,1,1,1,1,1,1,0,1,1,1,1,1,12,NV
+New Hampshire,1,1,1,1,1,1,1,1,1,0,1,1,1,12,NH
+New Jersey,1,1,1,1,1,1,1,1,1,1,1,1,1,13,NJ
+New Mexico,1,1,1,1,1,1,1,1,1,1,1,1,0,12,NM
+New York,1,1,1,1,1,1,1,0,1,1,1,1,0,11,NY
+North Carolina,1,1,1,1,1,1,1,1,0,1,1,1,0,11,NC
+North Dakota,1,1,1,0,1,1,1,0,1,1,1,1,1,11,ND
+Ohio,1,1,1,0,1,1,1,1,0,1,1,1,1,11,OH
+Oklahoma,1,1,1,0,1,1,1,1,1,1,1,1,1,12,OK
+Oregon1,1,1,1,1,1,1,1,1,1,1,1,1,1,13,OR
+Oregon,1,1,1,0,1,1,1,1,0,1,1,1,1,11,PA
+Rhode Island,1,1,1,1,1,1,1,1,1,1,1,1,1,13,RI
+South Carolina,1,1,1,0,1,1,1,1,0,1,1,1,1,11,SC
+South Dakota,1,1,1,0,1,1,1,0,0,0,0,0,0,6,SD
+Tennessee,1,1,1,0,1,1,1,1,1,1,1,1,1,12,TN
+Texas,1,1,1,0,1,1,1,1,1,0,1,1,1,11,TX
+Utah,1,1,1,0,1,1,1,1,0,1,1,1,1,11,UT
+Vermont,1,1,1,1,1,1,1,1,0,1,1,1,0,11,VT
+Virginia,1,1,1,0,1,1,1,0,0,1,1,1,1,10,VA
+Washington,1,1,1,1,1,1,1,0,1,1,1,1,1,12,WA
+West Virginia,1,1,1,0,1,1,1,0,1,0,1,1,1,10,WV
+Wisconsin,1,0,1,0,1,1,1,1,0,0,1,0,1,8,WI
+Wyoming,1,1,1,0,1,1,1,1,0,1,1,1,1,11,WY
