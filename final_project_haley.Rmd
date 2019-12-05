@@ -16,6 +16,7 @@ library(ggplot2)
 library(janitor)
 library(tidycensus)
 library(viridis) 
+library(tscount)
 
 ```
 
@@ -45,7 +46,7 @@ write.csv(ss,"ss_data.csv")
 }
 ```
 
-## Read in and clean data
+# Read in and clean data
 ```{r read processed data, message=FALSE, warning=FALSE}
 # ss is csv file with school shooting data (individual incidents)
 ss = read_csv("ss_data.csv")%>%
@@ -55,61 +56,7 @@ ss = read_csv("ss_data.csv")%>%
   distinct_at(.vars = c(1:24), .keep_all = T)
 ```
 
-```{r}
-
-table(ss$reliability_score_1_5)%>%
-  data.frame()%>%
-  ggplot(aes(x = Var1, y = Freq))+
-  geom_bar(aes(fill = Var1), stat = "identity")+
-  scale_fill_discrete(name = "Reliability Score")+
-  labs(x = "Reliability Score", y = "Count")
-
-table(ss$school_type)%>%
-  data.frame()%>%
-  ggplot(aes(x = Var1, y = Freq))+
-  geom_bar(aes(fill = Var1), stat = "identity")+
-  scale_fill_discrete(name = "School Type")+
-  labs(x = "School Type", y = "Count")
-
-ss%>%
-  filter(shooter_age<200)%>%
-  ggplot(aes(x = reorder(state, shooter_age, FUN = mean), y = shooter_age))+
-  geom_boxplot()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
-  labs(y = "Age of shooter", x = "State", title = "Age of Shooter by State")
-
-
-ss%>%
-  ggplot(aes(x = reorder(state, killed_includes_shooter, FUN = mean), y = killed_includes_shooter))+
-  geom_boxplot()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
-  labs(y = "Numbeer Killed (including shooter)", x = "State", title = "Fatalities")
-
-
-ss%>%
-  ggplot(aes(x = reorder(state, wounded, FUN = mean), y = total_injured_killed_victims))+
-  geom_boxplot()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
-  labs(y = "Wounded ", x = "State", title = "Number Wounded")
-
-
-ss%>%
-  ggplot(aes(x = reorder(state, total_injured_killed_victims, FUN = mean), y = total_injured_killed_victims))+
-  geom_boxplot()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
-  labs(y = "Wounded or Killed", x = "State", title = "Combined Wounded & Fatalities")
-
-table(ss$state)%>%
-  data.frame()%>%
-  ggplot(aes(x = Var1, y = Freq))+
-  geom_bar(aes(x = reorder(Var1,Freq, desc)), stat = "identity")+
-  labs(x = "State", y = "Count", "Number of incidents by State (overall)")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))
-
-
-
-```
-
+## Population data
 ```{r population data, message=FALSE, warning=FALSE}
 
 # data set to go from state names to abbreviations
@@ -212,7 +159,7 @@ write.csv(pops, "state_populations.csv")
 
 ```
 
-## Population data
+### Read in population data
 
 ```{r load population data, message=FALSE, warning=FALSE}
 # read in population data (include abbreviated and full state name)
@@ -223,7 +170,7 @@ pops = read_csv("state_populations.csv")%>%
 ```
 
 
-## Incident count format
+### Incident count format
 ```{r merge population data, message=FALSE, warning=FALSE}
 sts = unique(ss$state)
 yrs = seq(range(ss$year)[1],range(ss$year)[2],by=1)
@@ -261,7 +208,7 @@ ss_counts = ss%>%
 
 ```
 
-
+## Grade data
 ```{r policy grade data, message=FALSE, warning=FALSE}
 
 # read in state grade data
@@ -321,7 +268,7 @@ write.csv(grades,"state_grades.csv")
 
 ```
 
-## Grades data
+### Read in grade data
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -340,7 +287,137 @@ ss_counts = ss_counts%>%
 
 
 ```
+## Media data
+```{r warning=FALSE, message=FALSE}
 
+media = read_csv("media_data.csv")%>%
+  separate(`Year-Month`, into = c("year","month"), sep = "-")%>%
+  clean_names()%>%
+  select(-starts_with("x"))%>%
+  group_by(year) %>%
+  mutate(yearly_articles = sum(articles_shootings_excluding_firearm_laws_and_regulations))%>% 
+  mutate(yearly_shootings = sum(mass_shooting))%>%
+  mutate(art_per_inc = yearly_articles/yearly_shootings)%>%
+  ungroup()%>%
+  mutate(prev_month_art = c(0,articles_shootings_excluding_firearm_laws_and_regulations[1:227]))%>%
+  mutate(prev_year_art = c(rep(0,12),yearly_articles[1:216]))%>%
+  mutate(year = as.numeric(year))
+```
+
+## Poverty data
+```{r,message=FALSE}
+
+pov=read.csv("census_poverty_data.csv",stringsAsFactors = FALSE)
+pov=filter(pov,State!="      United States"&State!="     United States"& State!="District of Columbia"&State!="United States")
+
+names(pov)[1:2]<-c("state","poverty")
+names(pov)[4]<-"year"
+
+skel=expand_grid(sort(unique(pov$state)),min(pov$year):(max(pov$year)+2))
+names(skel)<-c("state","year")
+
+
+
+sk1=filter(skel,year==2007|year==2008|year==2009)
+sk1=left_join(sk1,filter(pov,year==2007),by="state")
+
+sk2=filter(skel,year==2010|year==2011|year==2012)
+sk2=left_join(sk2,filter(pov,year==2010),by="state")
+
+sk3=filter(skel,year==2013|year==2014|year==2015)
+sk3=left_join(sk3,filter(pov,year==2013),by="state")
+
+sk4=filter(skel,year==2016|year==2017|year==2018)
+sk4=left_join(sk4,filter(pov,year==2016),by="state")
+
+pov=rbind(sk1,sk2,sk3,sk4)
+pov=pov[,1:3]
+names(pov)<-c("state","year","poverty")
+
+
+```
+
+### Merge poverty data 
+```{r message=FALSE, warning=FALSE}
+
+pov = left_join(pov,states, by = c("state"="state.name"))%>%
+  select(-state)%>%
+  rename(state = state.abb)
+ss_counts = left_join(ss_counts, pov, by = c("state","year"))
+
+```
+
+## Bullying data
+```{r message = FALSE}
+bully = read_csv("State_bullying.csv")%>%
+  select(c(total_score,state.abb))%>%
+  rename(state = state.abb)%>%
+  mutate(year = 2010)
+
+ss_counts = left_join(ss_counts, bully%>%select(-year), by = "state")%>%
+  rename(bullying_score = total_score)%>%
+  mutate(bullying_score = as.numeric(bullying_score))
+
+```
+
+# EDA 
+```{r}
+
+table(ss$reliability_score_1_5)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(fill = Var1), stat = "identity")+
+  scale_fill_discrete(name = "Reliability Score")+
+  labs(x = "Reliability Score", y = "Count")
+
+table(ss$school_type)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(fill = Var1), stat = "identity")+
+  scale_fill_discrete(name = "School Type")+
+  labs(x = "School Type", y = "Count")
+
+ss%>%
+  filter(shooter_age<200)%>%
+  ggplot(aes(x = reorder(state, shooter_age, FUN = mean), y = shooter_age))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Age of shooter", x = "State", title = "Age of Shooter by State")
+
+
+ss%>%
+  ggplot(aes(x = reorder(state, killed_includes_shooter, FUN = mean), y = killed_includes_shooter))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Numbeer Killed (including shooter)", x = "State", title = "Fatalities")
+
+
+ss%>%
+  ggplot(aes(x = reorder(state, wounded, FUN = mean), y = total_injured_killed_victims))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Wounded ", x = "State", title = "Number Wounded")
+
+
+ss%>%
+  ggplot(aes(x = reorder(state, total_injured_killed_victims, FUN = mean), y = total_injured_killed_victims))+
+  geom_boxplot()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))+
+  labs(y = "Wounded or Killed", x = "State", title = "Combined Wounded & Fatalities")
+
+table(ss$state)%>%
+  data.frame()%>%
+  ggplot(aes(x = Var1, y = Freq))+
+  geom_bar(aes(x = reorder(Var1,Freq, desc)), stat = "identity")+
+  labs(x = "State", y = "Count", "Number of incidents by State (overall)")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 6))
+
+
+
+```
+
+
+### Grade plots
 ```{r fig.height = 8, fig.width = 10, warning=FALSE}
 
 cc = scales::seq_gradient_pal("green", "red", "Lab")(seq(0,1,length.out=12))
@@ -431,40 +508,36 @@ ss_counts%>%
 
 ```
 
-## Media data
-```{r warning=FALSE, message=FALSE}
 
-media = read_csv("media_data.csv")%>%
-  separate(`Year-Month`, into = c("year","month"), sep = "-")%>%
-  clean_names()%>%
-  select(-starts_with("x"))%>%
-  group_by(year) %>%
-  mutate(yearly_articles = sum(articles_shootings_excluding_firearm_laws_and_regulations))%>% 
-  mutate(yearly_shootings = sum(mass_shooting))%>%
-  mutate(art_per_inc = yearly_articles/yearly_shootings)%>%
-  ungroup()%>%
-  mutate(prev_month_art = c(0,articles_shootings_excluding_firearm_laws_and_regulations[1:227]))
-
+### Media Plots
+```{r}
 media%>%
-  ggplot(aes(x = prev_month_art, y = mass_shooting, color = as.numeric(year)))+geom_point(position = "jitter")
+  ggplot(aes(x = prev_month_art, y = mass_shooting, color = as.numeric(year)))+geom_point(position = "jitter")+
+  scale_color_continuous(name = "Year")+
+  labs(y = "Mass Shooting Count", x = "Articles in Previous Month")+
+  theme_bw()
 
 media%>%
   ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations, x= as.numeric(year), color = as.numeric(year)))+
   geom_point()+
   geom_jitter()+
   labs(y = "Monthly Articles",x =  "Year")+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  theme_bw()
 
 media%>%
   ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations/yearly_shootings, x= as.numeric(year), color = as.numeric(year)))+
   geom_point()+
   geom_jitter()+
   labs(y = "Monthly Articles/Yearly Mass Shootings",x =  "Year")+
-  theme(legend.position = "none")
+  theme(legend.position = "none")+
+  theme_bw()
 
 media%>%
-  ggplot(aes(y = yearly_articles/yearly_shootings, x= as.numeric(year), color = as.numeric(year)))+ 
-  geom_point()
+  ggplot(aes(y = yearly_articles, x= as.numeric(year)))+ 
+  geom_point()+
+  labs(y = "Yearly Articles",x =  "Year")+
+  theme_bw()
 
 ```
 
@@ -490,56 +563,60 @@ for(x in unique(ss_counts$state)){
   
 }
 
+ss_counts = ss_counts%>%
+  left_join(media%>%select(prev_year_art, year,yearly_articles)%>%distinct(), by = "year")
 
 
 ```
 
-```{r,message=FALSE}
-
-pov=read.csv("census_poverty_data.csv",stringsAsFactors = FALSE)
-pov=filter(pov,State!="      United States"&State!="     United States"& State!="District of Columbia"&State!="United States")
-
-names(pov)[1:2]<-c("state","poverty")
-names(pov)[4]<-"year"
-
-skel=expand_grid(sort(unique(pov$state)),min(pov$year):(max(pov$year)+2))
-names(skel)<-c("state","year")
 
 
-
-sk1=filter(skel,year==2007|year==2008|year==2009)
-sk1=left_join(sk1,filter(pov,year==2007),by="state")
-
-sk2=filter(skel,year==2010|year==2011|year==2012)
-sk2=left_join(sk2,filter(pov,year==2010),by="state")
-
-sk3=filter(skel,year==2013|year==2014|year==2015)
-sk3=left_join(sk3,filter(pov,year==2013),by="state")
-
-sk4=filter(skel,year==2016|year==2017|year==2018)
-sk4=left_join(sk4,filter(pov,year==2016),by="state")
-
-pov=rbind(sk1,sk2,sk3,sk4)
-pov=pov[,1:3]
-names(pov)<-c("state","year","poverty")
-
-
-```
-
-### Merge poverty data 
+### Media plots
 ```{r}
 
-pov = left_join(pov,states, by = c("state"="state.name"))%>%
-  select(-state)%>%
-  rename(state = state.abb)
-ss_counts = left_join(ss_counts, pov, by = c("state","year"))
 
+ss_counts%>%
+  group_by(year)%>%
+  summarise(yearly_incidents = sum(incident_count), prev_year_art = prev_year_art[1] )%>%
+  ggplot(aes(x = year, y = yearly_incidents, fill = prev_year_art))+geom_bar(stat = "identity")+
+  labs(y = "Yearly School Shootings", x = "Year")+
+  scale_fill_viridis(option = "D", name = "Articles in previous year")+
+  theme_bw()
 ```
+
 
 ```{r}
 
-fit = glm(incident_count~gpa+target+random_vict+bullied+domestic_violence+ offset(log(population)), family = "poisson", data = ss_counts)
+delta = data.frame(state = NULL, year = NULL, delta_gpa = NULL, delta_ss = NULL, delta_pop = NULL)
+for(x in unique(ss_counts$state)){
+  dat = filter(ss_counts, state == x)%>%
+    arrange(year)
+  chng_gpa = c(NA,diff(dat$gpa))
+  chng_ss = c(NA, diff(dat$incident_count))
+  chng_pop = c(NA, diff(dat$population))
+  st = rep(x, nrow(dat))
+  newrows =data.frame(state = st, year = dat$year, delta_gpa = chng_gpa, delta_ss = chng_ss, delta_pop= chng_pop)
+  delta = bind_rows(delta,newrows)
+}
+```
+
+# Model Fitting
+```{r}
+
+fit = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+offset(log(population)), family = "poisson", data = ss_counts)
+
+
+ts_y = ts(ss_counts%>%ungroup()%>%slice(which(complete.cases(ss_counts)))%>%select(incident_count))
+ts_x = ss_counts%>%
+    ungroup()%>%
+  slice(which(complete.cases(ss_counts)))%>%
+  select(c(gpa,poverty,bullying_score,yearly_articles,population))%>%
+  as.matrix()
+
+ts_fit = tsglm(ts_y, xreg = ts_x, model = list(past_obs = 1, external = TRUE), link = "log", distr = "poisson")
 
 
 
 ```
+
+
