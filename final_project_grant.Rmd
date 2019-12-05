@@ -39,4 +39,45 @@ data=rbind(sk1,sk2,sk3,sk4)
 data=data[,1:3]
 names(data)<-c("state","year","poverty")
 
+
+
+# Mental Health Data
+cleaned=1
+
+data.2016=read.csv("mha2016.csv",stringsAsFactors = FALSE)
+data.2017=read.csv("mha2017.csv",stringsAsFactors = FALSE)
+data.2018=read.csv("mha2018.csv",stringsAsFactors = FALSE)
+data.2019=read.csv("mha2019.csv",stringsAsFactors = FALSE)
+data.2020=read.csv("mha2020.csv",stringsAsFactors = FALSE)
+
+names(data.2017)[2]<-"State"
+
+data.2016=data.2016[,c("State","Percent","Year")]
+data.2017=data.2017[,c("State","Percent","Year")]
+data.2018=data.2018[,c("State","Percent","Year")]
+data.2019=data.2019[,c("State","Percent","Year")]
+data.2020=data.2020[,c("State","Percent","Year")]
+states=sort(unique(data.2020$State))
+# Remove DC
+states=states[-9]
+# Find which states don't match up for each year
+if(cleaned==0){
+states==sort(unique(data.2016$State))
+sort(unique(data.2016$State))[8]
+# remove DC from 2016 data
+data.2016=filter(data.2016,State!="DC")      
+states==sort(unique(data.2016$State))
+data.2016$State[35]="Louisiana"
+states==sort(unique(data.2016$State))
+data.2017=filter(data.2017,State!="District of Columbia")
+states==sort(unique(data.2017$State))
+data.2018=filter(data.2018,State!="District of Columbia")
+data.2018$State[9]="Wyoming"
+states==sort(unique(data.2018$State))
+data.2019=filter(data.2019,State!="District of Columbia"&State!="")
+states==sort(unique(data.2019$State))
+}
+mh.data=rbind(data.2016,data.2017,data.2018,data.2019,data.2020)
+mh.data$Year=mh.data$Year-1      
+mh.data$Percent[51]=42.1
 ```
