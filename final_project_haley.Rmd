@@ -45,6 +45,7 @@ write.csv(ss,"ss_data.csv")
 }
 ```
 
+## Read in and clean data
 ```{r read processed data, message=FALSE, warning=FALSE}
 # ss is csv file with school shooting data (individual incidents)
 ss = read_csv("ss_data.csv")%>%
@@ -211,6 +212,7 @@ write.csv(pops, "state_populations.csv")
 
 ```
 
+## Population data
 
 ```{r load population data, message=FALSE, warning=FALSE}
 # read in population data (include abbreviated and full state name)
@@ -311,6 +313,7 @@ write.csv(grades,"state_grades.csv")
 
 ```
 
+## Grades data
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -414,6 +417,8 @@ ss_counts%>%
 
 
 ```
+
+## Media data
 ```{r warning=FALSE}
 
 media = read_csv("media_data.csv")%>%
