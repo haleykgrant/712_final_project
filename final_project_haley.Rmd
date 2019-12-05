@@ -462,6 +462,10 @@ media%>%
   labs(y = "Monthly Articles/Yearly Mass Shootings",x =  "Year")+
   theme(legend.position = "none")
 
+media%>%
+  ggplot(aes(y = yearly_articles/yearly_shootings, x= as.numeric(year), color = as.numeric(year)))+ 
+  geom_point()
+
 ```
 
 ```{r warning=FALSE}
@@ -486,13 +490,55 @@ for(x in unique(ss_counts$state)){
   
 }
 
+
+
 ```
 
+```{r,message=FALSE}
 
+pov=read.csv("census_poverty_data.csv",stringsAsFactors = FALSE)
+pov=filter(pov,State!="      United States"&State!="     United States"& State!="District of Columbia"&State!="United States")
+
+names(pov)[1:2]<-c("state","poverty")
+names(pov)[4]<-"year"
+
+skel=expand_grid(sort(unique(pov$state)),min(pov$year):(max(pov$year)+2))
+names(skel)<-c("state","year")
+
+
+
+sk1=filter(skel,year==2007|year==2008|year==2009)
+sk1=left_join(sk1,filter(pov,year==2007),by="state")
+
+sk2=filter(skel,year==2010|year==2011|year==2012)
+sk2=left_join(sk2,filter(pov,year==2010),by="state")
+
+sk3=filter(skel,year==2013|year==2014|year==2015)
+sk3=left_join(sk3,filter(pov,year==2013),by="state")
+
+sk4=filter(skel,year==2016|year==2017|year==2018)
+sk4=left_join(sk4,filter(pov,year==2016),by="state")
+
+pov=rbind(sk1,sk2,sk3,sk4)
+pov=pov[,1:3]
+names(pov)<-c("state","year","poverty")
+
+
+```
+
+### Merge poverty data 
+```{r}
+
+pov = left_join(pov,states, by = c("state"="state.name"))%>%
+  select(-state)%>%
+  rename(state = state.abb)
+ss_counts = left_join(ss_counts, pov, by = c("state","year"))
+
+```
 
 ```{r}
 
-fit = glm(incident_count~gpa+offset(log(population)), family = "poisson", data = ss_counts)
+fit = glm(incident_count~gpa+target+random_vict+bullied+domestic_violence+ offset(log(population)), family = "poisson", data = ss_counts)
 
 
 
