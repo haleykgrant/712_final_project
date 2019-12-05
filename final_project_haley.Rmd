@@ -223,7 +223,7 @@ pops = read_csv("state_populations.csv")%>%
 ```
 
 
-
+## Incident count format
 ```{r merge population data, message=FALSE, warning=FALSE}
 sts = unique(ss$state)
 yrs = seq(range(ss$year)[1],range(ss$year)[2],by=1)
@@ -320,8 +320,13 @@ write.csv(grades,"state_grades.csv")
 grades = read_csv("state_grades.csv")%>%
   select(-X1)
 
+gpa_convert = data.frame(letter_grade = c("A","A-","B+","B","B-",
+                                          "C+","C","C-","D+","D","D-","F"),
+                         gpa = c(4,3.7,3.3,3,2.7,2.3,2,1.7,1.3,1,0.7,0))
+
 ss_counts = ss_counts%>%
-  left_join(grades%>%select(state,grade,year),by = c("full_state_name"="state","year"))
+  left_join(grades%>%select(state,grade,year),by = c("full_state_name"="state","year"))%>%
+  left_join(gpa_convert, by = c("grade"="letter_grade"))
 
 
 
@@ -419,16 +424,68 @@ ss_counts%>%
 ```
 
 ## Media data
-```{r warning=FALSE}
+```{r warning=FALSE, message=FALSE}
 
 media = read_csv("media_data.csv")%>%
   separate(`Year-Month`, into = c("year","month"), sep = "-")%>%
   clean_names()%>%
   select(-starts_with("x"))%>%
   group_by(year) %>%
-  mutate(yearly_articles = sum(articles_shootings_excluding_firearm_laws_and_regulations)) # add column with summed article count by year
+  mutate(yearly_articles = sum(articles_shootings_excluding_firearm_laws_and_regulations))%>% 
+  mutate(yearly_shootings = sum(mass_shooting))%>%
+  mutate(art_per_inc = yearly_articles/yearly_shootings)%>%
+  ungroup()%>%
+  mutate(prev_month_art = c(0,articles_shootings_excluding_firearm_laws_and_regulations[1:227]))
+
+media%>%
+  ggplot(aes(x = prev_month_art, y = mass_shooting, color = as.numeric(year)))+geom_point(position = "jitter")
+
+media%>%
+  ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations, x= as.numeric(year), color = as.numeric(year)))+
+  geom_point()+
+  geom_jitter()+
+  labs(y = "Monthly Articles",x =  "Year")+
+  theme(legend.position = "none")
+
+media%>%
+  ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations/yearly_shootings, x= as.numeric(year), color = as.numeric(year)))+
+  geom_point()+
+  geom_jitter()+
+  labs(y = "Monthly Articles/Yearly Mass Shootings",x =  "Year")+
+  theme(legend.position = "none")
+
+```
+
+```{r}
+school_counts = ss%>%
+  select(school,city,state)%>%
+  unite(col = school_city,c(school,city,state), sep = "_")%>%
+  table(dnn = c("school","count"))%>%
+  data.frame()%>%
+  separate(col = school_city, into = c("school","city","state"), sep = "_" )
+
+
+delta = data.frame(state = NULL, year = NULL, delta_gpa = NULL, delta_ss = NULL, delta_pop = NULL)
+for(x in unique(ss_counts$state)){
+  dat = filter(ss_counts, state == x)%>%
+    arrange(year)
+  chng_gpa = c(NA,diff(dat$gpa))
+  chng_ss = c(NA, diff(dat$incident_count))
+  chng_pop = c(NA, diff(dat$population))
+  st = rep(x, nrow(dat))
+  newrows =data.frame(state = st, year = dat$year, delta_gpa = chng_gpa, delta_ss = chng_ss, delta_pop= chng_pop)
+  delta = bind_rows(delta,newrows)
+  
+}
+
+```
+
+
+
+```{r}
+
+fit = glm(incident_count~gpa+offset(log(population)), family = "poisson", data = ss_counts)
 
 
 
 ```
-
