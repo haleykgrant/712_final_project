@@ -244,7 +244,15 @@ ss_counts = ss%>%
             avg_shooter_age = mean(shooter_age),
             max_shooter_age = max(shooter_age),
             min_shooter_age = min(shooter_age),
-            avg_reliability = mean(reliability_score_1_5))%>%
+            avg_reliability = mean(reliability_score_1_5),
+            target = mean(ifelse(targeted_specific_victim_s=="Y",1,
+                                 ifelse(targeted_specific_victim_s=="N",0,NA)),na.rm = T),
+            random_vict = mean(ifelse(random_victims=="Y",1,
+                                      ifelse(random_victims=="N",0,NA)),na.rm = T),
+            bullied = mean(ifelse(bullied_y_n_n_a=="Y",1,
+                                  ifelse(bullied_y_n_n_a=="N",0,NA)),na.rm = T),
+            domestic_violence = mean(ifelse(domestic_violence_y_n=="Y",1,
+                                            ifelse(domestic_violence_y_n=="N",0,NA)),na.rm = T))%>%
   mutate(in_ss = TRUE)%>%
   full_join(st_yr, by = c("state","year"))%>%
   left_join(pops%>%rename(full_state_name = state), by = c("state"="state.abb", "year"))%>%
@@ -456,7 +464,7 @@ media%>%
 
 ```
 
-```{r}
+```{r warning=FALSE}
 school_counts = ss%>%
   select(school,city,state)%>%
   unite(col = school_city,c(school,city,state), sep = "_")%>%
