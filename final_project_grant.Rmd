@@ -80,4 +80,5 @@ states==sort(unique(data.2019$State))
 mh.data=rbind(data.2016,data.2017,data.2018,data.2019,data.2020)
 mh.data$Year=mh.data$Year-1      
 mh.data$Percent[51]=42.1
+mh.data=filter(mh.data,State!="District of Columbia")
 ```
