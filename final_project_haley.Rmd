@@ -18,6 +18,8 @@ library(tidycensus)
 library(viridis) 
 library(tscount)
 library(yrbss)
+library(zoo)
+library(purrr)
 
 ```
 
@@ -215,44 +217,52 @@ ss_counts = ss%>%
 # read in state grade data
 
 if(import_raw_data){
-grades18 = read_csv("../../data/2018grades.csv")%>%
+grades18 = read_csv("../../data_1/2018grades.csv")%>%
   select(-c(X6,X7))%>%
   clean_names()%>%
   select(-gun_death_rate_per_100k)%>%
   mutate(year = "2018")%>%
-  rename(grade = x2018_grade)
+  rename(grade = x2018_grade)%>%
+  select(state,grade,year)
 
-grades17 = read_csv("../../data/2017grades.csv")%>%
+grades17 = read_csv("../../data_1/2017grades.csv")%>%
   clean_names()%>%
   mutate(year = "2017")%>%
-  rename(grade = x2017_grade)
+  rename(grade = x2017_grade)%>%
+  select(state,grade,year)
 
-grades16 = read_csv("../../data/2016grades.csv")%>%
+grades16 = read_csv("../../data_1/2016grades.csv")%>%
   clean_names()%>%
   mutate(year = "2016")%>%
-  rename(grade = x2016_grade)
+  rename(grade = x2016_grade)%>%
+  select(state,grade,year)
 
 
-grades15 = read_csv("../../data/2015grades.csv")%>%
+grades15 = read_csv("../../data_1/2015grades.csv")%>%
   clean_names()%>%
   mutate(year = "2015")%>%
-  rename(grade = x2015_grade)
+  rename(grade = x2015_grade)%>%
+  select(state,grade,year)
+# add in missing value
+grades15 = rbind(grades15,c("Kansas","F",2015))
 
-grades14 = read_csv("../../data/2014grades.csv")%>%
+grades14 = read_csv("../../data_1/2014grades.csv")%>%
   clean_names()%>%
   mutate(year = "2014")%>%
-  rename(grade = x2014_grade)
+  rename(grade = x2014_grade)%>%
+  select(state,grade,year)
 
-grades13 = read_csv("../../data/2013grades.csv")%>%
+grades13 = read_csv("../../data_1/2013grades.csv")%>%
   clean_names()%>%
   mutate(year = "2013")%>%
-  rename(grade = x2013_grade)
+  rename(grade = x2013_grade)%>%
+  select(state,grade,year)
 
-grades12 = read_csv("../../data/2012grades.csv")%>%
+grades12 = read_csv("../../data_1/2012grades.csv")%>%
   clean_names()%>%
   mutate(year = "2012")%>%
-  rename(grade = x2012_grade)
-
+  rename(grade = x2012_grade)%>%
+  select(state,grade,year)
 
 # combine all year data 
 
@@ -425,22 +435,8 @@ lab = data.frame(question = yrbss::yrbss_questions_binary$variable, label = yrbs
 # read in csv
 bullying_survey = read_csv("bullying_survey.csv")
 
-bullying_to_merge = read_csv("bullying_survey.csv")%>%
-  select(-c(ciLB,ciUB,n,label))%>%
-  gather(key = stat_type, value = value, prop)%>%
-  spread(variable, value)%>%
-  select(-stat_type)
-
-colnames(bullying_to_merge)[3:17]=as.character(lab$label[1:15])
-
-bullying_to_merge = bullying_to_merge%>%
-  clean_names()
-
-ss_counts = left_join(ss_counts, bullying_to_merge, by = c("state","year"))
-
-
 # check missingness for 2009-2015
-sum(!complete.cases(filter(bullying_survey, year>=2009)))/nrow(filter(bullying_survey, year>=2009))
+sum(!complete.cases(filter(bullying_survey, year>=2007)))/nrow(filter(bullying_survey, year>=2007))
 
 
 ### We're going to need to impute values for missing years and states for some of these variables if these data are going to be useful in our analysis
@@ -453,6 +449,7 @@ suicide = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
 suicide_qns = bullying_survey%>%
   filter(variable %in% c("qn26","qn27","qn28","qn29","qn30"))
 
+sts[which(sts=="AZB")]="AZ"
 for(y in yrs){
   for(st in sts){
     dat = filter(suicide_qns,(year ==y & state == st))
@@ -512,7 +509,63 @@ for(y in yrs){
 survey_combined = bind_cols(suicide,safety, fight, bull)%>%
   select(year, state, score, n, score1, n1, score2, n2, score3, n3)%>%
   rename(suicide_score = score, school_safety_score = score1, fight_score = score2, bully_score = score3)%>%
-  filter(year>=2009)
+  filter(year>=2007)%>%
+  full_join(st_yr%>%filter(year>=2007))%>%
+  arrange(year)%>%
+  arrange(state)%>%
+  mutate(state = ifelse(state == "AZB","AZ",state))
+
+survey_combined = survey_combined%>%
+  group_by(state)%>%
+  mutate(suicide_score =ifelse(year<2016,ifelse(is.na(suicide_score), na.locf(suicide_score)/2+na.locf(suicide_score, fromLast = TRUE)/2,suicide_score),
+                              NA ))%>%
+  mutate(school_safety_score =ifelse(year<2016,ifelse(is.na(school_safety_score), na.locf(school_safety_score)/2+na.locf(school_safety_score, fromLast = TRUE)/2,school_safety_score),NA))%>%
+    mutate(fight_score =ifelse(year<2016,ifelse(is.na(fight_score), na.locf(fight_score)/2+na.locf(fight_score, fromLast = TRUE)/2,fight_score),NA))%>%
+      mutate(bully_score =ifelse(year<2016,ifelse(is.na(bully_score), na.locf(bully_score)/2+na.locf(bully_score, fromLast = TRUE)/2,bully_score),NA))%>%
+        mutate(n=ifelse(year<2016,ifelse(is.na(n), na.locf(n)/2+na.locf(n, fromLast = TRUE)/2,n),NA))%>%
+          mutate(n1=ifelse(year<2016,ifelse(is.na(n1), na.locf(n1)/2+na.locf(n1, fromLast = TRUE)/2,n1),NA))%>%
+          mutate(n2=ifelse(year<2016,ifelse(is.na(n2), na.locf(n2)/2+na.locf(n2, fromLast = TRUE)/2,n2),NA))%>%       
+  mutate(n3=ifelse(year<2016,ifelse(is.na(n3), na.locf(n3)/2+na.locf(n3, fromLast = TRUE)/2,n3),NA))
+
+
+# use fitted line to get 2016-2019 values 
+for(s in sts[which(!(sts %in% c("MA","AZB")))]){
+  dat = filter(survey_combined, state ==s)
+  ind = which(is.na(dat$suicide_score))[1]
+  slp = dat[ind-1,3:10]-dat[ind-2,3:10]
+  dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp
+    dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp  
+    dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp  
+    dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp
+
+  survey_combined[which(survey_combined$state == s),]=dat
+}
+
+# chech to see if mean and median are different
+survey_combined%>%
+  group_by(year)%>%
+  summarise(med_ss = median(suicide_score, na.rm = T), mn_ss = mean(suicide_score, na.rm = T),
+            med_safe = median(school_safety_score, na.rm = T), mn_safe = mean(school_safety_score, na.rm = T),
+            med_f = median(fight_score, na.rm = T), mn_f = mean(fight_score, na.rm = T),
+            med_b = median(bully_score, na.rm = T), mn_b = mean(bully_score, na.rm = T))
+
+# impute missing values with median value for each column
+
+survey_combined = survey_combined%>%
+  ungroup()%>%
+  group_by(year)%>%
+  mutate(suicide_score = ifelse(is.na(suicide_score), median(suicide_score, na.rm = T),suicide_score))%>%
+  mutate(school_safety_score = ifelse(is.na(school_safety_score), median(school_safety_score, na.rm = T),school_safety_score))%>%
+  mutate(fight_score = ifelse(is.na(fight_score), median(fight_score, na.rm = T),fight_score))%>%
+  mutate(bully_score = ifelse(is.na(bully_score), median(bully_score, na.rm = T),bully_score))%>%
+  mutate(n = ifelse(is.na(n), median(n, na.rm = T),n))%>%
+  mutate(n1 = ifelse(is.na(n1), median(n1, na.rm = T),n1))%>%
+  mutate(n2 = ifelse(is.na(n2), median(n2, na.rm = T),n2))%>%
+  mutate(n3 = ifelse(is.na(n3), median(n3, na.rm = T),n3))
+
+ss_counts = left_join(ss_counts, survey_combined, by = c("state","year"))%>%
+  filter(state != "DC")
+
 
 ```
 
@@ -744,9 +797,8 @@ ss_counts%>%
 ### Bullying survey plots
 ```{r message = F, warning=F}
 
-ggplot(data= bullying_survey, aes(x = year, y = prop, color = variable))+
-  geom_point(position = "jitter")+
-  geom_smooth(se=F)+
+ggplot(data= bullying_survey%>%filter(year>=2013), aes(x = year, y = prop, grouby_by = state, color = variable))+
+  geom_line(position = "jitter")+
   scale_color_viridis_d()+
   theme_bw()
 
@@ -775,14 +827,18 @@ bullying_survey%>%
 # Model Fitting
 ```{r warning=FALSE}
 
-fit = glm(incident_count~gpa+poverty+bullying_score+mh_score+ prev_year_art+year+offset(log(population)), family = "poisson", data = ss_counts)
+fit = glm(incident_count~gpa+poverty+bullying_score+mh_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
 
 if(FALSE){
-ts_y = ts(ss_counts%>%slice(which(complete.cases(ss_counts)))%>%select(incident_count))
-ts_x = ss_counts%>%
-    ungroup()%>%
-  slice(which(complete.cases(ss_counts)))%>%
-  select(c(gpa,poverty,bullying_score,yearly_articles,population))%>%
+ts_dat = ss_counts%>%
+  ungroup()%>%
+  select(-c(4:17,23:24,27))%>%
+  filter(year>=2012)%>%
+  filter(year<2019)
+ts_y = ts(ts_dat%>%ungroup()%>%select(incident_count))
+
+ts_x = ts_dat%>%
+  select(c(gpa,poverty,bullying_score,population,suicide_score,fight_score,school_safety_score,bully_score))%>%
   mutate(population = log(population))%>%
   as.matrix()
 
