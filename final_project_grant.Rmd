@@ -103,6 +103,8 @@ z%>%ggplot(aes(x=reorder(state,ci,FUN=median)))+geom_boxplot(aes(y=ci,color=stat
 
 ##########################################################################################################
 # Rand Laws Data
+
+if(FALSE){
 data.rand=read.csv("rand.laws.database.csv",stringsAsFactors = FALSE)
 
 types=c("background check","carrying","castle doctrine","child access","dealer license","age","registration","waiting period","prohibited possessor","safety training","ban","permit","open carry","one gun per")
@@ -158,8 +160,8 @@ skel$state=as.character(skel$state)
 rand.count.data=merge(skel,blank.df,by=c("state","type_of_law","effect","year"),all=TRUE)
 rand.count.data[is.na(rand.count.data$n),"n"]=0
 names(rand.count.data)[5]<-"count"
-rand.count.data=unite(rand.count.data,"law_effect",c("type_of_law","effect"),sep="_")%>%spread("law_effect","count")%>%clean_names()
-
+rand.count.data=unite(rand.count.data,"law_effect",c("type_of_law","effect"),sep="_")%>%spread("law_effect","count")%>%clean_names()%>%save("cleaned.rand.csv")
+}
 
 # d=cbind(y,df)
 # reformula(names(d)[-1],names(d[col numbers u want]))
