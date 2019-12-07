@@ -420,8 +420,23 @@ bullying$state[which(bullying$state=="AZB")]="AZ"
 write_csv(bullying, "bullying_survey.csv")
 }
 
+lab = data.frame(question = yrbss::yrbss_questions_binary$variable, label = yrbss::yrbss_questions_binary$label)%>%
+   filter(question %in% qns)
 # read in csv
 bullying_survey = read_csv("bullying_survey.csv")
+
+bullying_to_merge = read_csv("bullying_survey.csv")%>%
+  select(-c(ciLB,ciUB,n,label))%>%
+  gather(key = stat_type, value = value, prop)%>%
+  spread(variable, value)%>%
+  select(-stat_type)
+
+colnames(bullying_to_merge)[3:17]=as.character(lab$label[1:15])
+
+bullying_to_merge = bullying_to_merge%>%
+  clean_names()
+
+ss_counts = left_join(ss_counts, bullying_to_merge, by = c("state","year"))
 
 
 # check missingness for 2009-2015
@@ -429,6 +444,71 @@ sum(!complete.cases(filter(bullying_survey, year>=2009)))/nrow(filter(bullying_s
 
 
 ### We're going to need to impute values for missing years and states for some of these variables if these data are going to be useful in our analysis
+```
+
+### Make combined variables for survey questions
+```{r warning=FALSE, message=FALSE }
+# combine suicide questions 
+suicide = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+suicide_qns = bullying_survey%>%
+  filter(variable %in% c("qn27","qn28","qn29","qn30"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(suicide_qns,(year ==y & state == st))
+    suicide_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = suicide_score, n = samp)
+    suicide = bind_rows(suicide,newrow)
+  }
+}
+
+# combine questions involving physical fights
+fight = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+fight_qns = bullying_survey%>%
+  filter(variable %in% c("qn18","qn19","qn20"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(fight_qns,(year ==y & state == st))
+    fight_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = fight_score, n = samp)
+    fight = bind_rows(fight,newrow)
+  }
+}
+
+# school safety questions
+safety = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+safety_qns = bullying_survey%>%
+  filter(variable %in% c("qn13","qn14","qn15","qn16","qn17"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(safety_qns,(year ==y & state == st))
+    safety_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = safety_score, n = samp)
+    safety = bind_rows(safety,newrow)
+  }
+}
+
+# bullying questions
+bull = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+bully_qns = bullying_survey%>%
+  filter(variable %in% c("qn24","qn25","qnbullyweight","qnbullygay"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(bully_qns,(year ==y & state == st))
+    bully_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = bully_score, n = samp)
+    bull = bind_rows(bull,newrow)
+  }
+}
+
+
 ```
 
 
@@ -672,7 +752,6 @@ ggplot(data= bullying_survey%>%filter(variable %in% qns[9:17]), aes(x = year, y 
   theme_bw()
 
 
-
 lab = data.frame(question = yrbss::yrbss_questions_binary$variable, label = yrbss::yrbss_questions_binary$label)%>%
    filter(question %in% qns)
 
@@ -693,8 +772,8 @@ bullying_survey%>%
 
 fit = glm(incident_count~gpa+poverty+bullying_score+mh_score+ prev_year_art+year+offset(log(population)), family = "poisson", data = ss_counts)
 
-
-ts_y = ts(ss_counts%>%ungroup()%>%slice(which(complete.cases(ss_counts)))%>%select(incident_count))
+if(FALSE){
+ts_y = ts(ss_counts%>%slice(which(complete.cases(ss_counts)))%>%select(incident_count))
 ts_x = ss_counts%>%
     ungroup()%>%
   slice(which(complete.cases(ss_counts)))%>%
@@ -714,6 +793,7 @@ cilb= arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x))$coef-sqrt(diag(vcov(
 
 ciub = arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x))$coef+sqrt(diag(vcov( arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x)))))
 data.frame(Lower= cilb, Upper = ciub)
+}
 
 
 ```
