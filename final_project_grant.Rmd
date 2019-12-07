@@ -160,7 +160,7 @@ skel$state=as.character(skel$state)
 rand.count.data=merge(skel,blank.df,by=c("state","type_of_law","effect","year"),all=TRUE)
 rand.count.data[is.na(rand.count.data$n),"n"]=0
 names(rand.count.data)[5]<-"count"
-rand.count.data=unite(rand.count.data,"law_effect",c("type_of_law","effect"),sep="_")%>%spread("law_effect","count")%>%clean_names()%>%save("cleaned.rand.csv")
+rand.count.data=unite(rand.count.data,"law_effect",c("type_of_law","effect"),sep="_")%>%spread("law_effect","count")%>%clean_names()%>%write.csv("cleaned.rand.csv")
 }
 
 # d=cbind(y,df)
