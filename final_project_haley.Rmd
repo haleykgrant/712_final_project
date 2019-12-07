@@ -391,11 +391,6 @@ ss_counts = ss_counts%>%
   left_join(mh.data, by = c("state","year"))%>%
   rename(mh_score = percent)
 
-
-# Rand Laws Data
-
-data.rand=read.csv("rand.laws.database.csv",stringsAsFactors = FALSE)
-
 ```
 
 
@@ -569,7 +564,14 @@ ss_counts = left_join(ss_counts, survey_combined, by = c("state","year"))%>%
 
 ```
 
+```{r}
+rand.count.data = left_join(rand.count.data,states, by = c("state"="state.name"))%>%
+  select(-c(state,`0_Permissive`,`0_Restrictive`))%>%
+  rename(state = state.abb)
 
+ss_counts = left_join(ss_counts,rand.count.data, by = c("state","year"))
+
+```
 
 # EDA 
 ```{r}
@@ -829,16 +831,21 @@ bullying_survey%>%
 
 fit = glm(incident_count~gpa+poverty+bullying_score+mh_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
 
+
+
+
+
 if(FALSE){
 ts_dat = ss_counts%>%
   ungroup()%>%
   select(-c(4:17,23:24,27))%>%
-  filter(year>=2012)%>%
+  select(-starts_with("n"))%>%
+  filter(year>=2007)%>%
   filter(year<2019)
 ts_y = ts(ts_dat%>%ungroup()%>%select(incident_count))
 
 ts_x = ts_dat%>%
-  select(c(gpa,poverty,bullying_score,population,suicide_score,fight_score,school_safety_score,bully_score))%>%
+  select(c(6,9:44))%>%
   mutate(population = log(population))%>%
   as.matrix()
 
