@@ -451,7 +451,7 @@ sum(!complete.cases(filter(bullying_survey, year>=2009)))/nrow(filter(bullying_s
 # combine suicide questions 
 suicide = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
 suicide_qns = bullying_survey%>%
-  filter(variable %in% c("qn27","qn28","qn29","qn30"))
+  filter(variable %in% c("qn26","qn27","qn28","qn29","qn30"))
 
 for(y in yrs){
   for(st in sts){
@@ -508,6 +508,11 @@ for(y in yrs){
   }
 }
 
+
+survey_combined = bind_cols(suicide,safety, fight, bull)%>%
+  select(year, state, score, n, score1, n1, score2, n2, score3, n3)%>%
+  rename(suicide_score = score, school_safety_score = score1, fight_score = score2, bully_score = score3)%>%
+  filter(year>=2009)
 
 ```
 
