@@ -1,13 +1,19 @@
 ---
-title: "Data_Science_project"
-output: html_document
+title: "Data Science Project"
+output:
+  html_document:
+    highlight: tango
+    number_sections: no
+    theme: cosmo
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r message=FALSE}
+```{r message=FALSE, include=FALSE}
 
 library(readr)
 library(tidyverse)
@@ -15,9 +21,8 @@ library(tidyverse)
 
 
 
-## R Markdown
-
 ## Motivation and Objectives
+
 In September, 2014, the Federal Bureau of Investigation (FBI) released a report “A Study of Active Shooter Incidents in the United States Between 2000 and 2013” stating that the incidence of school and mass shooting incidents has been growing over the past 14 years $^{[1, 2]}$. Very recently on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old open fire at the school, killing 2 people and injuring 3 others $^{[3]}$. On average, mass killings involving firearms occur approximately every two weeks in the US, while school shootings occur on average monthly $^{[4]}$. The increasing trend has raise serious concerns and questions the existing the efficacy of the exisiting gun policies and laws in different States. In depth analysis of the imapct of gun policies of every state on school shooting can aid to establish appropriate interventions from the State legistations regarding gun policies are crucial to prevent such traumatic incidents. This study aims to 
 
 
@@ -49,11 +54,34 @@ School shooting is a complex phenomen as it is connected with various crucial co
 ## Data
 
 ### School Shooting Dataset
-The dataset was obtained from the ______________ website. It contained details about the school shootings incidents that took place in the United States over the years 1970 to 2019. The data were gather from different sources such as: newspaper article, online news report, court records or police report, and hundreds of news sources, statement/interview from law enforcement official, news report on court ruling. Each row of the dataset indicated an incident that occur at a specific date and time. The dataset contained some insightful variables such as: location, age/gender/race of shooter, number of victims, number of wounded, age of victim(s), age of the shooter, time of day, day of week, motive/category, history of bullying, history of domestic violence, weapon type, etc. The dataset contained a variable named "Reliability Score" which indicated the of sources of about the incidents. Reliability score=1 indicated:Independent Single Author/Moderator Blog, report/list lacking citations, or cited source cannot be located, which may not reliable. Hence those observations were discarded from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as "Accidental" was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occured in each State per year was calculated. 
+The dataset was obtained from the [Center for Homeland Defense and Security website](https://www.chds.us/ssdb/dataset/). It contained details about the school shootings incidents that took place in the United States over the years 1970 to 2019. The data were gather from different sources such as: newspaper article, online news report, court records or police report, and hundreds of news sources, statement/interview from law enforcement official, news report on court ruling. Each row of the dataset indicated an incident that occur at a specific date and time. The dataset contained some insightful variables such as: 
+
+* Location of indcident
+* Age/gender/race of shooter
+* Number of victims
+* Number of wounded
+* Age of victim(s)
+* Time of day/day of week
+* Motive/category
+* History of bullying (of shooter)
+* History of domestic violence
+* Weapon type
+* etc. 
+
+The dataset also contained a variable named *Reliability Score* which indicated the of sources of about the incidents. Reliability was scored on a 5-point scale classified by where the data were obtained from with the following scoring assignment:
+
+1. Independent Single Author/Moderator Blog, report/list lacking citations, or cited source cannot be located (e.g., newspaper headline title and story does not appear in searches)
+2. Single Newspaper Article, Online News Report (Network, Cable, Online)
+3. Multiple News Sources
+4. Hundreds of News Sources, Statement/Interview from Law Enforcement Official, News report on court ruling
+5. Court Records or Police Report
+
+
+We determined that observations with a reliability score of 1 may not be accurate, and hence discarded these observations from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as "Accidental" was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occured in each State per year was calculated. 
 
 
 ### Grade Dataset
-The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from https://lawcenter.giffords.org/scorecard/. For each state the annual score was graded onan A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into gpa scale. So the grades for each state was tranformed into a gpa score using the school gpa grading scale (out of 4.00).  
+The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the [Guifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score was graded onan A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into gpa scale. So the grades for each state was tranformed into a gpa score using the school gpa grading scale (out of 4.00).  
   
 ### Law Dataset
 The analysis also wished to investigate the impact of different gun laws separately and thus considered the RAND dataset. The dataset was obtained from the ______________ website. The dataset included information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables which informs about the type of the law, whether the change was restrictive or permissive, effective date and end date. There were total 12 types of laws and each change were designated as either restrictve or permissive. As some of the laws were change in the middle of the year, the year was rounded to the nearest year. Each permissive law was assigned  the value -1 and each restrictive law was assigned as +1. Then for each category and for each state the total number of permissive and restrictive laws were measured and a total score was calculated. The different types of laws were further merged and categorized in 4 categories into the following manner:
@@ -68,51 +96,67 @@ The analysis also wished to investigate the impact of different gun laws separat
 The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe menatl disorder. The dataset was obtained from_____________. The dataset contained the precentage of youths who has been diagnosed with major depression but who did not receieve any mental health treatment for each state over the years 2010 to 2016.  
 
 ### CDC Survey data
-The literature reviews stipulates that Mental health, School satety and Bullying plays a vital roles in school shooting incidences. To analyze different dynamics of school shooting, we gather the CDC Survey dataset which contains questions that gives an overview of the mentioned aspects for each state over the years from 1970 to 2015. The dataset was obtained from ___________. The dataset includes several questions among which the following question has been selected and included in the analysis: 
+The literature reviews stipulates that mental health, school satety and bullying all play a vital roles in school shooting incidences. To analyze the dynamics of school shootings, we gathered data from a CDC survey given to students in 37 states bianually from 1991 to 2015. The data were obtained from the R package [`yrbss`](https://github.com/hadley/yrbss). The dataset includes proportions of students answering "yes" to a number of questions. We selected and included in the analysis the following questions: 
 
-1. qn13: Carried a weapon
-2. qn14: Carried a gun
-3. qn15: Carried a weapon on school property
-4. qn16:	Did not go to school because they felt unsafe at school or on their way to or from school
-5. qn17	Were threatened or injured with a weapon on school property
-6. qn18:	Were in a physical fight
-7. qn19:	Were injured in a physical fight
-8. qn20:	Were in a physical fight on school property
-9. qn24:	Were bullied on school property
-10. qn25:	Were electronically bullied
-11. qn26:	Felt sad or hopeless
-12. qn27:	Seriously considered attempting suicide
-13. qn28:	Made a plan about how they would attempt suicide
-14. qn29:	Attempted suicide
-15. qn30:	Attempted suicide that resulted in an injury, poisoning, or overdose that had to be treated by a doctor or nurse
-16. qnbullyweight:	Been teased b/c of weight past 12 mos
-17. qnbullygay:	Been teased b/c labeled GLB past 12 mos
+1. Carried a weapon
+2. Carried a gun
+3. Carried a weapon on school property
+4. Did not go to school because they felt unsafe at school or on their way to or from school
+5. Were threatened or injured with a weapon on school property
+6. Were in a physical fight
+7. Were injured in a physical fight
+8. Were in a physical fight on school property
+9. Were bullied on school property
+10. Were electronically bullied
+11. Felt sad or hopeless
+12. Seriously considered attempting suicide
+13. Made a plan about how they would attempt suicide
+14. Attempted suicide
+15. Attempted suicide that resulted in an injury, poisoning, or overdose that had to be treated by a doctor or nurse
+16. Been teased because of weight in the past 12 months
+17. Been teased because of being labeled GLB in the past 12 months 
 
-For each question, the total number of participants who answered the question was availbale. Hence for each question the proportion of partipants who answered in affirmative was calculated. As some of the questions appears to be similar and indicate a common factor, the mentioned questions were then categorized in the following manner:
+Because many of these questions cover similar topics, we chose to combine the variables into four main categories and took weighted averages (weight by the number of respondents) to obtain a final score for each category. The categories are classified as follows:
 
-1. Suicidality: Felt sad or hopeless, Seriously considered attempting suicide, Made a plan about how they would attempt suicide, Attempted suicide, Attempted suicide that resulted in an injury, poisoning, or overdose.
-2. School Safety: Carried a weapon, Carried a gun, Carried a weapon on school property, Did not go to school because they felt unsafe at school or on their way to or from school, Were threatened or injured with a weapon on school property. 
-3. Being in a fight: Were in a physical fight, Were injured in a physical fight, Were in a physical fight on school property
-4. Bullying: Were bullied on school property, Were electronically bullied, Been teased b/c of weight past 12 months, Been teased b/c labeled GLB past 12 months
+1. __Suicidal thoughts or actions__ (measure of mental health):   
+    + Felt sad or hopeless, Seriously considered attempting suicide
+    + Made a plan about how they would attempt suicide
+    + Attempted suicide
+    + Attempted suicide that resulted in an injur, poisoning, or overdose.
+2. __School safety__ : 
+    + Carried a weapon
+    + Carried a gun
+    + Carried a weapon on school property
+    + Did not go to school because they felt unsafe at school or on their way to or from school 
+    + Were threatened or injured with a weapon on school property. 
+3. __Involvement in physical altercations__: 
+    + Were in a physical fight
+    + Were injured in a physical fight
+    + Were in a physical fight on school property
+4. __Bullying__: 
+    + Were bullied on school property
+    + Were electronically bullied
+    + Been teased b/c of weight past 12 months
+    + Been teased b/c labeled GLB past 12 months
 
-The questions  regarding bullying were not present in the dataset prior to 2010. We are assuming that the recent questionarire has added these question. Thus we only included the data from the year 2010. The dataset also contains data for every other year. So for the interpolation, we imputed the missing observation with the mean of the previous and next year values. As the dataset contains data up to the year 2016 and our school shooting dataset contained data till 2018, we imputed the values for those years using the predicted values of the linear regression model. To get an overall score for each state over all the years, we calculated the median score for each state. Though the mean and the median score did not appear to be much different, the mean may be affected by extreme values. 
+Data for questions regarding bullying were not present in the dataset prior to 2010. We assume the surveys were updated to include measures of bullying after the initial writing of the survey. Thus we only included the data from the year 2010. The dataset also contains data for every other year. So for the interpolation, we imputed the missing observation with the mean of the previous and next year values. As the dataset contains data up to the year 2016 and our school shooting dataset contained data till 2018, we imputed the values for those years using the predicted values of the linear regression model. To get an overall score for each state over all the years, we calculated the median score for each state. Though the mean and the median score did not appear to be much different, the mean may be affected by extreme values. 
 
 
 ### Poverty Data
-The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalance rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016. 
+The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalence rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016. 
 
 
 ### Bullying Law Data
-Bullying in school has been identified one of the significant causes behind school shootings. Some of states addressed that issue and have implemented several judicial laws to prevent school bullying. Though almost all the states have laws to prevent bullying the degree of rigidity varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retreived from: https://www.stopbullying.gov/laws/index.html. The dataset mentions about 14 different components of Bullying laws that each state may or may not have. Thus out of the total score 14, we calculated a total score for each state based on how many components of bullying laws were present in each state. unfortunately the data was available only for the year 2010. Thus we have included the dataset in the analysis assuming that the score remains the same over the time period
+Bullying in school has been identified one of the significant causes behind school shootings. Some of states addressed that issue and have implemented several judicial laws to prevent school bullying. Though almost all the states have laws to prevent bullying the degree of rigidity varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retrieved from [stopbullying.gov](https://www.stopbullying.gov/laws/index.html). The dataset mentions about 14 different components of Bullying laws that each state may or may not have. Thus out of the total score 14, we calculated a total score for each state based on how many components of bullying laws were present in each state. unfortunately the data was available only for the year 2010. Thus we have included the dataset in the analysis assuming that the score remains the same over the time period
 
 
 ### Media Data
 
-As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from ___________________. The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment"and "shootings excluding firearm laws and regulations". For each year, the total number of articles containing "shootings excluding firearm laws and regulations" and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles. (not sure how you calculate that variable)
+As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from a [Nature article](https://www.nature.com/articles/s41562-019-0636-0?fbclid=IwAR2mCmg1gQ1OOccfjklm4HKzOMcpg24Oz2C8ZOebg12HaBWwr6Up1YxosF4#data-availability) about media coverage and firearm acqusition after mass shootings (data available on the following [GitHub repository](https://github.com/Causality-Research/Firearms)). The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment"and "shootings excluding firearm laws and regulations". For each year, the total number of articles containing "shootings excluding firearm laws and regulations" and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles. 
 
 
 ### Population 
-To account for the fact that, the larger the state the more schools the state will have, we have included the population size of each state over all the years as a confounding varibale in our analysis. The dataset was obtained from _____________________________. The dataset contained the total number of population for each state over the years 1970 t0 2019. 
+To account for the fact that, the larger the state the more schools the state will have, we have included the population size of each state over all the years as a confounding variable in our analysis. The dataset was obtained from the [U.S. Census Bureau](https://scholar.harvard.edu/files/awatanabe/files/us_state_population_estimate_technical_notev1.pdf?fbclid=IwAR2VQnO9wWk1dlJT01_8LTqdTP4qet8wACZTIBJ9NpFbkyn_3-o1yM1bGRw). The dataset contained populations by over the years 1970 to 2019. 
 
 
 
