@@ -270,8 +270,8 @@ div.tocify {
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<div id="school-shooting-dataset" class="section level3">
-<h3>School Shooting Dataset</h3>
+<div id="school-shootings" class="section level3">
+<h3>School Shootings</h3>
 <p>The dataset was obtained from the <a href="https://www.chds.us/ssdb/dataset/">Center for Homeland Defense and Security website</a>. It contained details about the school shootings incidents that took place in the United States over the years 1970 to 2019. The data were gather from different sources such as: newspaper article, online news report, court records or police report, and hundreds of news sources, statement/interview from law enforcement official, news report on court ruling. Each row of the dataset indicated an incident that occur at a specific date and time. The dataset contained some insightful variables such as:</p>
 <ul>
 <li>Location of indcident</li>
@@ -296,12 +296,12 @@ div.tocify {
 </ol>
 <p>We determined that observations with a reliability score of 1 may not be accurate, and hence discarded these observations from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as “Accidental” was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occured in each State per year was calculated.</p>
 </div>
-<div id="grade-dataset" class="section level3">
-<h3>Grade Dataset</h3>
+<div id="state-grades-gun-policy" class="section level3">
+<h3>State Grades (Gun Policy)</h3>
 <p>The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the <a href="https://lawcenter.giffords.org/scorecard/">Guifford Law Center</a>. For each state the annual score was graded onan A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into gpa scale. So the grades for each state was tranformed into a gpa score using the school gpa grading scale (out of 4.00).</p>
 </div>
-<div id="law-dataset" class="section level3">
-<h3>Law Dataset</h3>
+<div id="gun-laws" class="section level3">
+<h3>Gun Laws</h3>
 <p>The analysis also wished to investigate the impact of different gun laws separately and thus considered the RAND dataset. The dataset was obtained from the ______________ website. The dataset included information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables which informs about the type of the law, whether the change was restrictive or permissive, effective date and end date. There were total 12 types of laws and each change were designated as either restrictve or permissive. As some of the laws were change in the middle of the year, the year was rounded to the nearest year. Each permissive law was assigned the value -1 and each restrictive law was assigned as +1. Then for each category and for each state the total number of permissive and restrictive laws were measured and a total score was calculated. The different types of laws were further merged and categorized in 4 categories into the following manner:</p>
 <ol style="list-style-type: decimal">
 <li>Access: Minimum age, Prohibited Possessor, Child Access</li>
@@ -310,12 +310,12 @@ div.tocify {
 <li>Transport: Castle Docrine, Open carrying not restricted, Carrying a concealed weapon</li>
 </ol>
 </div>
-<div id="mental-health-data" class="section level3">
-<h3>Mental Health Data</h3>
+<div id="mental-health" class="section level3">
+<h3>Mental Health</h3>
 <p>The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe menatl disorder. The dataset was obtained from_____________. The dataset contained the precentage of youths who has been diagnosed with major depression but who did not receieve any mental health treatment for each state over the years 2010 to 2016.</p>
 </div>
-<div id="cdc-survey-data" class="section level3">
-<h3>CDC Survey data</h3>
+<div id="cdc-survey" class="section level3">
+<h3>CDC Survey</h3>
 <p>The literature reviews stipulates that mental health, school satety and bullying all play a vital roles in school shooting incidences. To analyze the dynamics of school shootings, we gathered data from a CDC survey given to students in 37 states bianually from 1991 to 2015. The data were obtained from the R package <a href="https://github.com/hadley/yrbss"><code>yrbss</code></a>. The dataset includes proportions of students answering “yes” to a number of questions. We selected and included in the analysis the following questions:</p>
 <ol style="list-style-type: decimal">
 <li>Carried a weapon</li>
@@ -369,22 +369,25 @@ div.tocify {
 </ol>
 <p>Data for questions regarding bullying were not present in the dataset prior to 2010. We assume the surveys were updated to include measures of bullying after the initial writing of the survey. Thus we only included the data from the year 2010. The dataset also contains data for every other year. So for the interpolation, we imputed the missing observation with the mean of the previous and next year values. As the dataset contains data up to the year 2016 and our school shooting dataset contained data till 2018, we imputed the values for those years using the predicted values of the linear regression model. To get an overall score for each state over all the years, we calculated the median score for each state. Though the mean and the median score did not appear to be much different, the mean may be affected by extreme values.</p>
 </div>
-<div id="poverty-data" class="section level3">
-<h3>Poverty Data</h3>
+<div id="poverty" class="section level3">
+<h3>Poverty</h3>
 <p>The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalence rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016.</p>
 </div>
-<div id="bullying-law-data" class="section level3">
-<h3>Bullying Law Data</h3>
+<div id="bullying-laws" class="section level3">
+<h3>Bullying Laws</h3>
 <p>Bullying in school has been identified one of the significant causes behind school shootings. Some of states addressed that issue and have implemented several judicial laws to prevent school bullying. Though almost all the states have laws to prevent bullying the degree of rigidity varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retrieved from <a href="https://www.stopbullying.gov/laws/index.html">stopbullying.gov</a>. The dataset mentions about 14 different components of Bullying laws that each state may or may not have. Thus out of the total score 14, we calculated a total score for each state based on how many components of bullying laws were present in each state. unfortunately the data was available only for the year 2010. Thus we have included the dataset in the analysis assuming that the score remains the same over the time period</p>
 </div>
-<div id="media-data" class="section level3">
-<h3>Media Data</h3>
+<div id="media" class="section level3">
+<h3>Media</h3>
 <p>As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from a <a href="https://www.nature.com/articles/s41562-019-0636-0?fbclid=IwAR2mCmg1gQ1OOccfjklm4HKzOMcpg24Oz2C8ZOebg12HaBWwr6Up1YxosF4#data-availability">Nature article</a> about media coverage and firearm acqusition after mass shootings (data available on the following <a href="https://github.com/Causality-Research/Firearms">GitHub repository</a>). The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: “firearm laws and regulations”, “unemployment”and “shootings excluding firearm laws and regulations”. For each year, the total number of articles containing “shootings excluding firearm laws and regulations” and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles.</p>
 </div>
 <div id="population" class="section level3">
 <h3>Population</h3>
 <p>To account for the fact that, the larger the state the more schools the state will have, we have included the population size of each state over all the years as a confounding variable in our analysis. The dataset was obtained from the <a href="https://scholar.harvard.edu/files/awatanabe/files/us_state_population_estimate_technical_notev1.pdf?fbclid=IwAR2VQnO9wWk1dlJT01_8LTqdTP4qet8wACZTIBJ9NpFbkyn_3-o1yM1bGRw">U.S. Census Bureau</a>. The dataset contained populations by over the years 1970 to 2019.</p>
 </div>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
