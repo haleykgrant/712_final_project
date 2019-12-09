@@ -11,15 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(readr)
 library(tidyverse)
-library(ggplot2)
-library(janitor)
-library(tidycensus)
-library(viridis) 
-library(tscount)
-library(yrbss)
-library(zoo)
-library(purrr)
-
 ```
 
 
@@ -32,8 +23,13 @@ In September, 2014, the Federal Bureau of Investigation (FBI) released a report 
 
 
 ## Related Work
-According to an analysis by “Washington Post”, 233,000 students have experienced gun violence in school since the Columbine High massacre in 1999 and the number is increasing alarmingly$^{[5]}$. Such traumatic experiences leave a strong affect on the mental health of the survivors. Research indicates that exposure to assaultive violence, or learning that a close friend or loved one has faced such exposure, is associated with an increased incidence of a range of negative mental health outcomes, among them posttraumatic stress disorder (PTSD) and major depression $^{[6,7]}$. In order to effectively address gun violence in schools, it should be first acknowledged that the fact,it is a gun violence problem. Though there have been many comprehensive school safety plans proposed over the last 20 years, very few have effectively and thoroughly addressed the issue that is common in all school shootings: easy access to guns by those at risk of committing harm.  It has been found that two thirds of school shooters obtained their firearms from their own home, or the home of a relative $^{[8]}$. Studies have shown that the firearm homicide and suicide rates in the US are several times higher than that of any other industrialized country $^{[9]}$, and the patterns appear to be due to higher rates of firearm ownership in the US compared with other industrialized countries $^{[10]}$. It was shocking to learn that the pediatric firearm mortality rate is five times higher in the United States compared with any other industrialized country$^{[11]}$, and 87% of all children age 0 to 14 worldwide killed by firearms are children living in the US $^{[9]}$, despite the fact that less than 5% of the world’s children live in the US $^{[12]}$. Studies have confirmed that there has been significant increase in the number of gun rights and gun crimes in the United States in current years and many gun victims are exposed to violence in ways that are accidental, incidental, relational, or environmental$^{[13]}$ which questions the effectiveness of the exisiting gun  policies in different States in the United States. 
+According to an analysis by “Washington Post”, 233,000 students have experienced gun violence in school since the Columbine High massacre in 1999 and the number is increasing alarmingly$^{[5]}$. Such traumatic experiences leave a strong affect on the mental health of the survivors. Research indicates that exposure to assaultive violence, or learning that a close friend or loved one has faced such exposure, is associated with an increased incidence of a range of negative mental health outcomes, among them posttraumatic stress disorder (PTSD) and major depression $^{[6,7]}$. 
 
+In order to effectively address gun violence in schools, it should be first acknowledged that the fact,it is a gun violence problem. Though there have been many comprehensive school safety plans proposed over the last 20 years, very few have effectively and thoroughly addressed the issue that is common in all school shootings: easy access to guns by those at risk of committing harm.  It has been found that two thirds of school shooters obtained their firearms from their own home, or the home of a relative $^{[8]}$. Studies have shown that the firearm homicide and suicide rates in the US are several times higher than that of any other industrialized country $^{[9]}$, and the patterns appear to be due to higher rates of firearm ownership in the US compared with other industrialized countries $^{[10]}$. It was shocking to learn that the pediatric firearm mortality rate is five times higher in the United States compared with any other industrialized country$^{[11]}$, and 87% of all children age 0 to 14 worldwide killed by firearms are children living in the US $^{[9]}$, despite the fact that less than 5% of the world’s children live in the US $^{[12]}$. Studies have confirmed that there has been significant increase in the number of gun rights and gun crimes in the United States in current years and many gun victims are exposed to violence in ways that are accidental, incidental, relational, or environmental$^{[13]}$ which questions the effectiveness of the exisiting gun  policies in different States in the United States. 
+
+While studing the dynamics of school shooting, student mental health plays a vital role. Studies showed that around 34% (almost one third) of the active shooters have ever evaluated their mental health conditions, only 17% (almost one fifth) of the active shooters were diagnosed with mental illness, although almost 80% of the shooters had a record of attempting suicides or have thought of commiting suicide before their attack$^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorder past history of suffering from extreme depression, sadness, hopelessnes and desperation before their attack $^{[15]}$. Mental health condition is also very closely related to the financial stability. Economic insecurities can increase the anxiety, frustration, depression, hopelessness and also make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
+
+Though it may come as shocking, studies have sound that media coverage of shooters instigate more future school shooting incidences. A recent study have found significantly positive effect of media coverage of shooting incidences with the number of subsequent shootings and concluded that the effect lasts for following 4-10 days $^{[17]}$. The criminology professor Adam Lankford corroborated that the media coverage of school shooters can encourage future shooter and they are more likely to attempt such an incident $^{[17, 18]}$. 
 
 
 ## Hypothesis Questions
@@ -55,6 +51,10 @@ School shooting is a complex phenomen as it is connected with various crucial co
 ### School Shooting Dataset
 The dataset was obtained from the ______________ website. It contained details about the school shootings incidents that took place in the United States over the years 1970 to 2019. The data were gather from different sources such as: newspaper article, online news report, court records or police report, and hundreds of news sources, statement/interview from law enforcement official, news report on court ruling. Each row of the dataset indicated an incident that occur at a specific date and time. The dataset contained some insightful variables such as: location, age/gender/race of shooter, number of victims, number of wounded, age of victim(s), age of the shooter, time of day, day of week, motive/category, history of bullying, history of domestic violence, weapon type, etc. The dataset contained a variable named "Reliability Score" which indicated the of sources of about the incidents. Reliability score=1 indicated:Independent Single Author/Moderator Blog, report/list lacking citations, or cited source cannot be located, which may not reliable. Hence those observations were discarded from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as "Accidental" was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occured in each State per year was calculated. 
 
+
+### Grade Dataset
+The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from https://lawcenter.giffords.org/scorecard/. For each state the annual score was graded onan A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into gpa scale. So the grades for each state was tranformed into a gpa score using the school gpa grading scale (out of 4.00).  
+  
 ### Law Dataset
 The analysis also wished to investigate the impact of different gun laws separately and thus considered the RAND dataset. The dataset was obtained from the ______________ website. The dataset included information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables which informs about the type of the law, whether the change was restrictive or permissive, effective date and end date. There were total 12 types of laws and each change were designated as either restrictve or permissive. As some of the laws were change in the middle of the year, the year was rounded to the nearest year. Each permissive law was assigned  the value -1 and each restrictive law was assigned as +1. Then for each category and for each state the total number of permissive and restrictive laws were measured and a total score was calculated. The different types of laws were further merged and categorized in 4 categories into the following manner:
 
@@ -64,9 +64,11 @@ The analysis also wished to investigate the impact of different gun laws separat
 4. Transport: Castle Docrine, Open carrying not restricted, Carrying a concealed weapon
 
 
-### CDC Survey data
+### Mental Health Data
+The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe menatl disorder. The dataset was obtained from_____________. The dataset contained the precentage of youths who has been diagnosed with major depression but who did not receieve any mental health treatment for each state over the years 2010 to 2016.  
 
-The literature reviews stipulates that Mental health, School satety and Bullying plays a vital roles in school shooting incidences. To analyze different dynamics of school shooting, we gather the CDC Survey dataset which contains questions that gives an overview of the mentioned aspects for each state over the years from 1970 to 2018. The dataset was obtained from ___________. The dataset includes several questions among which the following question has been selected and included in the analysis: 
+### CDC Survey data
+The literature reviews stipulates that Mental health, School satety and Bullying plays a vital roles in school shooting incidences. To analyze different dynamics of school shooting, we gather the CDC Survey dataset which contains questions that gives an overview of the mentioned aspects for each state over the years from 1970 to 2015. The dataset was obtained from ___________. The dataset includes several questions among which the following question has been selected and included in the analysis: 
 
 1. qn13: Carried a weapon
 2. qn14: Carried a gun
@@ -86,6 +88,31 @@ The literature reviews stipulates that Mental health, School satety and Bullying
 16. qnbullyweight:	Been teased b/c of weight past 12 mos
 17. qnbullygay:	Been teased b/c labeled GLB past 12 mos
 
+For each question, the total number of participants who answered the question was availbale. Hence for each question the proportion of partipants who answered in affirmative was calculated. As some of the questions appears to be similar and indicate a common factor, the mentioned questions were then categorized in the following manner:
+
+1. Suicidality: Felt sad or hopeless, Seriously considered attempting suicide, Made a plan about how they would attempt suicide, Attempted suicide, Attempted suicide that resulted in an injury, poisoning, or overdose.
+2. School Safety: Carried a weapon, Carried a gun, Carried a weapon on school property, Did not go to school because they felt unsafe at school or on their way to or from school, Were threatened or injured with a weapon on school property. 
+3. Being in a fight: Were in a physical fight, Were injured in a physical fight, Were in a physical fight on school property
+4. Bullying: Were bullied on school property, Were electronically bullied, Been teased b/c of weight past 12 months, Been teased b/c labeled GLB past 12 months
+
+The questions  regarding bullying were not present in the dataset prior to 2010. We are assuming that the recent questionarire has added these question. Thus we only included the data from the year 2010. The dataset also contains data for every other year. So for the interpolation, we imputed the missing observation with the mean of the previous and next year values. As the dataset contains data up to the year 2016 and our school shooting dataset contained data till 2018, we imputed the values for those years using the predicted values of the linear regression model. To get an overall score for each state over all the years, we calculated the median score for each state. Though the mean and the median score did not appear to be much different, the mean may be affected by extreme values. 
+
+
+### Poverty Data
+The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalance rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016. 
+
+
+### Bullying Law Data
+Bullying in school has been identified one of the significant causes behind school shootings. Some of states addressed that issue and have implemented several judicial laws to prevent school bullying. Though almost all the states have laws to prevent bullying the degree of rigidity varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retreived from: https://www.stopbullying.gov/laws/index.html. The dataset mentions about 14 different components of Bullying laws that each state may or may not have. Thus out of the total score 14, we calculated a total score for each state based on how many components of bullying laws were present in each state. unfortunately the data was available only for the year 2010. Thus we have included the dataset in the analysis assuming that the score remains the same over the time period
+
+
+### Media Data
+
+As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from ___________________. The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment"and "shootings excluding firearm laws and regulations". For each year, the total number of articles containing "shootings excluding firearm laws and regulations" and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles. (not sure how you calculate that variable)
+
+
+### Population 
+To account for the fact that, the larger the state the more schools the state will have, we have included the population size of each state over all the years as a confounding varibale in our analysis. The dataset was obtained from _____________________________. The dataset contained the total number of population for each state over the years 1970 t0 2019. 
 
 
 
@@ -118,7 +145,13 @@ The literature reviews stipulates that Mental health, School satety and Bullying
 
 13. Metzl, J. M., & MacLeish, K. T. (2015). Mental illness, mass shootings, and the politics of American firearms. American journal of public health, 105(2), 240-249.
 
+14. Vossekuil, B., Fein, R. A., Reddy, M., Borum, R., & Modzeleski, W. (2002). The final report and findings of the safe school initiative: Implications for the prevention of school attacks in the United States. Washington, DC: U.S. Secret Service and U.S. Department of Education.
 
+15. Lee, J. H. (2013). School shootings in the U.S. public schools: Analysis through the eyes of an educator. Review of Higher Education and Self-Learning, 6, 88–120.
 
+16. Pah, A. R., Hagan, J., Jennings, A. L., Jain, A., Albrecht, K., Hockenberry, A. J., & Amaral, L. A. N. (2017). Economic insecurity and the rise in gun violence at US schools. Nature Human Behaviour, 1(2), 0040.
 
+17. Jetter, M., & Walker, J. (2018). The Effect of Media Coverage on Mass Shootings.
+
+18. Christensen, J. (2017). Why the US has the most mass shootings. CNN, published August 27, 2015.
 
