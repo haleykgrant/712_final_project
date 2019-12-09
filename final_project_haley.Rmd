@@ -20,6 +20,9 @@ library(tscount)
 library(yrbss)
 library(zoo)
 library(purrr)
+library(gganimate)
+library(usmap)
+library(maps)
 
 ```
 
@@ -56,7 +59,8 @@ ss = read_csv("ss_data.csv")%>%
   select(-X1)%>%
   mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))%>%
   mutate(state = ifelse(state == "St. Croix, US Virgin Islands","St.Croix",state))%>%
-  distinct_at(.vars = c(1:24), .keep_all = T)
+  distinct_at(.vars = c(1:24), .keep_all = T)%>%
+  filter(category != "Accident")
 ```
 
 ## Population data
@@ -565,11 +569,24 @@ ss_counts = left_join(ss_counts, survey_combined, by = c("state","year"))%>%
 ```
 
 ```{r}
-rand.count.data = left_join(rand.count.data,states, by = c("state"="state.name"))%>%
-  select(-c(state,`0_Permissive`,`0_Restrictive`))%>%
+
+
+rand.count.data = read_csv("cleaned.rand.csv")%>%
+  select(-X1)%>%
+  left_join(states, by = c("state"= "state.name"))%>%
+  select(-state)%>%
   rename(state = state.abb)
 
 ss_counts = left_join(ss_counts,rand.count.data, by = c("state","year"))
+
+
+
+ss_counts = ss_counts%>%
+  mutate(access_laws = -1*(age_permissive-age_restrictive+child_access_permissive-child_access_restrictive+prohibited_possessor_permissive-prohibited_possessor_restrictive))%>%
+  mutate(transport= -1*(castle_doctrine_permissive-castle_doctrine_restrictive+open_carry_permissive-open_carry_restrictive+carrying_permissive-carrying_permissive))%>%
+  mutate(screening = -1*(background_check_permissive- background_check_restrictive + waiting_period_permissive- waiting_period_restrictive + permit_permissive - permit_restrictive + registration_permissive - registration_restrictive + safety_training_permissive - safety_training_restrictive + dealer_license_permissive - dealer_license_restrictive + one_gun_per_permissive - one_gun_per_restrictive))%>%
+  mutate(ban = -ban_permissive+ban_restrictive)%>%
+  select(-c(36:63))
 
 ```
 
@@ -630,18 +647,23 @@ table(ss$state)%>%
 ```
 
 
+
+
+
+
 ### Grade plots
 ```{r fig.height = 8, fig.width = 10, warning=FALSE}
 
 cc = scales::seq_gradient_pal("green", "red", "Lab")(seq(0,1,length.out=12))
-
+cc2 = scales::seq_gradient_pal("green", "red", "Lab")(seq(0,1,length.out=5))
 
 
 # This will handle the ordering
 d <- ss_counts %>% 
   filter(year %in% seq(2012,2018,by=1))%>%
+  mutate(grade = substr(grade,1,1))%>%
   ungroup() %>%   # As a precaution / handle in a separate .grouped_df method
-  arrange(year, incident_count) %>%   # arrange by facet variables and continuous values
+  arrange(year, grade) %>%   # arrange by facet variables and continuous values
   mutate(.r = row_number()) # Add a row number variable
 
 ggplot(d, aes(x = .r, y= incident_count, fill = grade)) +  # Use .r instead of x
@@ -654,13 +676,81 @@ ggplot(d, aes(x = .r, y= incident_count, fill = grade)) +  # Use .r instead of x
     breaks = d$.r,     # notice need to reuse data frame
     labels = d$state
   )+
-  scale_fill_manual(values = cc, name = "Grade")+
-  scale_color_manual(values = cc, guide = FALSE)+
+  labs(title = "Incident Count by Grade", x = "State", y = "School Shootings")+
+  scale_fill_manual(values = cc2, name = "Grade")+
+  scale_color_manual(values = cc2, guide = FALSE)+
   theme_bw()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5), legend.position = c(0.7,.15), legend.direction = "horizontal",legend.key.size = unit(1.5,"line"), legend.text = element_text(size = 8), legend.title = element_text(size = 10))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5), legend.position = c(0.7,.15), legend.direction = "horizontal",legend.key.size = unit(1.5,"line"), legend.text = element_text(size = 8), legend.title = element_text(size = 10),plot.title = element_text(hjust = 0.5))
+
+### Outcome plot: 
+ss_counts%>%
+  group_by(year)%>%
+  summarise(ss = sum(incident_count))%>%
+  ggplot(aes(x = year, y = ss))+
+  geom_line(color = "red")+
+  labs(x = "Year", y = "School Shootings", title = "School Shootings in the U.S.")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+```{r}
+
+
+
+grades = left_join(grades, gpa_convert, by = c("grade"="letter_grade"))
+
+dat_loc= map_data("state")%>%
+  mutate(sts=toupper(region))
+
+b=full_join(grades%>%mutate(state = tolower(state)), dat_loc, by=c("state"="region"))
+b = b%>%mutate(year = as.numeric(year))%>%filter(!is.na(year))%>%select(-subregion)
+b = b[complete.cases(b),]
+
+map_plts = ggplot(data = b, aes(x = long, y = lat, group = group))+
+  geom_polygon(aes(fill = gpa), color = "white")+
+  scale_fill_viridis(option = "D", name = "GPA")+
+  labs(title = "Grade Changes by Year", subtitle = 'Year: {frame_time}', x = NULL, y = NULL)+
+  theme_bw()+
+  theme(line = element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank(), plot.title = element_text(hjust = 0.5))+
+  transition_time(year, range = c(2012,2018))
+
+animate(map_plts, nframes = 7, fps = 1)
+anim_save("state_grade_animation.GIF")
+
+dat_loc = left_join(dat_loc,states%>%mutate(state.name = tolower(state.name)), by = c("region"="state.name"))
+b2=full_join(ss_counts%>%ungroup()%>%filter(year>=2007)%>%filter(!(state%in%c("AK","HI")))%>%select(state,year,access_laws,transport,screening,ban), dat_loc, by=c("state"="state.abb"))%>%
+  select(-subregion)%>%
+  gather(key = "law_class", value = "number_in_effect", c(3:6))
+b2 = b2[complete.cases(b2),]
+
+
+law.labs <- c("Access Laws", "Bans","Screening Laws", "Transport Laws")
+names(law.labs) <- c("access_laws", "ban","screening","transport")
+
+map_plts_law = ggplot(data = b2, aes(x = long, y = lat, group = group))+
+  geom_polygon(aes(fill = number_in_effect), color = "white")+
+  scale_fill_viridis(option = "D", name = "Laws in\nEffect\n(R-P)")+
+  labs(title = "Law Changes by Year",subtitle = 'Year: {frame_time}', x = NULL, y = NULL)+
+  theme_bw()+
+  facet_wrap(.~law_class, labeller = labeller(law_class = law.labs))+
+  theme(line = element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank(), plot.title = element_text(hjust = 0.5))+
+  transition_time(year, range = c(2007,2019))
+
+animate(map_plts_law, nframes = 13, fps = 1)
+anim_save("state_law_animation.GIF")
+
+
+
+
+
+
 
 
 ```
+
+
 
 ```{r warning=FALSE}
 ss_counts%>%
@@ -823,17 +913,43 @@ bullying_survey%>%
   data.frame()%>%
   kableExtra::kable(caption = "Observations per Question")
 
+
+survey_combined%>%
+  gather(key = score_type, percent, c(3,5,7,9))%>%
+  ggplot(aes(x = state, y = percent, color = score_type ))+
+  geom_boxplot()+
+  scale_color_viridis_d()+
+  facet_wrap(.~score_type)+
+  theme_bw()+
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+  
+
 ```
 
 
 # Model Fitting
 ```{r warning=FALSE}
 
-fit = glm(incident_count~gpa+poverty+bullying_score+mh_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
+
+fit_grade = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
+
+summary(fit_grade)
+
+fit_law = glm(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
+summary(fit_law)
+
+z_fit = pscl::zeroinfl(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), dist  = "poisson", data = ss_counts)
+summary(z_fit)
+
+fit_law_victims = MASS::glm.nb(total_victims ~ prev_year_art + poverty + bullying_score + suicide_score + school_safety_score + fight_score + bully_score + access_laws + 
+    transport + screening + ban+ offset(log(population)), data = ss_counts)
+summary(fit_law_victims)
+1-pchisq(195.70 , df = 184)
 
 
 
-
+plot(DHARMa::simulateResiduals(fit_law))
 
 if(FALSE){
 ts_dat = ss_counts%>%
@@ -845,16 +961,16 @@ ts_dat = ss_counts%>%
 ts_y = ts(ts_dat%>%ungroup()%>%select(incident_count))
 
 ts_x = ts_dat%>%
-  select(c(6,9:44))%>%
+  select(c(6,9:18))%>%
   mutate(population = log(population))%>%
   as.matrix()
 
-ts_fit = tsglm(ts_y, xreg = ts_x, model = list(past_obs = 1, external = TRUE), link = "log", distr = "poisson")
+ts_fit = tsglm(ts_y, xreg = ts_x, model = list(past_obs = 2, external = c(FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE)), link = "log", distr = "poisson")
 
 best_fit = forecast::auto.arima(diff(ts_y), xreg = diff(ts_x))
 
-astsa::sarima(diff(ts_y),p = 0, d = 0, q =0, xreg = diff(ts_x))
-arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x))$coef
+astsa::sarima(diff(ts_y),p = 2, d = 0, q =2, xreg = diff(ts_x))
+arima(diff(ts_y),order = c(2,0,2), xreg = diff(ts_x))$coef
 sqrt(diag(vcov( arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x)))))
 
 cilb= arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x))$coef-sqrt(diag(vcov( arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x)))))
