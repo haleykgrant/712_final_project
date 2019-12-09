@@ -452,7 +452,7 @@ sts[which(sts=="AZB")]="AZ"
 for(y in yrs){
   for(st in sts){
     dat = filter(suicide_qns,(year ==y & state == st))
-    suicide_score = weighted.mean(dat$prop,(1/dat$n), na.rm = TRUE)
+    suicide_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)), na.rm = TRUE)
     samp = mean(dat$n,na.rm = TRUE)
     newrow = data.frame(year = y, state = st, score = suicide_score, n = samp)
     suicide = bind_rows(suicide,newrow)
@@ -467,7 +467,7 @@ fight_qns = bullying_survey%>%
 for(y in yrs){
   for(st in sts){
     dat = filter(fight_qns,(year ==y & state == st))
-    fight_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    fight_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)),, na.rm = TRUE)
     samp = mean(dat$n,na.rm = TRUE)
     newrow = data.frame(year = y, state = st, score = fight_score, n = samp)
     fight = bind_rows(fight,newrow)
@@ -482,7 +482,7 @@ safety_qns = bullying_survey%>%
 for(y in yrs){
   for(st in sts){
     dat = filter(safety_qns,(year ==y & state == st))
-    safety_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    safety_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)), na.rm = TRUE)
     samp = mean(dat$n,na.rm = TRUE)
     newrow = data.frame(year = y, state = st, score = safety_score, n = samp)
     safety = bind_rows(safety,newrow)
@@ -497,7 +497,7 @@ bully_qns = bullying_survey%>%
 for(y in yrs){
   for(st in sts){
     dat = filter(bully_qns,(year ==y & state == st))
-    bully_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    bully_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)), na.rm = TRUE)
     samp = mean(dat$n,na.rm = TRUE)
     newrow = data.frame(year = y, state = st, score = bully_score, n = samp)
     bull = bind_rows(bull,newrow)
