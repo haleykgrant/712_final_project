@@ -677,8 +677,8 @@ ggplot(d, aes(x = .r, y= incident_count, fill = grade)) +  # Use .r instead of x
     labels = d$state
   )+
   labs(title = "Incident Count by Grade", x = "State", y = "School Shootings")+
-  scale_fill_manual(values = cc2, name = "Grade")+
-  scale_color_manual(values = cc2, guide = FALSE)+
+  scale_fill_viridis_d( name = "Grade", direction = -1)+
+  scale_color_viridis_d( guide = FALSE, direction = -1)+
   theme_bw()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5), legend.position = c(0.7,.15), legend.direction = "horizontal",legend.key.size = unit(1.5,"line"), legend.text = element_text(size = 8), legend.title = element_text(size = 10),plot.title = element_text(hjust = 0.5))
 
@@ -691,12 +691,19 @@ ss_counts%>%
   labs(x = "Year", y = "School Shootings", title = "School Shootings in the U.S.")+
   theme_bw()+
   theme(plot.title = element_text(hjust = 0.5))
+
+
+ss_counts%>%
+  ggplot(aes(x = reorder(state, population, FUN = mean), y = incident_count, color = state))+
+  geom_boxplot()+
+  theme_bw()+
+  coord_flip()+
+  theme(legend.position = "none")
 ```
 
 
 
-```{r}
-
+```{r warning=FALSE, message=FALSE}
 
 
 grades = left_join(grades, gpa_convert, by = c("grade"="letter_grade"))
