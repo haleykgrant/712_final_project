@@ -452,7 +452,7 @@ sts[which(sts=="AZB")]="AZ"
 for(y in yrs){
   for(st in sts){
     dat = filter(suicide_qns,(year ==y & state == st))
-    suicide_score = weighted.mean(dat$prop,1/(dat$n), na.rm = TRUE)
+    suicide_score = weighted.mean(dat$prop,(1/dat$n), na.rm = TRUE)
     samp = mean(dat$n,na.rm = TRUE)
     newrow = data.frame(year = y, state = st, score = suicide_score, n = samp)
     suicide = bind_rows(suicide,newrow)
@@ -514,6 +514,10 @@ survey_combined = bind_cols(suicide,safety, fight, bull)%>%
   arrange(state)%>%
   mutate(state = ifelse(state == "AZB","AZ",state))
 
+
+```
+
+```{r warning=FALSE, message = FALSE}
 survey_combined = survey_combined%>%
   group_by(state)%>%
   mutate(suicide_score =ifelse(year<2016,ifelse(is.na(suicide_score), na.locf(suicide_score)/2+na.locf(suicide_score, fromLast = TRUE)/2,suicide_score),
@@ -726,8 +730,15 @@ map_plts = ggplot(data = b, aes(x = long, y = lat, group = group))+
   transition_time(year, range = c(2012,2018))
 
 animate(map_plts, nframes = 7, fps = 1)
+
 anim_save("state_grade_animation.GIF")
 
+
+
+```
+
+```{r warning=FALSE, message=FALSE}
+ 
 dat_loc = left_join(dat_loc,states%>%mutate(state.name = tolower(state.name)), by = c("region"="state.name"))
 b2=full_join(ss_counts%>%ungroup()%>%filter(year>=2007)%>%filter(!(state%in%c("AK","HI")))%>%select(state,year,access_laws,transport,screening,ban), dat_loc, by=c("state"="state.abb"))%>%
   select(-subregion)%>%
@@ -748,6 +759,7 @@ map_plts_law = ggplot(data = b2, aes(x = long, y = lat, group = group))+
   transition_time(year, range = c(2007,2019))
 
 animate(map_plts_law, nframes = 13, fps = 1)
+
 anim_save("state_law_animation.GIF")
 
 
@@ -830,19 +842,21 @@ media%>%
   theme_bw()
 
 media%>%
-  ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations, x= as.numeric(year), color = as.numeric(year)))+
+    mutate(date = as.Date(zoo::as.yearmon(paste(year,"-",month, sep = ""))))%>%
+  ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations, x= date, color = year))+
   geom_point()+
   geom_jitter()+
-  labs(y = "Monthly Articles",x =  "Year")+
-  theme(legend.position = "none")+
-  theme_bw()
+  labs(y = "Monthly Articles",x =  "Year", title = "Media Coverage of Shootings", subtitle = "Articles in NYT and Washington Post Regarding Shootings")+
+  scale_color_continuous(name = "Year")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, size = 8))
 
 media%>%
-  ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations/yearly_shootings, x= as.numeric(year), color = as.numeric(year)))+
+ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations/yearly_shootings, x= as.numeric(year)))+
   geom_point()+
   geom_jitter()+
   labs(y = "Monthly Articles/Yearly Mass Shootings",x =  "Year")+
-  theme(legend.position = "none")+
+  scale_color_continuous(name = "Year")+
   theme_bw()
 
 media%>%
@@ -888,6 +902,7 @@ for(x in unique(ss_counts$state)){
 ss_counts%>%
   group_by(year)%>%
   summarise(yearly_incidents = sum(incident_count), prev_year_art = prev_year_art[1] )%>%
+  filter(year %in% seq(1999,2017, by = 1))%>%
   ggplot(aes(x = year, y = yearly_incidents, fill = prev_year_art))+geom_bar(stat = "identity")+
   labs(y = "Yearly School Shootings", x = "Year")+
   scale_fill_viridis(option = "D", name = "Articles in previous year")+
