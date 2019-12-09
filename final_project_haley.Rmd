@@ -560,7 +560,9 @@ survey_combined = survey_combined%>%
   mutate(n = ifelse(is.na(n), median(n, na.rm = T),n))%>%
   mutate(n1 = ifelse(is.na(n1), median(n1, na.rm = T),n1))%>%
   mutate(n2 = ifelse(is.na(n2), median(n2, na.rm = T),n2))%>%
-  mutate(n3 = ifelse(is.na(n3), median(n3, na.rm = T),n3))
+  mutate(n3 = ifelse(is.na(n3), median(n3, na.rm = T),n3))%>%
+  mutate(school_safety_score = ifelse(school_safety_score<0,0,school_safety_score))%>%
+  mutate(fight_score = ifelse(fight_score<0,0,fight_score))
 
 ss_counts = left_join(ss_counts, survey_combined, by = c("state","year"))%>%
   filter(state != "DC")
@@ -920,16 +922,19 @@ bullying_survey%>%
   data.frame()%>%
   kableExtra::kable(caption = "Observations per Question")
 
+surv.labs = c("Bullying Score", "Physical Altercation Score", "School Danger Perception Score", "Suicidal Thoughts or Actions Score")
+names(surv.labs)= c("bully_score", "fight_score", "school_safety_score","suicide_score")
 
 survey_combined%>%
   gather(key = score_type, percent, c(3,5,7,9))%>%
   ggplot(aes(x = state, y = percent, color = score_type ))+
   geom_boxplot()+
   scale_color_viridis_d()+
-  facet_wrap(.~score_type)+
+  labs(title = "Survey Reponses by State", x = "State", y = "Percent Answering 'Yes'")+
+  facet_wrap(.~score_type,labeller = labeller(score_type = surv.labs))+
   theme_bw()+
   theme(legend.position = "none")+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5))
   
 
 ```
