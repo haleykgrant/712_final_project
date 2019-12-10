@@ -928,6 +928,28 @@ survey_combined_raw%>%
 
 ## Model Fitting
 
+We next turn to fitting a model to explain the incidence of school shootings in the United States. We first choose to fit a Poisson generalized linear model (GLM) with school shooting count (by state and year) as the outcome of interest. Poisson GLMs are commonly-used for count data, which is why we started with these models. Our choice was then validated by a number of model diagnostic/goodness-of-fit tests (presented below).
+
+We include the following variables in the model (each varies by time and/or state):
+
+* State gun policy grade (converted to 4.0 GPA scale)
+* Percent of population living below the poverty line
+* Strength of anti-bullying laws
+* Media coverage in the previous year (number of NYT and WP articles)
+* Time (year)
+* Survey suicide score
+* Survey physical altercations score
+* Survey school safety score (student perception of danger)
+* Survey bullying score (proportion of students experiencing bullying)
+* *Population* (log scale)
+
+__Note__: population was not used as a variable but as an offset term in the model (coefficient not estimated but set to be 1).
+
+More formally, the model is:
+
+$ math equations I don't want to write rn$
+
+
 
 
 ## References
