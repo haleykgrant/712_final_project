@@ -957,7 +957,8 @@ where here for each state $s$ and year $t$ we have that $I_{t,s}$ is the school 
 # fit model written above
 fit_grade = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
 
-kableExtra::kable( broom::tidy(fit_grade), align = "c")
+kableExtra::kable( broom::tidy(fit_grade), align = "c")%>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 
 # 1- to show estimated drop
 exp_change = 1-round(exp(-.3189), digits = 3)
@@ -968,7 +969,7 @@ u = 1-round(exp(-.3189 - 1.96 *.0706502 ), digits = 3)
 
 
 # change from F to A grade (4 point increase in gpa) (1- to show estimated drop)
-f_to_a = 1-round(exp(4*-.3189), digits = 3)
+f_to_a = 1-round(exp(4*-.3189), digits = 4)
 
 # C.I.
 l4 = 1-round(exp(4*-.3189 + 1.96*4*.0706502 ), digits = 3)
@@ -997,7 +998,8 @@ Because we found a statistically significant effect, we wish to look further int
 ```{r law fit}
 fit_law = glm(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
 
-kableExtra::kable( broom::tidy(fit_law), align = "c")
+kableExtra::kable( broom::tidy(fit_law), align = "c", digits = 4)%>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
 
