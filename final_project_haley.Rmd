@@ -32,14 +32,17 @@ library(maps)
 import_raw_data = FALSE
 
 if(import_raw_data){
-
+# read in data from local csv file
 ss = read_csv("../../data_1/school_shootings.csv")
+
+# first row has column names
 colnames(ss) = ss[1,]
+
 ss = ss[-1,]%>%
   clean_names()%>%
-  select(-c(na,na_2))%>%
-  filter(reliability_score_1_5!=1)
+  select(-c(na,na_2))
 
+# columns after row 1426 were shifter in original table
 ss2 = read_csv("../../data_1/ss_pt2.csv")%>%
   select(-X1)
 colnames(ss2)=colnames(ss)[34:ncol(ss)]
@@ -60,7 +63,8 @@ ss = read_csv("ss_data.csv")%>%
   mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))%>%
   mutate(state = ifelse(state == "St. Croix, US Virgin Islands","St.Croix",state))%>%
   distinct_at(.vars = c(1:24), .keep_all = T)%>%
-  filter(category != "Accident")
+  filter(category != "Accident")%>%
+  filter(reliability_score_1_5!=1)
 ```
 
 ## Population data
@@ -515,6 +519,16 @@ survey_combined = bind_cols(suicide,safety, fight, bull)%>%
   mutate(state = ifelse(state == "AZB","AZ",state))
 
 
+
+survey_combined_raw = bind_cols(suicide,safety, fight, bull)%>%
+  select(year, state, score, n, score1, n1, score2, n2, score3, n3)%>%
+  rename(suicide_score = score, school_safety_score = score1, fight_score = score2, bully_score = score3)%>%
+  filter(year>=2007)%>%
+  full_join(st_yr%>%filter(year>=2007))%>%
+  arrange(year)%>%
+  arrange(state)%>%
+  mutate(state = ifelse(state == "AZB","AZ",state))
+
 ```
 
 ```{r warning=FALSE, message = FALSE}
@@ -917,6 +931,22 @@ ggplot(data= bullying_survey%>%filter(year>=2013), aes(x = year, y = prop, groub
   geom_line(position = "jitter")+
   scale_color_viridis_d()+
   theme_bw()
+
+ggplot(data= bullying_survey, aes(x = year, y = prop, color = variable))+
+  geom_point(position = "jitter")+
+  geom_smooth(se=F)+
+  scale_color_viridis_d()+
+  theme_bw()
+
+survey_combined%>%
+  gather(key = "score_type", value = "percent_yes",c(3,5,7,9) )%>%
+ggplot(aes(x = year, y = percent_yes, color = score_type))+
+  geom_point(position = "jitter")+
+  geom_smooth(se=F)+
+  scale_color_viridis_d()+
+  theme_bw()
+
+
 
 ggplot(data= bullying_survey%>%filter(variable %in% qns[9:17]), aes(x = year, y = prop, color = variable))+
   geom_point(position = "jitter")+

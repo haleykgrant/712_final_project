@@ -5,8 +5,10 @@ output:
     highlight: tango
     number_sections: no
     theme: cosmo
-    toc: yes
-    toc_float: yes
+    code_folding: "hide"
+    toc: TRUE
+    toc_float: TRUE
+    
 ---
 
 ```{r setup, include=FALSE}
@@ -17,35 +19,46 @@ knitr::opts_chunk$set(echo = TRUE)
 
 library(readr)
 library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(tidycensus)
+library(viridis) 
+library(tscount)
+library(yrbss)
+library(zoo)
+library(purrr)
+library(gganimate)
+library(usmap)
+library(maps)
 ```
 
 
 
 ## Motivation and Objectives
 
-In September, 2014, the Federal Bureau of Investigation (FBI) released a report “A Study of Active Shooter Incidents in the United States Between 2000 and 2013” stating that the incidence of school and mass shooting incidents has been growing over the past 14 years $^{[1, 2]}$. Very recently on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old open fire at the school, killing 2 people and injuring 3 others $^{[3]}$. On average, mass killings involving firearms occur approximately every two weeks in the US, while school shootings occur on average monthly $^{[4]}$. The increasing trend has raise serious concerns and questions the existing the efficacy of the exisiting gun policies and laws in different States. In depth analysis of the imapct of gun policies of every state on school shooting can aid to establish appropriate interventions from the State legistations regarding gun policies are crucial to prevent such traumatic incidents. This study aims to 
+In September, 2014, the Federal Bureau of Investigation (FBI) released a report “A Study of Active Shooter Incidents in the United States Between 2000 and 2013” stating that the incidence of school and mass shooting incidents has been growing over the past 14 years $^{[1, 2]}$. Very recently on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old open fire at the school, killing 2 people and injuring 3 others $^{[3]}$. On average, mass killings involving firearms occur approximately every two weeks in the US, while school shootings occur on average monthly $^{[4]}$. The increasing trend has raise serious concerns and questions the existing the efficacy of the existing gun policies and laws in different States. In depth analysis of the impact of gun policies of every state on school shooting can aid to establish appropriate interventions from the State legislation regarding gun policies are crucial to prevent such traumatic incidents. This study aims to 
 
 
 
 ## Related Work
-According to an analysis by “Washington Post”, 233,000 students have experienced gun violence in school since the Columbine High massacre in 1999 and the number is increasing alarmingly$^{[5]}$. Such traumatic experiences leave a strong affect on the mental health of the survivors. Research indicates that exposure to assaultive violence, or learning that a close friend or loved one has faced such exposure, is associated with an increased incidence of a range of negative mental health outcomes, among them posttraumatic stress disorder (PTSD) and major depression $^{[6,7]}$. 
+According to an analysis by “Washington Post”, 233,000 students have experienced gun violence in school since the Columbine High massacre in 1999 and the number is increasing alarmingly$^{[5]}$. Such traumatic experiences leave a strong affect on the mental health of the survivors. Research indicates that exposure to assault violence, or learning that a close friend or loved one has faced such exposure, is associated with an increased incidence of a range of negative mental health outcomes, among them posttraumatic stress disorder (PTSD) and major depression $^{[6,7]}$. 
 
-In order to effectively address gun violence in schools, it should be first acknowledged that the fact,it is a gun violence problem. Though there have been many comprehensive school safety plans proposed over the last 20 years, very few have effectively and thoroughly addressed the issue that is common in all school shootings: easy access to guns by those at risk of committing harm.  It has been found that two thirds of school shooters obtained their firearms from their own home, or the home of a relative $^{[8]}$. Studies have shown that the firearm homicide and suicide rates in the US are several times higher than that of any other industrialized country $^{[9]}$, and the patterns appear to be due to higher rates of firearm ownership in the US compared with other industrialized countries $^{[10]}$. It was shocking to learn that the pediatric firearm mortality rate is five times higher in the United States compared with any other industrialized country$^{[11]}$, and 87% of all children age 0 to 14 worldwide killed by firearms are children living in the US $^{[9]}$, despite the fact that less than 5% of the world’s children live in the US $^{[12]}$. Studies have confirmed that there has been significant increase in the number of gun rights and gun crimes in the United States in current years and many gun victims are exposed to violence in ways that are accidental, incidental, relational, or environmental$^{[13]}$ which questions the effectiveness of the exisiting gun  policies in different States in the United States. 
+In order to effectively address gun violence in schools, it should be first acknowledged that the fact,it is a gun violence problem. Though there have been many comprehensive school safety plans proposed over the last 20 years, very few have effectively and thoroughly addressed the issue that is common in all school shootings: easy access to guns by those at risk of committing harm.  It has been found that two thirds of school shooters obtained their firearms from their own home, or the home of a relative $^{[8]}$. Studies have shown that the firearm homicide and suicide rates in the US are several times higher than that of any other industrialized country $^{[9]}$, and the patterns appear to be due to higher rates of firearm ownership in the US compared with other industrialized countries $^{[10]}$. It was shocking to learn that the pediatric firearm mortality rate is five times higher in the United States compared with any other industrialized country$^{[11]}$, and 87% of all children age 0 to 14 worldwide killed by firearms are children living in the US $^{[9]}$, despite the fact that less than 5% of the world’s children live in the US $^{[12]}$. Studies have confirmed that there has been significant increase in the number of gun rights and gun crimes in the United States in current years and many gun victims are exposed to violence in ways that are accidental, incidental, relational, or environmental$^{[13]}$ which questions the effectiveness of the existing gun  policies in different States in the United States. 
 
-While studing the dynamics of school shooting, student mental health plays a vital role. Studies showed that around 34% (almost one third) of the active shooters have ever evaluated their mental health conditions, only 17% (almost one fifth) of the active shooters were diagnosed with mental illness, although almost 80% of the shooters had a record of attempting suicides or have thought of commiting suicide before their attack$^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorder past history of suffering from extreme depression, sadness, hopelessnes and desperation before their attack $^{[15]}$. Mental health condition is also very closely related to the financial stability. Economic insecurities can increase the anxiety, frustration, depression, hopelessness and also make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
+While studding the dynamics of school shooting, student mental health plays a vital role. Studies showed that around 34% (almost one third) of the active shooters have ever evaluated their mental health conditions, only 17% (almost one fifth) of the active shooters were diagnosed with mental illness, although almost 80% of the shooters had a record of attempting suicides or have thought of commuting suicide before their attack$^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorder past history of suffering from extreme depression, sadness, hopelessness and desperation before their attack $^{[15]}$. Mental health condition is also very closely related to the financial stability. Economic insecurities can increase the anxiety, frustration, depression, hopelessness and also make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
 
 Though it may come as shocking, studies have sound that media coverage of shooters instigate more future school shooting incidences. A recent study have found significantly positive effect of media coverage of shooting incidences with the number of subsequent shootings and concluded that the effect lasts for following 4-10 days $^{[17]}$. The criminology professor Adam Lankford corroborated that the media coverage of school shooters can encourage future shooter and they are more likely to attempt such an incident $^{[17, 18]}$. 
 
 
 ## Hypothesis Questions
-School shooting is a complex phenomen as it is connected with various crucial components such as: mental health, bullying, school saftey measures, socio-economic condition and most importantly availibilty of guns. The goal of the project was to investigate the impact of gun policies on the school schooting incidences for different states. The analysis was designed to provide valuable insights to the state legislators about the impact of gun policies on the school shooting incidents. In order to analyze school shooting in depth, we scrutinized the following aspects of School Shooting within each state over the time period: 
+School shooting is a complex phenomenon as it is connected with various crucial components such as: mental health, bullying, school safety measures, socioeconomic condition and most importantly availability of guns. The goal of the project was to investigate the impact of gun policies on the school scooting incidences for different states. The analysis was designed to provide valuable insights to the state legislators about the impact of gun policies on the school shooting incidents. In order to analyze school shooting in depth, we scrutinized the following aspects of School Shooting within each state over the time period: 
 
 1. Overall Impacts of the gun laws
 2. Affects of bullying laws and prevalence of bullying\
 3. Prevalence of mental illness\
 4. Prevalence of  Bullying\
 5. School Safety Measures\
-6. Affects of Media covergare\
+6. Affects of Media coverage\
 7. Impact of hostility of school environment\
 8. Impact of poverty prevalence rate\
 9. Impact of specific gun laws\
@@ -56,7 +69,7 @@ School shooting is a complex phenomen as it is connected with various crucial co
 ### School Shootings
 The dataset was obtained from the [Center for Homeland Defense and Security website](https://www.chds.us/ssdb/dataset/). It contained details about the school shootings incidents that took place in the United States over the years 1970 to 2019. The data were gather from different sources such as: newspaper article, online news report, court records or police report, and hundreds of news sources, statement/interview from law enforcement official, news report on court ruling. Each row of the dataset indicated an incident that occur at a specific date and time. The dataset contained some insightful variables such as: 
 
-* Location of indcident
+* Location of incident
 * Age/gender/race of shooter
 * Number of victims
 * Number of wounded
@@ -77,26 +90,195 @@ The dataset also contained a variable named *Reliability Score* which indicated 
 5. Court Records or Police Report
 
 
-We determined that observations with a reliability score of 1 may not be accurate, and hence discarded these observations from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as "Accidental" was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occured in each State per year was calculated. 
+We determined that observations with a reliability score of 1 may not be accurate, and hence discarded these observations from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as "Accidental" was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occurred in each State per year was calculated. 
+
+```{r read in and clean data, message=FALSE, warning=FALSE}
+# variable to indicate if raw data should be imported or (if false) cleaned csv should be used
+import_raw_data = FALSE
+
+if(import_raw_data){
+# read in data from local csv file
+ss = read_csv("../../data_1/school_shootings.csv")
+
+# first row has column names
+colnames(ss) = ss[1,]
+
+ss = ss[-1,]%>%
+  clean_names()%>%
+  select(-c(na,na_2))
+
+# columns after row 1426 were shifter in original table
+# read in second data frame to fix this
+ss2 = read_csv("../../data_1/ss_pt2.csv")%>%
+  select(-X1)
+colnames(ss2)=colnames(ss)[34:ncol(ss)]
+
+# update tail of dataframe
+ss[(1426:nrow(ss)),(34:ncol(ss))]=ss2
+
+# fix age class
+ss$shooter_age = as.numeric(ss$shooter_age)
+
+# create cleaned csv file
+write.csv(ss,"ss_data.csv")
+}
+
+# ss is csv file with school shooting data (individual incidents) created above
+ss = read_csv("ss_data.csv")%>%
+  select(-X1)%>%
+  mutate(year = as.numeric(substr(date, (nchar(date)-3),nchar(date))))%>%
+  mutate(state = ifelse(state == "St. Croix, US Virgin Islands", 
+                        "St.Croix",state))%>% #shorten name
+  distinct_at(.vars = c(1:24), .keep_all = T)%>%
+  filter(category != "Accident")%>% # remove accidents from dataset
+  filter(reliability_score_1_5!=1) # remove unreliable data 
+```
+
+```{r}
+sts = unique(ss$state)
+yrs = seq(range(ss$year)[1],range(ss$year)[2],by=1)
+
+st_yr = data.frame(state = rep(sts,length(yrs)), year = sort(rep(yrs,length(sts))))%>%
+  arrange(state)
+
+```
 
 
 ### State Grades (Gun Policy)
-The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the [Guifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score was graded onan A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into gpa scale. So the grades for each state was tranformed into a gpa score using the school gpa grading scale (out of 4.00).  
-  
+The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the [Guifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score was graded on an A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into GPA scale. So the grades for each state was transformed into a GPA score using the school GPA grading scale (out of 4.00).  
+
+```{r policy grade data, message=FALSE, warning=FALSE}
+
+# read in state grade data
+if(import_raw_data){
+# on csv file per year
+
+# 2018
+grades18 = read_csv("../../data_1/2018grades.csv")%>%
+  select(-c(X6,X7))%>%
+  clean_names()%>%
+  select(-gun_death_rate_per_100k)%>%
+  mutate(year = "2018")%>%
+  rename(grade = x2018_grade)%>%
+  select(state,grade,year)
+
+# 2017
+grades17 = read_csv("../../data_1/2017grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2017")%>%
+  rename(grade = x2017_grade)%>%
+  select(state,grade,year)
+
+# 2016
+grades16 = read_csv("../../data_1/2016grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2016")%>%
+  rename(grade = x2016_grade)%>%
+  select(state,grade,year)
+
+# 2015
+grades15 = read_csv("../../data_1/2015grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2015")%>%
+  rename(grade = x2015_grade)%>%
+  select(state,grade,year)
+# add in missing value
+grades15 = rbind(grades15,c("Kansas","F",2015))
+
+# 2014
+grades14 = read_csv("../../data_1/2014grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2014")%>%
+  rename(grade = x2014_grade)%>%
+  select(state,grade,year)
+
+# 2013
+grades13 = read_csv("../../data_1/2013grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2013")%>%
+  rename(grade = x2013_grade)%>%
+  select(state,grade,year)
+
+# 2012
+grades12 = read_csv("../../data_1/2012grades.csv")%>%
+  clean_names()%>%
+  mutate(year = "2012")%>%
+  rename(grade = x2012_grade)%>%
+  select(state,grade,year)
+
+# combine all year data 
+grades = bind_rows(grades18,grades17)%>%
+  bind_rows(grades16)%>%
+  bind_rows(grades15)%>%
+  bind_rows(grades14)%>%
+  bind_rows(grades13)%>%
+  bind_rows(grades12)
+
+# write cleaned csv file
+write.csv(grades,"state_grades.csv")
+}
+
+
+
+grades = read_csv("state_grades.csv")%>%
+  select(-X1)
+
+gpa_convert = data.frame(letter_grade = c("A","A-","B+","B","B-",
+                                          "C+","C","C-","D+","D","D-","F"),
+                         gpa = c(4,3.7,3.3,3,2.7,2.3,2,1.7,1.3,1,0.7,0))
+
+
+
+```
+
+
+
+
+
 ### Gun Laws
-The analysis also wished to investigate the impact of different gun laws separately and thus considered the RAND dataset. The dataset was obtained from the ______________ website. The dataset included information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables which informs about the type of the law, whether the change was restrictive or permissive, effective date and end date. There were total 12 types of laws and each change were designated as either restrictve or permissive. As some of the laws were change in the middle of the year, the year was rounded to the nearest year. Each permissive law was assigned  the value -1 and each restrictive law was assigned as +1. Then for each category and for each state the total number of permissive and restrictive laws were measured and a total score was calculated. The different types of laws were further merged and categorized in 4 categories into the following manner:
+The analysis also wished to investigate the impact of different gun laws separately and thus considered the RAND dataset. The dataset was obtained from the ______________ website. The dataset includes information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables which informs about the type of the law, whether the change was restrictive or permissive, effective date and end date. There are total 12 types of laws and each change was designated as either restrictive or permissive. As some of the laws change in the middle of a year, the year was rounded to the nearest year (cutoff point of July 1st). Each permissive law was assigned  the value -1 and each restrictive law was assigned as +1. Then, for each category and for each state the total number of permissive and restrictive laws were measured and a total score was calculated. The different types of laws were further merged and categorized in 4 categories into the following manner:
 
 1. Access: Minimum age, Prohibited Possessor, Child Access
 2. Screening: Waiting period, Registration, Background checks, Dealer license, Safety training, permit, one gun per month
 3. Ban: Firearm ban
-4. Transport: Castle Docrine, Open carrying not restricted, Carrying a concealed weapon
+4. Transport: Castle Doctrine, Open carrying not restricted, Carrying a concealed weapon
+
+```{r RAND data, message=FALSE, warning=FALSE}
+# data set to go from state names to abbreviations
+states = data.frame(state.name,state.abb)
+dc = data.frame(matrix(ncol= 2, nrow = 1))
+colnames(dc)=colnames(states)
+dc$`state.name` = "District of Columbia"
+dc$`state.abb` = "DC"
+
+states = rbind(states,dc)
+states$state.name = as.character(states$state.name)
+
+
+rand.count.data = read_csv("cleaned.rand.csv")%>%
+  select(-X1)%>%
+  left_join(states, by = c("state"= "state.name"))%>%
+  select(-state)%>%
+  rename(state = state.abb)
+
+
+```
 
 
 ### Mental Health 
-The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe menatl disorder. The dataset was obtained from_____________. The dataset contained the precentage of youths who has been diagnosed with major depression but who did not receieve any mental health treatment for each state over the years 2010 to 2016.  
+The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe mental disorder. The dataset was obtained from_____________. The dataset contained the percentage of youths who has been diagnosed with major depression but who did not receive any mental health treatment for each state over the years 2010 to 2016.  
+
+```{r mental health data, message=FALSE, warning=FALSE}
+mh.data=read.csv("mh.data.csv",stringsAsFactors = FALSE)%>%
+  clean_names()%>%
+  select(-x)%>%
+  left_join(states, by = c("state"="state.name"))%>%
+  select(-state)%>%
+  rename(state = state.abb)
+```
 
 ### CDC Survey 
-The literature reviews stipulates that mental health, school satety and bullying all play a vital roles in school shooting incidences. To analyze the dynamics of school shootings, we gathered data from a CDC survey given to students in 37 states bianually from 1991 to 2015. The data were obtained from the R package [`yrbss`](https://github.com/hadley/yrbss). The dataset includes proportions of students answering "yes" to a number of questions. We selected and included in the analysis the following questions: 
+The literature reviews stipulates that mental health, school satiety and bullying all play a vital roles in school shooting incidences. To analyze the dynamics of school shootings, we gathered data from a CDC survey given to students in 37 states biannually from 1991 to 2015. The data were obtained from the R package [`yrbss`](https://github.com/hadley/yrbss). The dataset includes proportions of students answering "yes" to a number of questions. We selected and included in the analysis the following questions: 
 
 1. Carried a weapon
 2. Carried a gun
@@ -122,7 +304,7 @@ Because many of these questions cover similar topics, we chose to combine the va
     + Felt sad or hopeless, Seriously considered attempting suicide
     + Made a plan about how they would attempt suicide
     + Attempted suicide
-    + Attempted suicide that resulted in an injur, poisoning, or overdose.
+    + Attempted suicide that resulted in an injure, poisoning, or overdose.
 2. __School safety__ : 
     + Carried a weapon
     + Carried a gun
@@ -141,24 +323,610 @@ Because many of these questions cover similar topics, we chose to combine the va
 
 Data for questions regarding bullying were not present in the dataset prior to 2010. We assume the surveys were updated to include measures of bullying after the initial writing of the survey. Thus we only included the data from the year 2010. The dataset also contains data for every other year. So for the interpolation, we imputed the missing observation with the mean of the previous and next year values. As the dataset contains data up to the year 2016 and our school shooting dataset contained data till 2018, we imputed the values for those years using the predicted values of the linear regression model. To get an overall score for each state over all the years, we calculated the median score for each state. Though the mean and the median score did not appear to be much different, the mean may be affected by extreme values. 
 
+```{r CDC survey data, message=FALSE, warning=FALSE}
+# questions 
+qns = c("qn13","qn14","qn15","qn16","qn17","qn18","qn19","qn20","qn24","qn25","qn26","qn27","qn28","qn29","qn30","qnbullyweight","qnbullygay")
+# paricitpating states
+sts = yrbss::getListOfParticipatingStates()
+# years in data
+yrs = c(1991,1993,1995,1997,1999,2001,2003,2005,2007,2009,2011,2013,2015)
+
+if(import_raw_data){
+  # make data frame to store values
+bullying = data.frame(variable = NULL, state = NULL, year = NULL, prop= NULL, ciLB= NULL, ciUB = NULL, n = NULL)
+
+# run over all questions, states, and years
+for(v in qns){
+  for(s in sts){
+    for(y in yrs ){
+      p = yrbss::getProportionSingleVariable(.variable = v, .location = s, .year = y, .level = 0.95)$prop
+    ciL = yrbss::getProportionSingleVariable(.variable = v, .location = s, .year = y, .level = 0.95)$ciLB
+    ciU = yrbss::getProportionSingleVariable(.variable = v, .location = s, .year = y, .level = 0.95)$ciUB
+    sample_size = yrbss::getProportionSingleVariable(.variable = v, .location = s, .year = y, .level = 0.95)$n
+    newrow = data.frame(variable = v, state = s, year = y, prop= p, ciLB= ciL, ciUB = ciU, n = sample_size)
+    bullying = bind_rows(bullying,newrow)}
+}}
+
+# incorporate labels for questions (what the question actually is)
+lab = data.frame(question = yrbss::yrbss_questions_binary$variable, label = yrbss::yrbss_questions_binary$label)%>%
+   filter(question %in% qns)
+ 
+bullying = left_join(bullying,lab, by = c(variable = "question"))
+# clean Arizona label
+bullying$state[which(bullying$state=="AZB")]="AZ"
+
+# write cleaned csv file
+write_csv(bullying, "bullying_survey.csv")
+}
+
+# incorporate labels for questions (what the question actually is)
+lab = data.frame(question = yrbss::yrbss_questions_binary$variable, label = yrbss::yrbss_questions_binary$label)%>%
+   filter(question %in% qns)
+
+# read in csv
+bullying_survey = read_csv("bullying_survey.csv")
+
+
+# Make combined variables for survey questions (specified in text above)
+
+# combine suicide questions 
+suicide = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+suicide_qns = bullying_survey%>%
+  filter(variable %in% c("qn26","qn27","qn28","qn29","qn30"))
+
+sts[which(sts=="AZB")]="AZ"
+for(y in yrs){
+  for(st in sts){
+    dat = filter(suicide_qns,(year ==y & state == st))
+    # score is weighted average of proportions (weighted by number of respondents)
+    suicide_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = suicide_score, n = samp)
+    suicide = bind_rows(suicide,newrow)
+  }
+}
+
+# combine questions involving physical fights
+fight = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+fight_qns = bullying_survey%>%
+  filter(variable %in% c("qn18","qn19","qn20"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(fight_qns,(year ==y & state == st))
+    # score is weighted average of proportions (weighted by number of respondents)
+    fight_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)),, na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = fight_score, n = samp)
+    fight = bind_rows(fight,newrow)
+  }
+}
+
+# school safety questions
+safety = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+safety_qns = bullying_survey%>%
+  filter(variable %in% c("qn13","qn14","qn15","qn16","qn17"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(safety_qns,(year ==y & state == st))
+    # score is weighted average of proportions (weighted by number of respondents)
+    safety_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = safety_score, n = samp)
+    safety = bind_rows(safety,newrow)
+  }
+}
+
+# bullying questions
+bull = data.frame(year = NULL, state = NULL, score = NULL, n = NULL)
+bully_qns = bullying_survey%>%
+  filter(variable %in% c("qn24","qn25","qnbullyweight","qnbullygay"))
+
+for(y in yrs){
+  for(st in sts){
+    dat = filter(bully_qns,(year ==y & state == st))
+    # score is weighted average of proportions (weighted by number of respondents)
+    bully_score = weighted.mean(dat$prop,(dat$n/sum(dat$n)), na.rm = TRUE)
+    samp = mean(dat$n,na.rm = TRUE)
+    newrow = data.frame(year = y, state = st, score = bully_score, n = samp)
+    bull = bind_rows(bull,newrow)
+  }
+}
+
+
+
+# create table with new variables
+survey_combined = bind_cols(suicide,safety, fight, bull)%>%
+  select(year, state, score, n, score1, n1, score2, n2, score3, n3)%>%
+  rename(suicide_score = score, school_safety_score = score1, fight_score = score2, bully_score = score3)%>%
+  filter(year>=2007)%>% 
+  full_join(st_yr%>%filter(year>=2007))%>%
+  arrange(year)%>%
+  arrange(state)%>%
+  mutate(state = ifelse(state == "AZB","AZ",state))
+
+
+# impute values
+# average value of previous and next year (for years with such data)
+# for 2016-2019 predict value from line between 2014 and 2015 points
+survey_combined = survey_combined%>%
+  group_by(state)%>%
+  mutate(suicide_score =ifelse(year<2016,ifelse(is.na(suicide_score), na.locf(suicide_score)/2+na.locf(suicide_score, fromLast = TRUE)/2,suicide_score),
+                              NA ))%>%
+  mutate(school_safety_score =ifelse(year<2016,ifelse(is.na(school_safety_score), na.locf(school_safety_score)/2+na.locf(school_safety_score, fromLast = TRUE)/2,school_safety_score),NA))%>%
+    mutate(fight_score =ifelse(year<2016,ifelse(is.na(fight_score), na.locf(fight_score)/2+na.locf(fight_score, fromLast = TRUE)/2,fight_score),NA))%>%
+      mutate(bully_score =ifelse(year<2016,ifelse(is.na(bully_score), na.locf(bully_score)/2+na.locf(bully_score, fromLast = TRUE)/2,bully_score),NA))%>%
+        mutate(n=ifelse(year<2016,ifelse(is.na(n), na.locf(n)/2+na.locf(n, fromLast = TRUE)/2,n),NA))%>%
+          mutate(n1=ifelse(year<2016,ifelse(is.na(n1), na.locf(n1)/2+na.locf(n1, fromLast = TRUE)/2,n1),NA))%>%
+          mutate(n2=ifelse(year<2016,ifelse(is.na(n2), na.locf(n2)/2+na.locf(n2, fromLast = TRUE)/2,n2),NA))%>%       
+  mutate(n3=ifelse(year<2016,ifelse(is.na(n3), na.locf(n3)/2+na.locf(n3, fromLast = TRUE)/2,n3),NA))
+
+
+# use fitted line to get 2016-2019 values 
+for(s in sts[which(!(sts %in% c("MA","AZB","DC")))]){
+  dat = filter(survey_combined, state ==s)
+  ind = which(is.na(dat$suicide_score))[1]
+  slp = dat[(ind-1),3:10]-dat[(ind-2),3:10]
+  dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp
+    dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp  
+    dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp  
+    dat[which(is.na(dat$suicide_score))[1],3:10] =  dat[(ind-1),3:10]+as.numeric(dat[which(is.na(dat$suicide_score))[1],1]-2015)*slp
+
+  survey_combined[which(survey_combined$state == s),]=dat
+}
+
+# chech to see if mean and median are different
+med_mn = survey_combined%>%
+  group_by(year)%>%
+  summarise(med_ss = median(suicide_score, na.rm = T), mn_ss = mean(suicide_score, na.rm = T),
+            med_safe = median(school_safety_score, na.rm = T), mn_safe = mean(school_safety_score, na.rm = T),
+            med_f = median(fight_score, na.rm = T), mn_f = mean(fight_score, na.rm = T),
+            med_b = median(bully_score, na.rm = T), mn_b = mean(bully_score, na.rm = T))
+
+# impute missing values with median value for each column
+
+survey_combined = survey_combined%>%
+  ungroup()%>%
+  group_by(year)%>%
+  mutate(suicide_score = ifelse(is.na(suicide_score), median(suicide_score, na.rm = T),suicide_score))%>%
+  mutate(school_safety_score = ifelse(is.na(school_safety_score), median(school_safety_score, na.rm = T),school_safety_score))%>%
+  mutate(fight_score = ifelse(is.na(fight_score), median(fight_score, na.rm = T),fight_score))%>%
+  mutate(bully_score = ifelse(is.na(bully_score), median(bully_score, na.rm = T),bully_score))%>%
+  mutate(n = ifelse(is.na(n), median(n, na.rm = T),n))%>%
+  mutate(n1 = ifelse(is.na(n1), median(n1, na.rm = T),n1))%>%
+  mutate(n2 = ifelse(is.na(n2), median(n2, na.rm = T),n2))%>%
+  mutate(n3 = ifelse(is.na(n3), median(n3, na.rm = T),n3))%>%
+  mutate(school_safety_score = ifelse(school_safety_score<0,0,school_safety_score))%>%
+  mutate(fight_score = ifelse(fight_score<0,0,fight_score))
+
+```
 
 ### Poverty
 The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalence rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016. 
+
+```{r load and clean poverty data, message=FALSE, warning=FALSE}
+
+pov=read.csv("census_poverty_data.csv",stringsAsFactors = FALSE)
+pov=filter(pov,State!="      United States"&State!="     United States"& State!="District of Columbia"&State!="United States")
+
+names(pov)[1:2]<-c("state","poverty")
+names(pov)[4]<-"year"
+
+skel=expand_grid(sort(unique(pov$state)),min(pov$year):(max(pov$year)+2))
+names(skel)<-c("state","year")
+
+
+
+sk1=filter(skel,year==2007|year==2008|year==2009)
+sk1=left_join(sk1,filter(pov,year==2007),by="state")
+
+sk2=filter(skel,year==2010|year==2011|year==2012)
+sk2=left_join(sk2,filter(pov,year==2010),by="state")
+
+sk3=filter(skel,year==2013|year==2014|year==2015)
+sk3=left_join(sk3,filter(pov,year==2013),by="state")
+
+sk4=filter(skel,year==2016|year==2017|year==2018)
+sk4=left_join(sk4,filter(pov,year==2016),by="state")
+
+pov=rbind(sk1,sk2,sk3,sk4)
+pov=pov[,1:3]
+names(pov)<-c("state","year","poverty")
+```
 
 
 ### Bullying Laws
 Bullying in school has been identified one of the significant causes behind school shootings. Some of states addressed that issue and have implemented several judicial laws to prevent school bullying. Though almost all the states have laws to prevent bullying the degree of rigidity varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retrieved from [stopbullying.gov](https://www.stopbullying.gov/laws/index.html). The dataset mentions about 14 different components of Bullying laws that each state may or may not have. Thus out of the total score 14, we calculated a total score for each state based on how many components of bullying laws were present in each state. unfortunately the data was available only for the year 2010. Thus we have included the dataset in the analysis assuming that the score remains the same over the time period
 
+```{r bullying law data, message=FALSE, warning=FALSE}
+
+bully = read_csv("State_bullying.csv")%>%
+  select(c(total_score,state.abb))%>%
+  rename(state = state.abb)%>%
+  mutate(year = 2010)
+```
 
 ### Media
 
-As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from a [Nature article](https://www.nature.com/articles/s41562-019-0636-0?fbclid=IwAR2mCmg1gQ1OOccfjklm4HKzOMcpg24Oz2C8ZOebg12HaBWwr6Up1YxosF4#data-availability) about media coverage and firearm acqusition after mass shootings (data available on the following [GitHub repository](https://github.com/Causality-Research/Firearms)). The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment"and "shootings excluding firearm laws and regulations". For each year, the total number of articles containing "shootings excluding firearm laws and regulations" and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles. 
+As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from a [Nature article](https://www.nature.com/articles/s41562-019-0636-0?fbclid=IwAR2mCmg1gQ1OOccfjklm4HKzOMcpg24Oz2C8ZOebg12HaBWwr6Up1YxosF4#data-availability) about media coverage and firearm acquisition after mass shootings (data available on the following [GitHub repository](https://github.com/Causality-Research/Firearms)). The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment"and "shootings excluding firearm laws and regulations". For each year, the total number of articles containing "shootings excluding firearm laws and regulations" and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles. 
 
+
+```{r load and clean media data, message=FALSE, warning=FALSE}
+
+media = read_csv("media_data.csv")%>%
+  separate(`Year-Month`, into = c("year","month"), sep = "-")%>%
+  clean_names()%>%
+  select(-starts_with("x"))%>%
+  group_by(year) %>%
+  mutate(yearly_articles = sum(articles_shootings_excluding_firearm_laws_and_regulations))%>% 
+  mutate(yearly_shootings = sum(mass_shooting))%>%
+  mutate(art_per_inc = yearly_articles/yearly_shootings)%>%
+  ungroup()%>%
+  mutate(prev_month_art = c(0,articles_shootings_excluding_firearm_laws_and_regulations[1:227]))%>%
+  mutate(prev_year_art = c(rep(0,12),yearly_articles[1:216]))%>%
+  mutate(year = as.numeric(year))
+
+```
 
 ### Population 
-To account for the fact that, the larger the state the more schools the state will have, we have included the population size of each state over all the years as a confounding variable in our analysis. The dataset was obtained from the [U.S. Census Bureau](https://scholar.harvard.edu/files/awatanabe/files/us_state_population_estimate_technical_notev1.pdf?fbclid=IwAR2VQnO9wWk1dlJT01_8LTqdTP4qet8wACZTIBJ9NpFbkyn_3-o1yM1bGRw). The dataset contained populations by over the years 1970 to 2019. 
+It is well known that states vary widely in terms of population size. Because of this--and because we are looking at event data with number of events as our outcome of interest--we must take population into account in any analysis we do, since states with much higher populations are far more likely to experience events than smaller states. We obtained state population data from the [U.S. Census Bureau](https://scholar.harvard.edu/files/awatanabe/files/us_state_population_estimate_technical_notev1.pdf?fbclid=IwAR2VQnO9wWk1dlJT01_8LTqdTP4qet8wACZTIBJ9NpFbkyn_3-o1yM1bGRw). The dataset contained populations by over the years 1970 to 2019. 
+```{r load and clean population data, message=FALSE, warning=FALSE}
+
+
+
+if(import_raw_data){
+
+# 1980-1990
+pop8090_raw = read.delim("https://www2.census.gov/programs-surveys/popest/tables/1980-1990/state/asrh/st8090ts.txt" )%>%data.frame()
+pop8090_raw = pop8090_raw[c(8:58,64:114),]%>%data.frame()
+colnames(pop8090_raw)="var"
+pop8090 = data.frame(pop8090_raw$var[1:51],pop8090_raw$var[52:102])
+
+colnames(pop8090)=c("var1","var2")
+
+
+pop8090 = pop8090%>%
+  separate(var1, c("state",as.character(seq(1980,1984,by = 1))), extra = "merge")%>%
+  separate(var2, c("state1",as.character(seq(1985,1990,by = 1))), extra = "merge")%>%
+  select(c(state,starts_with("19")))
+  
+# 1970 - 1980
+pop7080_raw = read.delim("https://www2.census.gov/programs-surveys/popest/tables/1980-1990/state/asrh/st7080ts.txt")
+pop7080_raw = pop7080_raw[c(10:61,63:114),]%>%data.frame()
+colnames(pop7080_raw)="var"
+pop7080 = data.frame(pop7080_raw$var[1:51],pop7080_raw$var[53:103])
+
+colnames(pop7080)=c("var1","var2")
+
+pop7080 = pop7080%>%
+  separate(var1, c("blnk","id","state","1970","1971","1972","1973","1974","1975"), extra = "merge")%>%
+  separate(var2, c("blnk1","id1","state1",as.character(seq(1976,1980,by = 1))), extra = "merge")%>%
+  select(c(state,starts_with("19")))
+
+# 1990-2000
+pop90_00 = read_csv("../../data/pop_90-00.csv")%>%
+  rename(state = X1)%>%
+  select(c(state,3:13))%>%
+  filter(state != "USA")
+colnames(pop90_00)[2:ncol(pop90_00)]=as.character(seq(1990,2000,by = 1))
+pop90_00$state[30:35] = states$state.name[29:34]
+pop90_00$state[40:42] = states$state.name[39:41]
+pop90_00$state[9] = states$state.name[51]
+pop90_00$state[49] = states$state.name[48]
+
+# 2000-2010
+pop00_10 = read.csv("https://www2.census.gov/programs-surveys/popest/datasets/2000-2010/intercensal/state/st-est00int-agesex.csv")%>%
+  clean_names()%>%
+  filter(sex == 0, age == 999)%>%
+  select(c(name,starts_with("popestimate")))%>%
+  rename_at(vars(starts_with("popestimate")),funs(substr(.,start = 12, stop = 15)))%>%
+  rename(state = name)%>%
+  mutate(state = as.character(state))%>%
+  mutate(state = ifelse(state=="District of Columbia",as.character(states$state.name[51]),state))%>%
+  filter(state != "United States")
+
+# 2010-2018
+pop10_18 = read_csv("../../data/pop_2010-2018.csv")
+colnames(pop10_18)=pop10_18[1,]
+
+pop10_18 = pop10_18%>%
+  slice(-1)%>%
+  rename_at(vars(starts_with("Pop")), funs(substr(.,start = 38,stop = 41)))%>%
+  rename(state = Geography)%>%
+  select(c(state,starts_with("20")))%>%
+  mutate(state = ifelse(state=="District of Columbia",as.character(states$state.name[51]),state))
+
+# 2019
+
+pop2019 = read_csv("../../data/2019pop.csv")%>%
+  clean_names()%>%
+  select(c(state,pop))%>%
+  rename("2019"=pop)
+
+
+# combine all data
+pops = left_join(pop7080,pop8090%>%select(-c("1980")), by = "state")%>%
+  left_join(states,by = c("state"="state.abb"))%>%
+  mutate(state = state.name)%>%
+  select(-state.name)%>%
+  left_join(pop90_00%>%select(-c("1990")), by = "state")%>%
+  left_join(pop00_10%>%select(-c("2000")), by = "state")%>%
+  left_join(pop10_18%>%select(-c("2010")), by = "state")%>%
+  left_join(pop2019,by = "state")%>%
+  gather(key = "year", value = "population", c(2:51))
+
+# write cleaned csv file
+write.csv(pops, "state_populations.csv")
+
+}
+
+# read in population data (include abbreviated and full state name)
+pops = read_csv("state_populations.csv")%>%
+  select(-X1)%>%
+  left_join(states, by = c("state"="state.name"))
+
+```
+
+
+### Aggregating the data
+
+Because of the nature of the school shooting data (each row is one event), we must aggregate the data into a form that we can analyze. We create a new data set with each row representing the data for one state in a given year, with number of school shootings in that state/year as the main outcome of interest. We then merge all other data sets to get the final form of the data we will use for our remaining analysis.
+```{r count format, message=FALSE, warning=FALSE }
+# data set aggrgated by state and year
+ss_counts = ss%>%
+  group_by(state,year) %>%
+  summarize(incident_count = n(), 
+            total_victims = sum(total_injured_killed_victims), #include possible secondary outcomes
+            total_fatalities = sum(killed_includes_shooter),
+            total_wounded = sum(wounded),
+            avg_victims = mean(total_injured_killed_victims),
+            avg_fatalities = mean(killed_includes_shooter),
+            ave_wounded = mean(wounded),
+            avg_shooter_age = mean(shooter_age),
+            max_shooter_age = max(shooter_age),
+            min_shooter_age = min(shooter_age),
+            avg_reliability = mean(reliability_score_1_5),
+            target = mean(ifelse(targeted_specific_victim_s=="Y",1,
+                                 ifelse(targeted_specific_victim_s=="N",0,NA)),na.rm = T),
+            random_vict = mean(ifelse(random_victims=="Y",1,
+                                      ifelse(random_victims=="N",0,NA)),na.rm = T),
+            bullied = mean(ifelse(bullied_y_n_n_a=="Y",1,
+                                  ifelse(bullied_y_n_n_a=="N",0,NA)),na.rm = T),
+            domestic_violence = mean(ifelse(domestic_violence_y_n=="Y",1,
+                                            ifelse(domestic_violence_y_n=="N",0,NA)),na.rm = T))%>%
+  mutate(in_ss = TRUE)%>%
+  full_join(st_yr, by = c("state","year"))%>%
+  left_join(pops%>%rename(full_state_name = state), by = c("state"="state.abb", "year"))%>%
+  mutate(incident_count = ifelse(is.na(incident_count),0,incident_count))%>%
+  mutate(in_ss = ifelse(is.na(in_ss),FALSE,in_ss))
+
+# merge in grade data
+ss_counts = ss_counts%>%
+  left_join(grades%>%select(state,grade,year),by = c("full_state_name"="state","year"))%>%
+  left_join(gpa_convert, by = c("grade"="letter_grade"))
+
+# merge in media data
+ss_counts = ss_counts%>%
+  left_join(media%>%select(prev_year_art, year,yearly_articles)%>%distinct(), by = "year")
+
+# merge in poverty data
+pov = left_join(pov,states, by = c("state"="state.name"))%>%
+  select(-state)%>%
+  rename(state = state.abb)
+ss_counts = left_join(ss_counts, pov, by = c("state","year"))
+
+# merge bullying data
+ss_counts = left_join(ss_counts, bully%>%select(-year), by = "state")%>%
+  rename(bullying_score = total_score)%>%
+  mutate(bullying_score = as.numeric(bullying_score))
+
+# merge mental health data
+ss_counts = ss_counts%>%
+  left_join(mh.data, by = c("state","year"))%>%
+  rename(mh_score = percent)
+
+# merge CDC survey data
+ss_counts = left_join(ss_counts, survey_combined, by = c("state","year"))%>%
+  filter(state != "DC")
+
+# merge RAND data
+ss_counts = left_join(ss_counts,rand.count.data, by = c("state","year"))
+
+# create new variables of law categories
+# -1s are from after realizaing I accidentally marked permissive laws as positive and and restrictive laws as negative... whoops :) 
+ss_counts = ss_counts%>%
+  mutate(access_laws = -1*(age_permissive-age_restrictive+child_access_permissive-child_access_restrictive+prohibited_possessor_permissive-prohibited_possessor_restrictive))%>%
+  mutate(transport= -1*(castle_doctrine_permissive-castle_doctrine_restrictive+open_carry_permissive-open_carry_restrictive+carrying_permissive-carrying_permissive))%>%
+  mutate(screening = -1*(background_check_permissive- background_check_restrictive + waiting_period_permissive- waiting_period_restrictive + permit_permissive - permit_restrictive + registration_permissive - registration_restrictive + safety_training_permissive - safety_training_restrictive + dealer_license_permissive - dealer_license_restrictive + one_gun_per_permissive - one_gun_per_restrictive))%>%
+  mutate(ban = -ban_permissive+ban_restrictive)%>%
+  select(-c(36:63))
+
+
+```
+
 
 ## EDA
+
+Once all data were obtained we next made exploratory plots to understand the nature of the data and look for trends that will be important in later modeling and statistical analysis. First, we looked at the trend of school shootings over time by plotting the number of incidents per year. We can see that the general trend is that school shooting incidents are increasing over time.
+
+```{r shootings over time}
+ss_counts%>%
+  group_by(year)%>%
+  summarise(ss = sum(incident_count))%>%
+  ggplot(aes(x = year, y = ss))+
+  geom_line(color = "red")+
+  labs(x = "Year", y = "School Shootings", title = "School Shootings in the U.S.")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+We next look at how these school shootings occur with respect to gun policy. Below is a plot showing the number of school shootings in each state from the years 2012-2018, where each state is colored by the fun policy grade it received that year (we took grades as letter grades without +/-). As we can see, in the early years it seems that the states with poor gun policy grades account for the most school shootings. Interestingly, in 2018 there seems to be a trend reversal, with states receiving high grades experiencing a high number of school shootings.
+
+```{r}
+
+# This will handle the ordering
+d <- ss_counts %>% 
+  filter(year %in% seq(2012,2018,by=1))%>%
+  mutate(grade = substr(grade,1,1))%>%
+  ungroup() %>%   # As a precaution / handle in a separate .grouped_df method
+  arrange(year, grade) %>%   # arrange by facet variables and continuous values
+  mutate(.r = row_number()) # Add a row number variable
+
+ggplot(d, aes(x = .r, y= incident_count, fill = grade)) +  # Use .r instead of x
+  geom_point(data = d%>%filter(incident_count==0),
+             aes(x = .r, y= incident_count, color = grade),
+             size = 0.7) +
+  geom_bar(stat = "identity")+
+  facet_wrap(~ year, scales = "free_x") +  # Should free scales (though could be left to user)
+  scale_x_continuous(  # This handles replacement of .r for x
+    breaks = d$.r,     # notice need to reuse data frame
+    labels = d$state
+  )+
+  labs(title = "Incident Count by Grade", x = "State", y = "School Shootings")+
+  scale_fill_viridis_d( name = "Grade", direction = -1)+
+  scale_color_viridis_d( guide = FALSE, direction = -1)+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 3.5), legend.position = c(0.7,.15), legend.direction = "horizontal",legend.key.size = unit(1.5,"line"), legend.text = element_text(size = 8), legend.title = element_text(size = 10),plot.title = element_text(hjust = 0.5))
+
+```
+
+We next look at how state gun policy grades and number of gun laws in effect (by category) change over time. We plot the grades on a 4.0 GPA scale and the gun laws in effect is calculated as $# Restrictive laws - # Permissive laws $. In these animations we can see that while some states grades and laws change over time, many do not (this can be seen particularly well in ban and transport laws that seem relatively stable over the time period 2007-2019).
+
+```{r grade animation, warning=FALSE, message=FALSE}
+build_animations = FALSE
+if(build_animations){
+grades = left_join(grades, gpa_convert, by = c("grade"="letter_grade"))
+
+dat_loc= map_data("state")%>%
+  mutate(sts=toupper(region))
+
+b=full_join(grades%>%mutate(state = tolower(state)), dat_loc, by=c("state"="region"))
+b = b%>%mutate(year = as.numeric(year))%>%filter(!is.na(year))%>%select(-subregion)
+b = b[complete.cases(b),]
+
+map_plts = ggplot(data = b, aes(x = long, y = lat, group = group))+
+  geom_polygon(aes(fill = gpa), color = "white")+
+  scale_fill_viridis(option = "D", name = "GPA")+
+  labs(title = "Grade Changes by Year", subtitle = 'Year: {frame_time}', x = NULL, y = NULL)+
+  theme_bw()+
+  theme(line = element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank(), plot.title = element_text(hjust = 0.5))+
+  transition_time(year, range = c(2012,2018))
+
+animate(map_plts, nframes = 7, fps = 1)
+
+anim_save("state_grade_animation.gif")
+}
+
+
+
+
+
+```
+
+![State Grade Changes](state_grade_animation.gif)
+
+```{r law animation, warning=FALSE, message=FALSE}
+ 
+if(build_animations){
+dat_loc = left_join(dat_loc,states%>%mutate(state.name = tolower(state.name)), by = c("region"="state.name"))
+b2=full_join(ss_counts%>%ungroup()%>%filter(year>=2007)%>%filter(!(state%in%c("AK","HI")))%>%select(state,year,access_laws,transport,screening,ban), dat_loc, by=c("state"="state.abb"))%>%
+  select(-subregion)%>%
+  gather(key = "law_class", value = "number_in_effect", c(3:6))
+b2 = b2[complete.cases(b2),]
+
+
+law.labs <- c("Access Laws", "Bans","Screening Laws", "Transport Laws")
+names(law.labs) <- c("access_laws", "ban","screening","transport")
+
+map_plts_law = ggplot(data = b2, aes(x = long, y = lat, group = group))+
+  geom_polygon(aes(fill = number_in_effect), color = "white")+
+  scale_fill_viridis(option = "D", name = "Laws in\nEffect\n(R-P)")+
+  labs(title = "Law Changes by Year",subtitle = 'Year: {frame_time}', x = NULL, y = NULL)+
+  theme_bw()+
+  facet_wrap(.~law_class, labeller = labeller(law_class = law.labs))+
+  theme(line = element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank(), plot.title = element_text(hjust = 0.5))+
+  transition_time(year, range = c(2007,2019))
+
+animate(map_plts_law, nframes = 13, fps = 1)
+
+anim_save("state_law_animation.GIF")
+}
+
+
+
+```
+
+![State Law Changes](state_law_animation.gif)
+
+
+Another variable we wished to control for was media coverage of shooting events in the United States. Below we see that as the years have progressed, there has been a general increase in the number of articles published about shootings. Here we are using the number of articles in the New York Times and Washington Post as a proxy for general media coverage trends. We hypothesize that the increase in media coverage of mass shootings may help explain the increase in school shootings, as increased public awareness of these shootings may unintentionally normalize these events or even inspire further violence. Hence we also plot the number of school shootings colored by the number of articles about shootings published in the previous year. If the aforementioned hypothesis is true, we would expect to see higher bars (indicating more school shootings) in years in which the previous year had a lot of articles published about shootings. While there does seem to be some trend in the data, it is not particularly clear if this is the case or not.
+
+
+```{r media plots}
+media%>%
+    mutate(date = as.Date(zoo::as.yearmon(paste(year,"-",month, sep = ""))))%>%
+  ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations, x= date, color = year))+
+  geom_point()+
+  geom_jitter()+
+  labs(y = "Monthly Articles",x =  "Year", title = "Media Coverage of Shootings", subtitle = "Articles in NYT and Washington Post Regarding Shootings")+
+  scale_color_viridis_c(name = "Year")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, size = 8))
+
+
+ss_counts%>%
+  group_by(year)%>%
+  summarise(yearly_incidents = sum(incident_count), prev_year_art = prev_year_art[1] )%>%
+  filter(year %in% seq(1999,2017, by = 1))%>%
+  ggplot(aes(x = year, y = yearly_incidents, fill = prev_year_art))+geom_bar(stat = "identity")+
+  labs(y = "Yearly School Shootings", x = "Year", title = "Media Coverage Lag Effect")+
+  scale_fill_viridis(option = "D", name = "Articles in previous year")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+Next we look at student responses from the CDC YRBSS surveys. We plot the data (not imputed) using the aggregated variables we defined previously (4 categories: bullying, physical altercations, school safety, suicide) to see trends across time and states. We can see that these scores seem to stay relatively consistent across time with only some minor changes; validation our choice to impute values with the mean of adjacent years and using linear trajectory after 2015. There seems to be more variability across states (see boxplots). It is important to note that this suggests that our choice to impute data for unobserved states with the median of all other states' data (by year) will underestimate variance. This will be important to recall when interpreting the model results for these variables.
+
+```{r survey plots, message=FALSE, warning=FALSE}
+survey_combined_raw = bind_cols(suicide,safety, fight, bull)%>%
+  select(year, state, score, n, score1, n1, score2, n2, score3, n3)%>%
+  rename(suicide_score = score, school_safety_score = score1, fight_score = score2, bully_score = score3)%>%
+  filter(year>=2007)%>%
+  full_join(st_yr%>%filter(year>=2007))%>%
+  arrange(year)%>%
+  arrange(state)%>%
+  mutate(state = ifelse(state == "AZB","AZ",state))
+
+surv.labs = c("Bullying Score", "Physical Altercation Score", "School Danger Perception Score", "Suicidal Thoughts or Actions Score")
+names(surv.labs)= c("bully_score", "fight_score", "school_safety_score","suicide_score")
+
+
+survey_combined_raw%>%
+  gather(key = "score_type", value = "percent_yes", c(3,5,7,9))%>%
+  ggplot(aes(x = year, y = percent_yes, color = score_type))+
+  geom_point(position = "jitter")+
+  geom_smooth(se=F)+
+  scale_color_viridis_d(name = "Score Type", labels = c("Bullying\n","Involvment in \nPhysical Altercation\n","School Danger\nPerception\n","Suicidal \nThoughts/Actions\n"))+
+  xlim(2007,2015)+
+  labs(y = "% Responding Yes", x = "Year", title = "Survey Responses", subtitle = "(Aggregated Variables)")+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, size = 8))
+
+survey_combined_raw%>%
+  gather(key = score_type, percent, c(3,5,7,9))%>%
+  ggplot(aes(x = state, y = percent, color = score_type ))+
+  geom_boxplot()+
+  scale_color_viridis_d()+
+  labs(title = "Survey Reponses by State", x = "State", y = "Percent Answering 'Yes'")+
+  facet_wrap(.~score_type,labeller = labeller(score_type = surv.labs))+
+  theme_bw()+
+  theme(legend.position = "none",axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5),plot.title = element_text(hjust = 0.5))
+```
+
+## Model Fitting
 
 
 
