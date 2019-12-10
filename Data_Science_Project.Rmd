@@ -825,7 +825,7 @@ anim_save("state_grade_animation.gif")
 
 ```
 
-![State Grade Changes](state_grade_animation.gif)
+![](state_grade_animation.gif)
 
 ```{r law animation, warning=FALSE, message=FALSE}
  
@@ -858,7 +858,9 @@ anim_save("state_law_animation.GIF")
 
 ```
 
-![State Law Changes](state_law_animation.gif)
+
+
+![](state_law_animation.gif)
 
 
 Another variable we wished to control for was media coverage of shooting events in the United States. Below we see that as the years have progressed, there has been a general increase in the number of articles published about shootings. Here we are using the number of articles in the New York Times and Washington Post as a proxy for general media coverage trends. We hypothesize that the increase in media coverage of mass shootings may help explain the increase in school shootings, as increased public awareness of these shootings may unintentionally normalize these events or even inspire further violence. Hence we also plot the number of school shootings colored by the number of articles about shootings published in the previous year. If the aforementioned hypothesis is true, we would expect to see higher bars (indicating more school shootings) in years in which the previous year had a lot of articles published about shootings. While there does seem to be some trend in the data, it is not particularly clear if this is the case or not.
@@ -948,7 +950,7 @@ __Note__: population was not used as a variable but as an offset term in the mod
 More formally, the model we fit is:
 
 
-$\boxed{ E[\log(I_{t,s})]=\beta_0+\beta_1\cdot g_{t,s}+\beta_2\cdot p_{t,s}+\beta_3\cdot l_{t,s}+\beta_4\cdot b_{s}+\beta_5\cdot s_{t,s}+\beta_6\cdot y_{t,s}+\beta_6\cdot f_{t,s}+\beta_7\cdot t+ \beta_8 \cdot m_{t-1} +\log( n_{t,s}) }$
+$$\log(E[I_{t,s}])=\beta_0+\beta_1\cdot g_{t,s}+\beta_2\cdot p_{t,s}+\beta_3\cdot l_{t,s}+\beta_4\cdot b_{s}+\beta_5\cdot s_{t,s}+\\\beta_6\cdot y_{t,s}+\beta_7\cdot f_{t,s}+ \beta_8\cdot t+ \beta_9 \cdot m_{t-1} +\log( n_{t,s}) $$
 
 where here for each state $s$ and year $t$ we have that $I_{t,s}$ is the school shooting incident count, $g_{t,s}$ is the grade, $p_{t,s}$ is the percent of the population living in poverty, $b_{t,s}$ is the survey-derived bullying score, $l_{s}$ is the state anti-bullying law score (does not vary by year), $s_{t,s}$ is the survey-derived suicide score, $t$ is time (year), $f_{t,s}$ is the survey-derived physical altercation score, $y_{t,s}$ is the survey derived school danger score, $m_t$ is the media score (number of articles) the previous year, and $n_{t,s}$ is the population.
 
@@ -993,7 +995,11 @@ plot(DHARMa::simulateResiduals(fit_grade))
 
 ```
 
-Because we found a statistically significant effect, we wish to look further into which types of laws might be driving the differences in school shooting rates. Thus, we further remove the "grade" variable in the above model and instead use the combined law count variables described in an earlier section (4 categories : gun access laws, bans, screening laws, and transport laws). Recall that these variables are the difference in the sum of restrictive laws in effect minus the sum of permissive laws in effect for a given state and year (policies beginning or ending in the middle of the year are rounded to the nearest year). Thus, the model is the same except we now split the variable accounting for state gun policy into 4 variables (on for each of the law type categories).
+Because we found a statistically significant effect, we wish to look further into which types of laws might be driving the differences in school shooting rates. Thus, we further remove the "grade" variable in the above model and instead use the combined law count variables described in an earlier section (4 categories : gun access laws, bans, screening laws, and transport laws). Recall that these variables are the difference in the sum of restrictive laws in effect minus the sum of permissive laws in effect for a given state and year (policies beginning or ending in the middle of the year are rounded to the nearest year). Thus, the model is the same except we now split the variable accounting for state gun policy into 4 variables (one for each of the law type categories) and estimate a separate coefficient for each. That is,
+
+$$\log(E[I_{t,s}])=\beta_0+\beta_1 \cdot p_{t,s}+\beta_2\cdot l_{t,s}+\beta_3\cdot b_{s}+\beta_4\cdot s_{t,s}+\beta_5\cdot y_{t,s}+\beta_6\cdot f_{t,s}+ \beta_7\cdot t+ \beta_8 \cdot m_{t-1} +\\ \beta_9 \cdot al_{t,s}+\beta_{10} \cdot bl_{t,s}+\beta_{11} \cdot sl_{t,s} +\beta_{12} \cdot sl_{t,s}+  \log( n_{t,s}) $$
+
+where here all variables are the same as above with the addition of $al_{t,s}$, $bl_{t,s}$, $sl_{t,s}$, $tl_{t,s}$, which represent the access laws, bans, screening laws, and transport laws for state $s$ during year $t$.
 
 ```{r law fit}
 fit_law = glm(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
