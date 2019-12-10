@@ -943,12 +943,63 @@ We include the following variables in the model (each varies by time and/or stat
 * Survey bullying score (proportion of students experiencing bullying)
 * *Population* (log scale)
 
-__Note__: population was not used as a variable but as an offset term in the model (coefficient not estimated but set to be 1).
+__Note__: population was not used as a variable but as an offset term in the model (coefficient not estimated but set to be 1). Note we also have one year's worth of data for the "strength of anti-bullying laws" variable so we use it just as a fixed state effect (doesn't vary over time). Media data only varies by year, not by state.
 
-More formally, the model is:
+More formally, the model we fit is:
 
-$ math equations I don't want to write rn$
 
+$\boxed{ E[\log(I_{t,s})]=\beta_0+\beta_1\cdot g_{t,s}+\beta_2\cdot p_{t,s}+\beta_3\cdot l_{t,s}+\beta_4\cdot b_{s}+\beta_5\cdot s_{t,s}+\beta_6\cdot y_{t,s}+\beta_6\cdot f_{t,s}+\beta_7\cdot t+ \beta_8 \cdot m_{t-1} +\log( n_{t,s}) }$
+
+where here for each state $s$ and year $t$ we have that $I_{t,s}$ is the school shooting incident count, $g_{t,s}$ is the grade, $p_{t,s}$ is the percent of the population living in poverty, $b_{t,s}$ is the survey-derived bullying score, $l_{s}$ is the state anti-bullying law score (does not vary by year), $s_{t,s}$ is the survey-derived suicide score, $t$ is time (year), $f_{t,s}$ is the survey-derived physical altercation score, $y_{t,s}$ is the survey derived school danger score, $m_t$ is the media score (number of articles) the previous year, and $n_{t,s}$ is the population.
+
+
+```{r}
+# fit model written above
+fit_grade = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
+
+kableExtra::kable( broom::tidy(fit_grade), align = "c")
+
+# 1- to show estimated drop
+exp_change = 1-round(exp(-.3189), digits = 3)
+
+# C.I.
+l = 1-round(exp(-.3189 + 1.96 *.0706502 ), digits = 3)
+u = 1-round(exp(-.3189 - 1.96 *.0706502 ), digits = 3)
+
+
+# change from F to A grade (4 point increase in gpa) (1- to show estimated drop)
+f_to_a = 1-round(exp(4*-.3189), digits = 3)
+
+# C.I.
+l4 = 1-round(exp(4*-.3189 + 1.96*4*.0706502 ), digits = 3)
+u4 = 1-round(exp(4*-.3189 - 1.96*4*.0706502 ), digits = 3)
+```
+
+
+From this model we predict that with a one unit change in GPS a state would expect to see a $27.3\%$ reduction $(95\% \ C.I.: (16.5\%,36.7\%))$ in school shootings. This model also implies that increasing GPA by 4 (going from an F to an A) the expected drop in school shootings is $72.1\%$ $(95\%\  C.I.:(51.4\%\%,84)).$ To check the model we run a number of diagnostic tests. First we do a deviance test and get a p-value of  $p=0.838$ against our null hypothesis that the model fits well (no evidence against model). We also test for any overdispersion and get a p-value of $p = 0.945$ against the null that there is no overdispersion (no evidence against the null). Lastly we plot diagnostic plots and see that the model fits relatively well.
+
+```{r check model fit, message=FALSE}
+#check model fit using deviance
+p_fit_grade = 1-pchisq( fit_grade$deviance, df = fit_grade$df.residual)
+
+# check for overdispersion
+disp_test = AER::dispersiontest(fit_grade,trafo=1)
+p_disp = disp_test$p.value
+disp_est = disp_test$estimate
+
+# diagnostic plot
+plot(DHARMa::simulateResiduals(fit_grade))
+
+```
+
+Because we found a statistically significant effect, we wish to look further into which types of laws might be driving the differences in school shooting rates. Thus, we further remove the "grade" variable in the above model and instead use the combined law count variables described in an earlier section (4 categories : gun access laws, bans, screening laws, and transport laws). Recall that these variables are the difference in the sum of restrictive laws in effect minus the sum of permissive laws in effect for a given state and year (policies beginning or ending in the middle of the year are rounded to the nearest year). Thus, the model is the same except we now split the variable accounting for state gun policy into 4 variables (on for each of the law type categories).
+
+```{r law fit}
+fit_law = glm(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
+
+kableExtra::kable( broom::tidy(fit_law), align = "c")
+
+```
 
 
 
