@@ -30,6 +30,7 @@ library(purrr)
 library(gganimate)
 library(usmap)
 library(maps)
+library(geepack)
 ```
 
 
@@ -748,7 +749,7 @@ ss_counts = ss_counts%>%
 
 ## EDA
 
-Once all data were obtained we next made exploratory plots to understand the nature of the data and look for trends that will be important in later modeling and statistical analysis. First, we looked at the trend of school shootings over time by plotting the number of incidents per year. We can see that the general trend is that school shooting incidents are increasing over time.
+Once all data were obtained we next made exploratory plots to understand the nature of the data and look for trends that will be important in later modeling and statistical analysis. First, we looked at the trend of school shootings over time by plotting the number of incidents per year. We can see that the general trend is that school shooting incidents are increasing over time with a huge spike in the latter half of the past decade. *Note that the last date recorded in our data is November 11th, 2019 and hence we do not have a full year of data for 2019.
 
 ```{r shootings over time}
 ss_counts%>%
@@ -764,7 +765,7 @@ ss_counts%>%
 
 ### Gun Policy by State
 
-We next look at how these school shootings occur with respect to gun policy. Below is a plot showing the number of school shootings in each state from the years 2012-2018, where each state is colored by the fun policy grade it received that year (we took grades as letter grades without +/-). As we can see, in the early years it seems that the states with poor gun policy grades account for the most school shootings. Interestingly, in 2018 there seems to be a trend reversal, with states receiving high grades experiencing a high number of school shootings.
+We next look at how these school shootings occur with respect to gun policy. Below is a plot showing the number of school shootings in each state from the years 2012-2018, where each state is colored by the gun policy grade it received that year (we took grades as letter grades without +/-). As we can see, in the early years it seems that the states with poor gun policy grades account for the most school shootings. Interestingly, in 2018 there seems to be a trend reversal, with states receiving high grades experiencing a high number of school shootings.
 
 ```{r}
 
@@ -794,20 +795,26 @@ ggplot(d, aes(x = .r, y= incident_count, fill = grade)) +  # Use .r instead of x
 
 ```
 
-We next look at how state gun policy grades and number of gun laws in effect (by category) change over time. We plot the grades on a 4.0 GPA scale and the gun laws in effect is calculated as $# Restrictive laws - # Permissive laws $. In these animations we can see that while some states grades and laws change over time, many do not (this can be seen particularly well in ban and transport laws that seem relatively stable over the time period 2007-2019).
+We next look at how state gun policy grades and number of gun laws in effect (by category) change over time. We plot the grades on a 4.0 GPA scale. Gun laws in effect is calculated for each state and year as $# Restrictive laws - # Permissive laws$. In these animations we can see that while some states' grades and laws experience large changes over time, many do not (this can be seen particularly well in ban and transport laws that seem relatively stable over the time period 2007-2019). 
 
 ```{r grade animation, warning=FALSE, message=FALSE}
+# variable to create animations (takes a few seconds so I saved files in the directory rather than building them each time I knit the code)
 build_animations = FALSE
+
 if(build_animations){
+# convert letter grade to gpa
 grades = left_join(grades, gpa_convert, by = c("grade"="letter_grade"))
 
+# get long/lat data
 dat_loc= map_data("state")%>%
   mutate(sts=toupper(region))
 
+# merge data
 b=full_join(grades%>%mutate(state = tolower(state)), dat_loc, by=c("state"="region"))
 b = b%>%mutate(year = as.numeric(year))%>%filter(!is.na(year))%>%select(-subregion)
 b = b[complete.cases(b),]
 
+# create plot to animate
 map_plts = ggplot(data = b, aes(x = long, y = lat, group = group))+
   geom_polygon(aes(fill = gpa), color = "white")+
   scale_fill_viridis(option = "D", name = "GPA")+
@@ -816,13 +823,12 @@ map_plts = ggplot(data = b, aes(x = long, y = lat, group = group))+
   theme(line = element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank(), plot.title = element_text(hjust = 0.5))+
   transition_time(year, range = c(2012,2018))
 
+# run animation
 animate(map_plts, nframes = 7, fps = 1)
 
+# save as file to save time when running next time
 anim_save("state_grade_animation.gif")
 }
-
-
-
 
 
 ```
@@ -832,16 +838,18 @@ anim_save("state_grade_animation.gif")
 ```{r law animation, warning=FALSE, message=FALSE}
  
 if(build_animations){
+# long/lat data
 dat_loc = left_join(dat_loc,states%>%mutate(state.name = tolower(state.name)), by = c("region"="state.name"))
 b2=full_join(ss_counts%>%ungroup()%>%filter(year>=2007)%>%filter(!(state%in%c("AK","HI")))%>%select(state,year,access_laws,transport,screening,ban), dat_loc, by=c("state"="state.abb"))%>%
   select(-subregion)%>%
   gather(key = "law_class", value = "number_in_effect", c(3:6))
 b2 = b2[complete.cases(b2),]
 
-
+# facet labels for cleaner plots
 law.labs <- c("Access Laws", "Bans","Screening Laws", "Transport Laws")
 names(law.labs) <- c("access_laws", "ban","screening","transport")
 
+# create plots for animation
 map_plts_law = ggplot(data = b2, aes(x = long, y = lat, group = group))+
   geom_polygon(aes(fill = number_in_effect), color = "white")+
   scale_fill_viridis(option = "D", name = "Laws in\nEffect\n(R-P)")+
@@ -851,12 +859,12 @@ map_plts_law = ggplot(data = b2, aes(x = long, y = lat, group = group))+
   theme(line = element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank(), plot.title = element_text(hjust = 0.5))+
   transition_time(year, range = c(2007,2019))
 
+# run animation 
 animate(map_plts_law, nframes = 13, fps = 1)
 
+# save file
 anim_save("state_law_animation.GIF")
 }
-
-
 
 ```
 
@@ -870,6 +878,8 @@ Another variable we wished to control for was media coverage of shooting events 
 
 
 ```{r media plots}
+
+# plot number of artciles per month over time 
 media%>%
     mutate(date = as.Date(zoo::as.yearmon(paste(year,"-",month, sep = ""))))%>%
   ggplot(aes(y = articles_shootings_excluding_firearm_laws_and_regulations, x= date, color = year))+
@@ -880,7 +890,7 @@ media%>%
   theme_bw()+
   theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-
+# plot school shooting counts per year colored by number of articles in previous year
 ss_counts%>%
   group_by(year)%>%
   summarise(yearly_incidents = sum(incident_count), prev_year_art = prev_year_art[1] )%>%
@@ -898,6 +908,7 @@ ss_counts%>%
 Next we look at student responses from the CDC YRBSS surveys. We plot the data (not imputed) using the aggregated variables we defined previously (4 categories: bullying, physical altercations, school safety, suicide) to see trends across time and states. We can see that these scores seem to stay relatively consistent across time with only some minor changes; validation our choice to impute values with the mean of adjacent years and using linear trajectory after 2015. There seems to be more variability across states (see boxplots). It is important to note that this suggests that our choice to impute data for unobserved states with the median of all other states' data (by year) will underestimate variance. This will be important to recall when interpreting the model results for these variables.
 
 ```{r survey plots, message=FALSE, warning=FALSE}
+# retrieve origiial data without imputed data
 survey_combined_raw = bind_cols(suicide,safety, fight, bull)%>%
   select(year, state, score, n, score1, n1, score2, n2, score3, n3)%>%
   rename(suicide_score = score, school_safety_score = score1, fight_score = score2, bully_score = score3)%>%
@@ -907,10 +918,11 @@ survey_combined_raw = bind_cols(suicide,safety, fight, bull)%>%
   arrange(state)%>%
   mutate(state = ifelse(state == "AZB","AZ",state))
 
+# cleaner facet labels
 surv.labs = c("Bullying Score", "Physical Altercation Score", "School Danger Perception Score", "Suicidal Thoughts or Actions Score")
 names(surv.labs)= c("bully_score", "fight_score", "school_safety_score","suicide_score")
 
-
+# plot survey responses over time 
 survey_combined_raw%>%
   gather(key = "score_type", value = "percent_yes", c(3,5,7,9))%>%
   ggplot(aes(x = year, y = percent_yes, color = score_type))+
@@ -922,6 +934,7 @@ survey_combined_raw%>%
   theme_bw()+
   theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5, size = 8))
 
+# plot survey responses variation by state
 survey_combined_raw%>%
   gather(key = score_type, percent, c(3,5,7,9))%>%
   ggplot(aes(x = state, y = percent, color = score_type ))+
@@ -968,6 +981,7 @@ Below we show the model output. One can see that the only significant covariate 
 # fit model written above
 fit_grade = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
 
+# table with model output
 kbl = broom::tidy(fit_grade)
 kbl$term = c("Intercept","GPA", "Poverty", "Bullying Laws score", "Articles in previous year", "Year","Suicide score", "Fight score" , "School safety score", "Bullying score")
 kableExtra::kable( kbl, align = "c" , digits = 4)%>%
@@ -990,7 +1004,7 @@ u4 = 1-round(exp(4*-.3189 - 1.96*4*.0706502 ), digits = 3)
 ```
 
 
-From this model we predict that with a one unit change in GPA, a state would expect to see a 27.3% reduction (95%  C.I. (16.5%,36.7%)) in school shootings. This model also implies that increasing GPA by 4 (going from an F to an A) the expected drop in school shootings is 72.1% (95%  C.I. (51.4%,84%)). For context, the average number of school shootings per year and state in the data is 0.516.
+From this model we predict that with a one unit change in GPA, a state would expect to see a __27.3% reduction (95%  C.I. (16.5%,36.7%))__ in school shootings. This model also implies that increasing GPA by 4 (going from an F to an A) the expected drop in school shootings is __72.1% (95%  C.I. (51.4%,84%))__. For context, the average number of school shootings per year and state in the data is 0.516.
 
 ### Model Checking
 
@@ -1010,6 +1024,29 @@ plot(DHARMa::simulateResiduals(fit_grade))
 
 ```
 
+### GEE
+
+Finally, we wished to see if there was variability between states that we did not already account with significant effects on school shootings. We did this using Generalized Estimating Equations (GEE) taking state as the grouping factor. We used an autoregressive correlation structure within states to take into account fading lag effects across years. We can see below that even when taking state variation into account, GPA still has a significant effect in reducing school shootings. The results are very similar to our previous GLM results.
+
+
+
+```{r}
+# fit gee
+gee_dat_grade = ss_counts%>%
+  select(c(1,2,3,20,22,23,25,26,28,30,32,34))
+
+gee_grade = geeglm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score,family=poisson("log") ,offset = log(population),id=as.factor(state), corstr = "ar1", data=gee_dat_grade[complete.cases(gee_dat_grade),]) 
+# n = 300 observations
+
+# table with model output
+kbl_gee = broom::tidy(gee_grade)
+kbl_gee$term = c("Intercept","GPA", "Poverty", "Bullying Laws score", "Articles in previous year", "Year","Suicide score", "Fight score" , "School safety score", "Bullying score")
+kableExtra::kable( kbl_gee, align = "c" , digits = 4)%>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width = F)
+
+```
+
+
 ### Model Using State Laws
 
 Because we found a statistically significant effect in the model using state gun policy grade, we wish to look further into this trend by looking specifically at which types of laws might be driving the differences in school shooting rates. Thus, we further remove the "grade" variable in the above model and instead use the combined law count variables described in an earlier section (4 categories : gun access laws, bans, screening laws, and transport laws). Recall that these variables are the difference in the sum of restrictive laws in effect minus the sum of permissive laws in effect for a given state and year (policies beginning or ending in the middle of the year are rounded to the nearest year). Thus, the model is the same except we now split the variable accounting for state gun policy into 4 variables (one for each of the law type categories) and estimate a separate coefficient for each. That is,
@@ -1023,27 +1060,31 @@ where here all variables are the same as above with the addition of $al_{t,s}$, 
 Below we see that from this model, year, media, suicide score, fight score, access laws, and bans all have significant effect at an $\alpha$ level of 0.05. There is also some evidence that transport laws have an effect on school shooting incidence; though, interestingly this slope is positive indicating more transport laws are associated with higher rates of school shootings. 
 
 ```{r law fit}
+# modeel fit with law counts
 fit_law = glm(reformulate(names(ss_counts)[c(2,23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
 
-
+# table with output
 kbl2 = broom::tidy(fit_law)
 kbl2$term = c("Intercept","Year","Articles in previous year","Poverty", "Bullying Laws score",  "Suicide score",  "School safety score", "Fight score" ,"Bullying score", "Access Laws", "Transport Laws", "Screening Laws", "Bans")
 kableExtra::kable( kbl2, align = "c" , digits = 4)%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
-Our model estimates that every addition of a restrictive (or removal of permissive) access law is associated with a 6.4% (95% C.I. (1.3%,11.3%)) drop in school shootings and, likewise, every addition of a ban is associated with a 22.9% decrease in school shootings (95% C.I. (2%,39.4%)).
+Our model estimates that every addition of a restrictive (or removal of permissive) access law is associated with a __6.4% (95% C.I. (1.3%,11.3%))__ drop in school shootings and, likewise, every addition of a ban is associated with a __22.9% decrease in school shootings (95% C.I. (2%,39.4%))__.
 ```{r}
+# predict on raw scale for variables of interest
 
-
+# bans estimate and conf int
 bans_est = 1-exp(-0.2604)
 bans_ci_u = 1-exp(-0.2604-	1.96*0.1226)
 bans_ci_l = 1-exp(-0.2604+	1.96*0.1226)
 
+# access laws estimate and conf int
 access_est = 1-exp(-0.0666)
 access_ci_u = 1-exp(-0.0666	-1.96*0.0274)
 access_ci_l = 1-exp(-0.0666	+1.96*0.0274)
 
+# table of estimates on raw scale
 kableExtra::kable(data.frame(Variable = c("Access Laws","Bans"), Estimate = -1*c(access_est,bans_est), `C.I Lower`= -1*c(access_ci_u,bans_ci_u),`C.I Upper`= -1*c(access_ci_l,bans_ci_l)  ), digits = 3)%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
 
@@ -1068,12 +1109,34 @@ plot(DHARMa::simulateResiduals(fit_law))
 z_fit = pscl::zeroinfl(reformulate(names(ss_counts)[c(2,23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), dist  = "poisson", data = ss_counts)
 ## simlilar results
 
+```
+
+### GEE
+
+We, again, use GEE to check for unaccounted-for variability between states. Interestingly, for this set of covariates, the model output does not match our previous output with respect to significance (direction of estimated coefficients still similar). Here none of the types of law show a significant effect on school shootings with p-values all greater than 0.4. We believe one explanation of this is that because these laws do not change drastically from year to year, they may be absorbed into the state effect and hence appear insignificant after allowing for state variation. This does not necessarily mean that these laws do not play a role in school shootings. Rather, this could just be a consequence of the laws' lack of variation across time, making their effects difficult to distinguish from other within-state variability in the data we have. 
+
+```{r}
+# dropped media data because otherwise there wasn't enough data
+gee_dat_law = ss_counts%>%
+  select(c(1,2,3,20,25,26,28,30,32,34,36:39))
+
+gee_law = geeglm(incident_count ~ year  + poverty + suicide_score + school_safety_score + fight_score + bully_score + access_laws + transport + screening + ban,family=poisson("log"), offset = log(population),id=as.factor(state), corstr = "ar1",
+                data=gee_dat_law[complete.cases(gee_dat_law),])
+# n = 550 observations
+
+# table with output
+kbl2_gee = broom::tidy(gee_law)
+kbl2_gee$term = c("Intercept","Year","Poverty", "Suicide score",  "School safety score", "Fight score" ,"Bullying score", "Access Laws", "Transport Laws", "Screening Laws", "Bans")
+kableExtra::kable( kbl2_gee, align = "c" , digits = 4)%>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
 
 ```
 
+
 ## Secondary Analysis
 
-The analysis above uses number of school shootings as its outcome, but does not account for the severity of the events in terms of number of victims/fatalities. Instead, it treats all shooting events equally. Next, we perform a secondary analysis using number of victims as the outcome of interest (total wounded or killed including shooter), rather than just incident count. For any state and year combination with 0 shootings, we assign the value 0 for number of victims. Hence, this analysis will treat shootings with no victims (no persons wounded or killed) the same as days in which no shootings occur. We do this so that the analysis can be interpreted as number of victims of school shootings (injuries/fatalities) that could be avoided with different gun policies.
+The analysis above uses number of school shootings as its outcome, but does not account for the severity of the events in terms of number of victims/fatalities. Instead, it treats all shooting events equally. Next, we perform a secondary analysis using the number of victims from all school shootings in a given state and year as the outcome of interest (total wounded or killed including shooter), rather than just incident count. For any state and year combination with no school shootings recorded, we assign the value 0 for number of victims. Hence, this analysis will treat shootings with no victims (no persons wounded or killed) the same as days in which no shootings occur. We do this so that the analysis can be interpreted as number of victims of school shootings (injuries/fatalities) that could be avoided with different gun policies.
 
 ### Model Results
 
@@ -1084,7 +1147,7 @@ fit_law_victims = MASS::glm.nb(total_victims ~ year+prev_year_art + poverty + bu
     transport + screening + ban+ offset(log(population)), data = ss_counts%>%
   mutate(total_victims = ifelse(is.na(total_victims),0,total_victims)))
 
-
+# table with model output
 kbl3 = broom::tidy(fit_law_victims)
 kbl3$term = c("Intercept","Year","Articles in previous year","Poverty", "Bullying Laws score",  "Suicide score",  "School safety score", "Fight score" ,"Bullying score", "Access Laws", "Transport Laws", "Screening Laws", "Bans")
 kableExtra::kable( kbl3, align = "c" , digits = 4)%>%
@@ -1092,31 +1155,39 @@ kableExtra::kable( kbl3, align = "c" , digits = 4)%>%
 
 ```
 
-Here we see that there is some evidence of effect for all four types of gun laws. Below we show the estimated change (proportion-so -0.103 corresponds to an 10.3% decrease in victims) in victims from school shootings per unit change in each type of gun law (negative values correspond to increases in victim counts). For context, the average repose value in the data set is 0.8564 victims per state and year. Interestingly, in this analysis screening and transport laws both have positive coefficients, indicating that stricter laws are associated with more fatalities/injuries from school shootings. While the effect of screening laws is relatively small, the transport law effect is sizable. Further analysis may want to look at these laws in further detail to understand this trend.
+Here we see that there is evidence of effect for all four types of gun laws. Below we show the estimated change (proportion-so -0.103 corresponds to an 10.3% decrease in victims) in victims from school shootings per unit change in each type of gun law (negative values correspond to increases in victim counts). For context, the average repose value in the data set is 0.8564 victims per state and year. Interestingly, in this analysis screening and transport laws both have positive coefficients, indicating that stricter laws are associated with more fatalities/injuries from school shootings. While the effect of screening laws is relatively small, the transport law effect is sizable. Further analysis may want to look at these laws in further detail to understand this trend.
 
 ```{r}
+# predict on raw scale for variables of interest
+# include estimated change and conf int
 
+# bans
 bans_est = 1-exp(-0.4477)
 bans_ci_u = 1-exp(-0.4477	-1.96*0.1708)
 bans_ci_l = 1-exp(-0.4477	+1.96*0.1708)
 
+# access laws
 access_est = 1-exp(-0.1089)
 access_ci_u = 1-exp(-0.1089-1.96*	0.0378)
 access_ci_l = 1-exp(-0.1089+1.96*	0.0378)
 
-
+#transport laws
 trans_est =  1-exp(0.2066)
 trans_ci_u =  1-exp(0.2066-1.96*	0.0872)
 trans_ci_l =  1-exp(0.2066+1.96*	0.0872)
 
+#screening laws
 screen_est = 1-exp(0.0722)
 screen_ci_u = 1-exp(0.0722-1.96*	0.0369)
 screen_ci_l = 1-exp(0.0722+1.96*	0.0369)
 
+# print table
 kableExtra::kable(data.frame(Variable = c("Access Laws","Bans","Transport Laws", "Screening Laws"), Estimate = -1*c(access_est,bans_est, trans_est, screen_est), `C.I Lower`= -1* c(access_ci_u,bans_ci_u, trans_ci_u, screen_ci_u),`C.I Upper`=-1*c(access_ci_l,bans_ci_l, trans_ci_l,screen_ci_l) ), digits = 3)%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
 
 ```
+
+
 
 ## References
 1. Walker C. (2019, July) 10 years. 180 school shootings. 356 victims. Retrieved from: https://www.cnn.com/interactive/2019/07/us/ten-years-of-school-shootings-trnd/ 
