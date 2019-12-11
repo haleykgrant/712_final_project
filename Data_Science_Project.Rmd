@@ -35,20 +35,18 @@ library(geepack)
 
 
 
-## Motivation and Objectives
 
-In September, 2014, the Federal Bureau of Investigation (FBI) released a report “A Study of Active Shooter Incidents in the United States Between 2000 and 2013” stating that the incidence of school and mass shooting incidents has been growing over the past 14 years $^{[1, 2]}$. Very recently on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old open fire at the school, killing 2 people and injuring 3 others $^{[3]}$. On average, mass killings involving firearms occur approximately every two weeks in the US, while school shootings occur on average monthly $^{[4]}$. The increasing trend has raise serious concerns and questions the existing the efficacy of the existing gun policies and laws in different States. In depth analysis of the impact of gun policies of every state on school shooting can aid to establish appropriate interventions from the State legislation regarding gun policies are crucial to prevent such traumatic incidents. This study aims to 
+# Motivation and Objectives
+In September, 2014, the Federal Bureau of Investigation (FBI) published a report, “A Study of Active Shooter Incidents in the United States Between 2000 and 2013,” starting that the incidence of school and mass shooting incidents has been drastically increasing since the turn of the century $^{[1,2]}$. According to a recent study, on an average, the United States experiences approximately one mass killing every two weeks and one school shooting every month $^{[4]}$. In fact, just on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old opened fire at the school, killing 2 people and injuring 3 others $^{[3]}$. Such an increasing trend has raised serious public concerns about school safety and questions the efficacy of the existing gun laws in different states. To prevent such traumatic incidents, state legislators should consider implementing effective gun policies that would bring notable reduction in school shootings. We believe that an in-depth analysis of the impact of gun policies of every state on school shooting may help convince state legislators to push to establish appropriate interventions. Thus, the primary aim of this study is to investigate the association between the strength of state gun laws with the incidence of school shootings. 
 
+# Related Work
+According to an analysis by *The Washington Post*, since the Columbine school shooting in 1999, almost 233,000 students have experienced gun violence and that number is still rising $^{[5]}$. Not only has this resulted in a huge unnecessary loss of life, experiencing such traumatic events also leaves a strong effect on the mental health of the survivors and their loved ones. Research indicates that experiencing assault and other violence, or knowing that a close friend or family member had to experience such violence, increases their chance of developing severe mental health problems such as post-traumatic stress disorder (PTSD) and major depression $^{[6,7]}$.
 
+In order to effectively address gun violence in schools, we should first acknowledge that this is, specifically, a gun violence problem. Though in the last two decades several school safety plans has been proposed, very few of them have exhaustively adjusted for the most crucial fact that was common almost in all school shooting incidents: the shooters did not have legal access to the firearms used. It was shocking to learn that almost two thirds of the shooters collected their firearms from their own home or from a relative's home $^{[8]}$. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[9]}$ as well as highest rate of firearm ownership among these countries $^{[10]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[11]}$. Though less than 5% of the world's children live in the Unites States $^{[12]}$, studies have found that almost 87% of the child deaths from firearms have occurred in the United States $^{[9]}$. Studies have confirmed that there has been a significant increase in the number of gun rights and gun crimes in the United States in recent years. In addition, many gun victims are exposed to such violence in ways that are accidental, incidental, relational, or environmental $^{[13]}$. This suggests that even when there is no intention of foul play, the high level of gun accessibility likely exacerbates the incidence of unnecessary and unintended injuries or deaths.
 
-## Related Work
-According to an analysis by “Washington Post”, 233,000 students have experienced gun violence in school since the Columbine High massacre in 1999 and the number is increasing alarmingly$^{[5]}$. Such traumatic experiences leave a strong affect on the mental health of the survivors. Research indicates that exposure to assault violence, or learning that a close friend or loved one has faced such exposure, is associated with an increased incidence of a range of negative mental health outcomes, among them posttraumatic stress disorder (PTSD) and major depression $^{[6,7]}$. 
+While studying the dynamics of school shootings, student mental health plays a vital role. Studies showed that only around 34% of the active shooters have ever been evaluated for mental health conditions, only 17% were diagnosed with mental illness, and almost 80% of the shooters had a record of attempting suicide or thoughts suicide before their attack $^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorded history of extreme depression, sadness, hopelessness and desperation before their attack $^{[15]}$. Mental health condition can also be closely related to financial stability. Economic insecurities can increase anxiety, frustration, depression, hopelessness and make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
 
-In order to effectively address gun violence in schools, it should be first acknowledged that the fact,it is a gun violence problem. Though there have been many comprehensive school safety plans proposed over the last 20 years, very few have effectively and thoroughly addressed the issue that is common in all school shootings: easy access to guns by those at risk of committing harm.  It has been found that two thirds of school shooters obtained their firearms from their own home, or the home of a relative $^{[8]}$. Studies have shown that the firearm homicide and suicide rates in the US are several times higher than that of any other industrialized country $^{[9]}$, and the patterns appear to be due to higher rates of firearm ownership in the US compared with other industrialized countries $^{[10]}$. It was shocking to learn that the pediatric firearm mortality rate is five times higher in the United States compared with any other industrialized country$^{[11]}$, and 87% of all children age 0 to 14 worldwide killed by firearms are children living in the US $^{[9]}$, despite the fact that less than 5% of the world’s children live in the US $^{[12]}$. Studies have confirmed that there has been significant increase in the number of gun rights and gun crimes in the United States in current years and many gun victims are exposed to violence in ways that are accidental, incidental, relational, or environmental$^{[13]}$ which questions the effectiveness of the existing gun  policies in different States in the United States. 
-
-While studding the dynamics of school shooting, student mental health plays a vital role. Studies showed that around 34% (almost one third) of the active shooters have ever evaluated their mental health conditions, only 17% (almost one fifth) of the active shooters were diagnosed with mental illness, although almost 80% of the shooters had a record of attempting suicides or have thought of commuting suicide before their attack$^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorder past history of suffering from extreme depression, sadness, hopelessness and desperation before their attack $^{[15]}$. Mental health condition is also very closely related to the financial stability. Economic insecurities can increase the anxiety, frustration, depression, hopelessness and also make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
-
-Though it may come as shocking, studies have sound that media coverage of shooters instigate more future school shooting incidences. A recent study have found significantly positive effect of media coverage of shooting incidences with the number of subsequent shootings and concluded that the effect lasts for following 4-10 days $^{[17]}$. The criminology professor Adam Lankford corroborated that the media coverage of school shooters can encourage future shooter and they are more likely to attempt such an incident $^{[17, 18]}$. 
+Though it may come as shocking, studies have found that media coverage of shooters instigate more future school shooting events. A recent study found a positive association between media coverage of shooting events and subsequent shootings, with increased media coverage being associated with higher rates of a subsequent shooting lasting for a period of 4-10 days $^{[17]}$. University of Alabama criminology professor Adam Lankford corroborated that the media coverage of school shooters can encourage future shooters to attempt such an attack themselves $^{[17,18]}$.
 
 
 ## Hypothesis Questions
@@ -984,7 +982,7 @@ fit_grade = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+su
 # table with model output
 kbl = broom::tidy(fit_grade)
 kbl$term = c("Intercept","GPA", "Poverty", "Bullying Laws score", "Articles in previous year", "Year","Suicide score", "Fight score" , "School safety score", "Bullying score")
-kableExtra::kable( kbl, align = "c" , digits = 4)%>%
+kableExtra::kable( kbl, align = "c" , digits = 4, caption = "GLM Output Using State Policy Grades as Covariates")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 
 # 1- to show estimated drop
@@ -1041,7 +1039,7 @@ gee_grade = geeglm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year
 # table with model output
 kbl_gee = broom::tidy(gee_grade)
 kbl_gee$term = c("Intercept","GPA", "Poverty", "Bullying Laws score", "Articles in previous year", "Year","Suicide score", "Fight score" , "School safety score", "Bullying score")
-kableExtra::kable( kbl_gee, align = "c" , digits = 4)%>%
+kableExtra::kable( kbl_gee, align = "c" , digits = 4, caption = "GEE Output Using State Policy Grade as Covariates")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"),full_width = F)
 
 ```
@@ -1066,7 +1064,7 @@ fit_law = glm(reformulate(names(ss_counts)[c(2,23,25,26,28,30,32,34,36:39)],name
 # table with output
 kbl2 = broom::tidy(fit_law)
 kbl2$term = c("Intercept","Year","Articles in previous year","Poverty", "Bullying Laws score",  "Suicide score",  "School safety score", "Fight score" ,"Bullying score", "Access Laws", "Transport Laws", "Screening Laws", "Bans")
-kableExtra::kable( kbl2, align = "c" , digits = 4)%>%
+kableExtra::kable( kbl2, align = "c" , digits = 4, caption = "GLM Output using State Laws as Covariates")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
@@ -1075,17 +1073,17 @@ Our model estimates that every addition of a restrictive (or removal of permissi
 # predict on raw scale for variables of interest
 
 # bans estimate and conf int
-bans_est = 1-exp(-0.2604)
-bans_ci_u = 1-exp(-0.2604-	1.96*0.1226)
-bans_ci_l = 1-exp(-0.2604+	1.96*0.1226)
+bans_est = paste( round(1-exp(-0.2604), digits = 4)*-100, "%", sep = "")
+bans_ci_l = paste( round(1-exp(-0.2604-	1.96*0.1226),digits = 4)*-100, "%", sep = "")
+bans_ci_u = paste( round(1-exp(-0.2604+	1.96*0.1226),digits = 4)*-100, "%", sep = "")
 
 # access laws estimate and conf int
-access_est = 1-exp(-0.0666)
-access_ci_u = 1-exp(-0.0666	-1.96*0.0274)
-access_ci_l = 1-exp(-0.0666	+1.96*0.0274)
+access_est = paste( round(1-exp(-0.0666), digits = 4)*-100, "%", sep = "")
+access_ci_l = paste( round(1-exp(-0.0666	-1.96*0.0274), digits = 4)*-100, "%", sep = "")
+access_ci_u = paste( round(1-exp(-0.0666	+1.96*0.0274), digits = 4)*-100, "%", sep = "")
 
 # table of estimates on raw scale
-kableExtra::kable(data.frame(Variable = c("Access Laws","Bans"), Estimate = -1*c(access_est,bans_est), `C.I Lower`= -1*c(access_ci_u,bans_ci_u),`C.I Upper`= -1*c(access_ci_l,bans_ci_l)  ), digits = 3)%>%
+kableExtra::kable(data.frame(Variable = c("Access Laws","Bans"), Estimate = c(access_est,bans_est), `C.I Lower`= c(access_ci_l,bans_ci_l),`C.I Upper`= c(access_ci_u,bans_ci_u)  ), digits = 3, caption = "Estimated Change in School Shooting Victims per Unit Increase in Law Type", align = "c")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
 
 ```
@@ -1127,7 +1125,7 @@ gee_law = geeglm(incident_count ~ year  + poverty + suicide_score + school_safet
 # table with output
 kbl2_gee = broom::tidy(gee_law)
 kbl2_gee$term = c("Intercept","Year","Poverty", "Suicide score",  "School safety score", "Fight score" ,"Bullying score", "Access Laws", "Transport Laws", "Screening Laws", "Bans")
-kableExtra::kable( kbl2_gee, align = "c" , digits = 4)%>%
+kableExtra::kable( kbl2_gee, align = "c" , digits = 4,caption = "GEE Output using State Laws as Covariates")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
 
 
@@ -1140,8 +1138,22 @@ The analysis above uses number of school shootings as its outcome, but does not 
 
 ### Model Results
 
+#### Model using grades:
 ```{r victims}
 
+# fit model written above
+fit_grade_victims = glm(total_victims~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
+
+# table with model output
+kbl_vict = broom::tidy(fit_grade_victims)
+kbl_vict$term = c("Intercept","GPA", "Poverty", "Bullying Laws score", "Articles in previous year", "Year","Suicide score", "Fight score" , "School safety score", "Bullying score")
+kableExtra::kable( kbl_vict, align = "c" , digits = 4, caption = "GLM Output Using State Policy Grades as Covariates and Number of Victims as the Outcome")%>%
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+#### Model using laws:
+```{r}
 # need to add in zero for rows with no shootings
 fit_law_victims = MASS::glm.nb(total_victims ~ year+prev_year_art + poverty + bullying_score + suicide_score + school_safety_score + fight_score + bully_score + access_laws + 
     transport + screening + ban+ offset(log(population)), data = ss_counts%>%
@@ -1150,7 +1162,7 @@ fit_law_victims = MASS::glm.nb(total_victims ~ year+prev_year_art + poverty + bu
 # table with model output
 kbl3 = broom::tidy(fit_law_victims)
 kbl3$term = c("Intercept","Year","Articles in previous year","Poverty", "Bullying Laws score",  "Suicide score",  "School safety score", "Fight score" ,"Bullying score", "Access Laws", "Transport Laws", "Screening Laws", "Bans")
-kableExtra::kable( kbl3, align = "c" , digits = 4)%>%
+kableExtra::kable( kbl3, align = "c" , digits = 4, caption = "GLM Output Using State Laws as Covariates and Number of Victims as the Outcome")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 
 ```
@@ -1162,27 +1174,27 @@ Here we see that there is evidence of effect for all four types of gun laws. Bel
 # include estimated change and conf int
 
 # bans
-bans_est = 1-exp(-0.4477)
-bans_ci_u = 1-exp(-0.4477	-1.96*0.1708)
-bans_ci_l = 1-exp(-0.4477	+1.96*0.1708)
+bans_est = paste( round(1-exp(-0.4477), digits = 4)*-100, "%", sep = "")
+bans_ci_l = paste( round(1-exp(-0.4477	-1.96*0.1708), digits = 4)*-100, "%", sep = "")
+bans_ci_u = paste( round(1-exp(-0.4477	+1.96*0.1708), digits = 4)*-100, "%", sep = "")
 
 # access laws
-access_est = 1-exp(-0.1089)
-access_ci_u = 1-exp(-0.1089-1.96*	0.0378)
-access_ci_l = 1-exp(-0.1089+1.96*	0.0378)
+access_est = paste( round(1-exp(-0.1089), digits = 4)*-100, "%", sep = "")
+access_ci_l = paste( round(1-exp(-0.1089-1.96*	0.0378), digits = 4)*-100, "%", sep = "")
+access_ci_u = paste( round(1-exp(-0.1089+1.96*	0.0378), digits = 4)*-100, "%", sep = "")
 
 #transport laws
-trans_est =  1-exp(0.2066)
-trans_ci_u =  1-exp(0.2066-1.96*	0.0872)
-trans_ci_l =  1-exp(0.2066+1.96*	0.0872)
+trans_est = paste("+", round( 1-exp(0.2066), digits = 4)*-100, "%", sep = "")
+trans_ci_l = paste( round( 1-exp(0.2066-1.96*	0.0872), digits = 4)*-100, "%", sep = "")
+trans_ci_u = paste( round( 1-exp(0.2066+1.96*	0.0872), digits = 4)*-100, "%", sep = "")
 
 #screening laws
-screen_est = 1-exp(0.0722)
-screen_ci_u = 1-exp(0.0722-1.96*	0.0369)
-screen_ci_l = 1-exp(0.0722+1.96*	0.0369)
+screen_est = paste("+", round(1-exp(0.0722), digits = 4)*-100, "%", sep = "")
+screen_ci_l = paste( round(1-exp(0.0722-1.96*	0.0369), digits = 4)*-100, "%", sep = "")
+screen_ci_u = paste( round(1-exp(0.0722+1.96*	0.0369), digits = 4)*-100, "%", sep = "")
 
 # print table
-kableExtra::kable(data.frame(Variable = c("Access Laws","Bans","Transport Laws", "Screening Laws"), Estimate = -1*c(access_est,bans_est, trans_est, screen_est), `C.I Lower`= -1* c(access_ci_u,bans_ci_u, trans_ci_u, screen_ci_u),`C.I Upper`=-1*c(access_ci_l,bans_ci_l, trans_ci_l,screen_ci_l) ), digits = 3)%>%
+kableExtra::kable(data.frame(Variable = c("Access Laws","Bans","Transport Laws", "Screening Laws"), Estimate = c(access_est,bans_est, trans_est, screen_est), `C.I Lower`=c(access_ci_l,bans_ci_l, trans_ci_l,screen_ci_l) ,`C.I Upper`=c(access_ci_u,bans_ci_u, trans_ci_u, screen_ci_u)), caption = "Estimated Change in School Shooting Victims per Unit Increase in Law Type", align = "c")%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
 
 ```
