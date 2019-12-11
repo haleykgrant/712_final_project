@@ -1,0 +1,54 @@
+---
+title: "Narration"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Motivation and Objectives
+In September, 2014, the Federal Bureau of Investigation (FBI) provided a report “A Study of Active Shooter Incidents in the United States Between 2000 and 2013” mentioning that the incidence of school and mass shooting incidents has been drasically increasing over the past 14 years $^{[1,2]}$. Very recently on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old open fire at the school, killing 2 people and injuring 3 others $^{[3]}$. According a recent study, on an average, in the United States one mass killing occurs approximately every two weeks and one school shooting occurs almost every month $^{[4]}$. Such an increasing trend has raised serious public concerns about school safety and questions the efficacy of the existing gun laws in different States. To prevent such traumatic incidents, state legistators should consider implementing effective gun law policies that would bring notable reduction in school shootings. We believe that in depth analysis of the impact of gun policies of every state on school shooting may help state legislators to establish appropriate interventions. Thus primary aim of this study is to investigate the association between the strength of states gun laws with the incidence of school shootings. 
+
+# Related Work
+According to an analysis by “Washington Post”, since the Columbine school shooitng in the year 1999, almost 233,000 students have experienced gun violence and the number is still growing at a rapid rate $^{[5]}$. Experiencing such a traumatic event leaves a strong affect on the mental health of the survivors. Research indicates that experiencing assults and violences, or knowing that a close friend or family member had to experience such violence, increases their chance of developing severe mental health problems such as post-traumatic stress disorder (PTSD) and major depression $^{[6,7]}$.
+
+In order to effectively address gun violence in schools, we should first acknowledged that the fact,it is very much a gun violence problem. Though in the last two decades several school safety plans has been proposed but very few of them have exhaustively adjusted for the most crucial fact that was common almost in all school shooting incidences: the shooters did not have leagl access to the firearms. It was shocking to learn that almost two thirds of the shooters collected their firearms from their own home ot from their relative's home $^{[8]}$. Studies have shown that the Unites States have the highest number of firearm homicide and suicide rates  than any other inustrialized countries in the world $^{[9]}$, and it is somehow not surprizing as the United States also have highest rates of firearm ownership among all other industrialized countries $^{[10]}$. In the similar pattern, the United States also have five times more pediatric firearm mortality rate then any other country $^{[11]}$. Though only less than 5% of the world's children lives in the Unites States $^{[12]}$, studies have found that almost 87% of the children who have been killed by firearms happen to be from the United States $^{[9]}$. Studies have confirmed that there has been significant increase in the number of gun rights and gun crimes in the United States in current years and many gun victims are exposed to violence in ways that are accidental, incidental, relational, or environmental $^{[13]}$ which questions the effectiveness of the existing gun policies in different States in the United States.
+
+While studying the dynamics of school shooting, student mental health plays a vital role. Studies showed that around 34% (almost one third) of the active shooters have ever evaluated their mental health conditions, only 17% (almost one fifth) of the active shooters were diagnosed with mental illness, although almost 80% of the shooters had a record of attempting suicides or have thought of commuting suicide before their attack[14]. Studies have also indicated that around 61% of the shooters have a recorder past history of suffering from extreme depression, sadness, hopelessness and desperation before their attack [15]. Mental health condition is also very closely related to the financial stability. Economic insecurities can increase the anxiety, frustration, depression, hopelessness and also make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools [16].
+
+Though it may come as shocking, studies have sound that media coverage of shooters instigate more future school shooting incidences. A recent study have found significantly positive effect of media coverage of shooting incidences with the number of subsequent shootings and concluded that the effect lasts for following 4-10 days [17]. The criminology professor Adam Lankford corroborated that the media coverage of school shooters can encourage future shooter and they are more likely to attempt such an incident [17,18].
+
+
+
+# Recommendation
+The analysis showed explicit evidences that the states with more prohibitive gun laws policies had lesser number of school shooting experiences and thus leads us to suggest improving gun policies and imposing more restrictive gun laws may help to reduce the number of school shootings. The analysis of individual types of gun laws reveals that controlling the accessibilty of guns and banning firearms may improve the prevalent school shooting rates. Based on the other findings of our primary analysis we would also suggest to pay more attention to the media coverage of the school shooting incidences. We would recommend media to not broadcast the name and details of the shooters rather focus more on the victims as often cases potential attackers may be motivated by the publicity. Youth mental health should given more priority and states can offer different behavioral interventions in schools to promote mental health.    
+
+
+
+# Limitations
+
+The gun law scores were assigned to each state based on the how restrictive and effective gun policies and laws the state implements, however there was not been much details provided in the website about the mechanisimn that was applied in the grading scores. The website does not clearly state which are the laws they have considered while grading the states and also how much weight each gun laws were assigned while calculating the score. Again the relative difference between two grades such as B to A and F to E, was been considered as equal change as in both cases the more gun policies or laws has been introdruced and grades have improved by one scale but it ignores the fact that the state moving from F to E might had to struggle more to improve the situation than the state which already had a better judicial law about gun policies. 
+
+Similarly when we were investigating the effects of different gun laws separately, we assumed that the all the gun laws hold similar importance and we had assigned equal weights to all the laws. For all the different types of all, for each cases when there was a permissive law change we assigned -1 and for each restrive law change we assigned +1. Again, as mentioned at the data section some of the laws were changed in the middle of the year and we decided to round the value to the nearest year which may cause some loss of information. In the dataset we have considered the law changes that took place after the year 2010. However, there can be some changes in the gun laws prior to 2010 which may still have some impact on the preceding years states gun policies and may have a confounding effect on our analysis and it is not possible to adjust for it. We are also aware of the fact that even if the laws were changed at a certain time point, it takes time for the changes to make a significant impact on  the overall gun prevalence and gun violence thus it is difficult to quantify the effect of gun policies on school shootings. 
+
+<font color="red">
+It is ascertained that the state with higher population would have more number of schools and also might have more school shooting incidences and we wished to adjust for the population. Though we could have adjust the model only for the school going population but the dataset shows that there was a large number of shooters with age more than 18 years. Hence we decided to take into account the overall population of each state for each year instead of just the school going population. 
+</font>
+
+
+<font color="red">
+As the literature view suggested we wished to adjust for the prevalence of mental heath illness in each state over the study period and collected data on the prevalent rate of youths who were suffereing from major depression but did not receive any mental health treatment. However the exporatory data analysis revealed that there were extreme inconsistency in the data. The documentation clearly did not specify the study years and though the report 2018 and 2019 mentioned that they have used survey data from the year 2014-2015, the values were different. Because of the reports did not explicitly defined the survey years we decided not to include the data in our analysis. However, if the dataset was perstitent, it would have added more information to our analysis.  
+
+</font>
+
+## Future Scope
+
+We selected the prevelant poverty rate as an indicator of the financial statbility and economic condition of each state. As the literature review implies, we could have collected unemployment rate for each state and for each year but since the majority of the school shooters were students, it is coherent to assume that whether the students are coming from financially stable families or not would impact more on school shootings than employment rate. However, for future analysis we could account for unemployment rate, income per household and other economic variables to make the study more exhaustive.   
+
+
+Bullying at school is often considered as one of the crucial components of school shooting incidences and thus we wished to account for the variation in the existing bullying laws in different states. However the most credible dataset that was avaiable for each state contained data only for the year 2010. So we included the variable to adjust for the variation in state laws assuming that the states maintained the same level of rigidity towards the bullying laws throughtout the study period. The analysis  would have been more thorough if we had data for all the years.      
+
+
+
+
