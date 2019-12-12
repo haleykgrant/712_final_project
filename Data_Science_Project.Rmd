@@ -1406,6 +1406,9 @@ kableExtra::kable(data.frame(Variable = c("Access Laws","Bans","Transport Laws",
 
 
 
+
+
+
 # Conclusions
 
 ## Recommendation
