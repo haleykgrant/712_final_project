@@ -889,6 +889,39 @@ ss_counts%>%
 
 ```
 
+
+```{r warning=F}
+ss_counts%>%
+  mutate(grade = substr(grade,1,1))%>% # get rid of plus/minus grades (round to letter grade)
+  group_by(grade)%>%
+  summarise(count = sum(incident_count), # total incidents in states with same grade (all years)
+            pop = sum(population))%>% # total population in states with same grade (all years)
+  filter(!is.na(grade))%>% # only years with grade value
+  ggplot(aes(x = grade, y = (count/pop)*330000000, fill = grade))+
+  geom_bar(stat = "identity")+
+  scale_fill_viridis_d(direction = -1)+
+  theme_classic()+
+  labs(y = "Normalized School Shooting Count", x = "Grade", title = "School Shootings by Gun Policy Strength")+
+  theme( legend.position = "none", plot.title = element_text(hjust = 0.5))
+```
+
+
+```{r include=FALSE}
+ss_counts%>%
+  gather(key = "law_type", value = "law_count", c(36:39))%>%
+  group_by(law_count,law_type)%>%
+  summarise(count = sum(incident_count), # total incidents in states with same grade (all years)
+            pop = sum(population))%>% # total population in states with same grade (all years)
+  ggplot(aes(x = law_count, y = (count/pop)*330000000, fill = law_count))+
+  geom_bar(stat = "identity")+
+  scale_fill_viridis_c(direction = 1)+
+  theme_classic()+
+  labs(y = "Normalized School Shooting Count", x = "Laws in Effect", title = "School Shootings by Gun Laws")+
+  theme( legend.position = "none", plot.title = element_text(hjust = 0.5))+
+  facet_wrap(.~law_type, scales = "free_x")
+
+```
+
 ## Gun Policy by State
 
 We next look at how these school shootings occur with respect to gun policy. Below is a plot showing the number of school shootings in each state from the years 2012-2018, where each state is colored by the gun policy grade it received that year (we took grades as letter grades without +/-). As we can see, in the early years it seems that the states with poor gun policy grades account for the most school shootings. Interestingly, in 2018 there seems to be a trend reversal, with states receiving high grades experiencing a high number of school shootings.

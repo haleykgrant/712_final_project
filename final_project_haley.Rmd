@@ -991,10 +991,24 @@ survey_combined%>%
 
 fit_grade = glm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score+ offset(log(population)), family = "poisson", data = ss_counts)
 
+gee_dat_grade = ss_counts%>%
+  select(c(1,2,3,20,22,23,25,26,28,30,32,34,36:39))
+
+gee_grade = geeglm(incident_count~gpa+poverty+bullying_score+ prev_year_art+year+suicide_score+fight_score+school_safety_score+bully_score,family=poisson("log")
+                ,offset = log(population),id=as.factor(state),data=gee_dat_grade[complete.cases(gee_dat_grade),])
+
+
 summary(fit_grade)
 
-fit_law = glm(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
+fit_law = glm(reformulate(names(ss_counts)[c(2,23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), family = "poisson", data = ss_counts)
 summary(fit_law)
+
+gee_dat_law = ss_counts%>%
+  select(c(1,2,3,20,23,25,26,28,30,32,34,36:39))
+
+gee_law = geeglm(incident_count ~ prev_year_art + poverty + suicide_score + school_safety_score + fight_score + bully_score + access_laws + 
+    transport + screening + ban,family=poisson("log")
+                ,offset = log(population),id=as.factor(state),data=gee_dat_law[complete.cases(gee_dat_law),])
 
 z_fit = pscl::zeroinfl(reformulate(names(ss_counts)[c(23,25,26,28,30,32,34,36:39)],names(ss_counts)[3]), offset=log(population), dist  = "poisson", data = ss_counts)
 summary(z_fit)
@@ -1035,6 +1049,25 @@ cilb= arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x))$coef-sqrt(diag(vcov(
 ciub = arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x))$coef+sqrt(diag(vcov( arima(diff(ts_y),order = c(0,0,0), xreg = diff(ts_x)))))
 data.frame(Lower= cilb, Upper = ciub)
 }
+
+
+```
+
+
+```{r}
+ss_counts%>%
+  mutate(grade = substr(grade,1,1))%>%
+  group_by(grade)%>%
+  summarise(count = sum(incident_count),
+            pop = sum(population))%>%
+  filter(!is.na(grade))%>%
+  ggplot(aes(x = grade, y = (count/pop)*330000000, fill = grade))+
+  geom_bar(stat = "identity")+
+  scale_fill_viridis_d(direction = -1)+
+  theme_classic()+
+  labs(y = "Normalized School Shooting Count", x = "Grade", title = "School Shootings by Gun Policy Strength")+
+  theme( legend.position = "none", plot.title = element_text(hjust = 0.5))
+
 
 
 ```
