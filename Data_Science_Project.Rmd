@@ -144,7 +144,7 @@ st_yr = data.frame(state = rep(sts,length(yrs)), year = sort(rep(yrs,length(sts)
 
 
 ## State Grades (Gun Policy)
-The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the [Guifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score was graded on an A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into GPA scale. So the grades for each state was transformed into a GPA score using the school GPA grading scale (out of 4.00).  
+The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the [Gifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score was graded on an A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into GPA scale. So the grades for each state was transformed into a GPA score using the school GPA grading scale (out of 4.00).  
 
 ```{r policy grade data, message=FALSE, warning=FALSE}
 
@@ -243,6 +243,85 @@ The analysis also wished to investigate the impact of different gun laws separat
 4. Transport: Castle Doctrine, Open carrying not restricted, Carrying a concealed weapon
 
 ```{r RAND data, message=FALSE, warning=FALSE}
+
+# Do not execute because final product is already saved as a CSV
+
+
+if(FALSE){
+  # import the raw data
+data.rand=read.csv("rand.laws.database.csv",stringsAsFactors = FALSE)
+
+# combine law types by a simple set of phrases which all laws contain exactly one of 
+
+types=c("background check","carrying","castle doctrine","child access","dealer license","age","registration","waiting period","prohibited possessor","safety training","ban","permit","open carry","one gun per")
+match.df=as.data.frame(unique(data.rand$Type.of.Law))
+match.df <- data.frame(lapply(match.df,as.character),stringsAsFactors=FALSE)
+names(match.df)<-"type"
+match.df$abv.name=0
+
+i=1
+j=1
+flag=0
+while(i<=nrow(match.df)){
+      j=1
+      while(j<=length(types)&flag==0){
+            if(any(grep(types[j],match.df$type[i],ignore.case=TRUE))){
+                  match.df$abv.name[i]=types[j]
+                  flag=1
+                  }
+            else{
+                  j=j+1
+            }
+      }
+      flag=0
+      i=i+1
+}
+
+names(data.rand)[5]="type"
+data.rand=left_join(data.rand,match.df,by="type")
+names(data.rand)[23]<-"type.of.law"
+
+# Only keep laws which have non-missing values for the type of change and effect, and remove DC
+
+data.rand=filter(data.rand,Type.of.Change=="Implement"|Type.of.Change=="Modify"|Type.of.Change=="Repeal")
+data.rand=filter(data.rand,Effect!="")
+data.rand=filter(data.rand,State!="District of Columbia"&State!="DIstrict of Columbia")
+
+# Determine the years in which the law is in effect by rounding the start and end dates to the nearest year. For laws which are not superceded by newer laws, set the end date to 2020 (our analyses do not extend to 2020 so this is equivalent to saying the law never ended).
+
+data.rand$Supercession.Date[data.rand$Supercession.Date==""]="1/1/2020"
+data.rand$end.year=year(mdy(data.rand$Supercession.Date))
+data.rand$end.month=month(mdy(data.rand$Supercession.Date))
+data.rand$start.year=year(mdy(data.rand$Effective.Date))
+data.rand$start.month=month(mdy(data.rand$Effective.Date))
+data.rand$start.year=data.rand$start.year+ceiling(data.rand$start.month/6)-1
+data.rand$end.year=data.rand$end.year+ceiling(data.rand$end.month/6)-1
+data.rand=clean_names(data.rand)
+
+year=2007
+blank.df=NULL
+while(year<=2019){
+      blank.df=data.rand%>%filter(start_year<=year,end_year>year)%>%count(state,type_of_law,effect)%>%cbind(year)%>%rbind(blank.df)
+      year=year+1
+}
+skel=expand.grid(unique(data.rand$state),unique(data.rand$type_of_law),unique(data.rand$effect),2007:2019)
+skel=as.data.frame(skel)
+
+# count the number of laws in effect for each state by year by type of law and effect (permissive or restrictive)
+
+names(skel)<-c("state","type_of_law","effect","year")
+skel$state=as.character(skel$state)
+rand.count.data=merge(skel,blank.df,by=c("state","type_of_law","effect","year"),all=TRUE)
+rand.count.data[is.na(rand.count.data$n),"n"]=0
+names(rand.count.data)[5]<-"count"
+rand.count.data=unite(rand.count.data,"law_effect",c("type_of_law","effect"),sep="_")%>%spread("law_effect","count")%>%clean_names()
+write.csv(rand.count.data,"cleaned.rand.csv")
+}
+
+
+
+
+
 # data set to go from state names to abbreviations
 states = data.frame(state.name,state.abb)
 dc = data.frame(matrix(ncol= 2, nrow = 1))
@@ -268,6 +347,54 @@ rand.count.data = read_csv("cleaned.rand.csv")%>%
 The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe mental disorder. The dataset was obtained from_____________. The dataset contained the percentage of youths who has been diagnosed with major depression but who did not receive any mental health treatment for each state over the years 2010 to 2016.  
 
 ```{r mental health data, message=FALSE, warning=FALSE}
+# cleaning mental health data. commented out because it is already saved as a csv file
+
+if(FALSE){
+# read in each year's csv file
+data.2016=read.csv("mha2016.csv",stringsAsFactors = FALSE)
+data.2017=read.csv("mha2017.csv",stringsAsFactors = FALSE)
+data.2018=read.csv("mha2018.csv",stringsAsFactors = FALSE)
+data.2019=read.csv("mha2019.csv",stringsAsFactors = FALSE)
+data.2020=read.csv("mha2020.csv",stringsAsFactors = FALSE)
+
+names(data.2017)[2]<-"State"
+
+data.2016=data.2016[,c("State","Percent","Year")]
+data.2017=data.2017[,c("State","Percent","Year")]
+data.2018=data.2018[,c("State","Percent","Year")]
+data.2019=data.2019[,c("State","Percent","Year")]
+data.2020=data.2020[,c("State","Percent","Year")]
+states=sort(unique(data.2020$State))
+# Remove DC
+states=states[-9]
+# Find which states don't match up for each year
+
+states==sort(unique(data.2016$State))
+sort(unique(data.2016$State))[8]
+# remove DC from 2016 data
+data.2016=filter(data.2016,State!="DC")      
+states==sort(unique(data.2016$State))
+data.2016$State[35]="Louisiana"
+states==sort(unique(data.2016$State))
+data.2017=filter(data.2017,State!="District of Columbia")
+states==sort(unique(data.2017$State))
+data.2018=filter(data.2018,State!="District of Columbia")
+data.2018$State[9]="Wyoming"
+states==sort(unique(data.2018$State))
+data.2019=filter(data.2019,State!="District of Columbia"&State!="")
+states==sort(unique(data.2019$State))
+
+mh.data=rbind(data.2016,data.2017,data.2018,data.2019,data.2020)
+mh.data$Year=mh.data$Year-1      
+mh.data$Percent[51]=42.1
+mh.data=filter(mh.data,State!="District of Columbia")
+write.csv(mh.data,"mh.data.csv")
+}
+
+
+
+
+
 mh.data=read.csv("mh.data.csv",stringsAsFactors = FALSE)%>%
   clean_names()%>%
   select(-x)%>%
@@ -505,6 +632,7 @@ survey_combined = survey_combined%>%
 The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalence rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016. 
 
 ```{r load and clean poverty data, message=FALSE, warning=FALSE}
+# read in poverty data
 
 pov=read.csv("census_poverty_data.csv",stringsAsFactors = FALSE)
 pov=filter(pov,State!="      United States"&State!="     United States"& State!="District of Columbia"&State!="United States")
@@ -516,7 +644,7 @@ skel=expand_grid(sort(unique(pov$state)),min(pov$year):(max(pov$year)+2))
 names(skel)<-c("state","year")
 
 
-
+# Each data point is a three-year average. We assign this average to all years which were combined to make the three year average
 sk1=filter(skel,year==2007|year==2008|year==2009)
 sk1=left_join(sk1,filter(pov,year==2007),by="state")
 
@@ -943,6 +1071,19 @@ survey_combined_raw%>%
   theme_bw()+
   theme(legend.position = "none",axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5),plot.title = element_text(hjust = 0.5))
 ```
+
+## Mental Health Data
+
+When we look further into the mental health data, we realize there are many issues with these data. For one, the survey years stated on the Mental Health America website for each year's report sometimes overlap, but do not share the same values. Further, the reported percentages do not always change from year to year. The below plot shows an example of this, using the year prior to the report as the survey year. 
+
+```{r mental health data problems, message=FALSE, warning=FALSE}
+
+mh.data=mh.data%>%clean_names()
+ggplot(data=mh.data,mapping=aes(x=year,y=percent,col=state))+geom_line()
+
+```
+
+Note that 2015 and 2016 show no change in values. We also notice that there does not appear to be any pattern in the percent of youth experiencing a major depressive episode and not receiving treatment by state or time. This observation,
 
 # Model Fitting
 
