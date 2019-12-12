@@ -1079,11 +1079,11 @@ When we look further into the mental health data, we realize there are many issu
 ```{r mental health data problems, message=FALSE, warning=FALSE}
 
 mh.data=mh.data%>%clean_names()
-ggplot(data=mh.data,mapping=aes(x=year,y=percent,col=state))+geom_line()
+ggplot(data=mh.data,mapping=aes(x=year,y=percent,col=state))+geom_line()+labs(title="Percent of Youth Who Experienced an MDE and Did Not Receive Treatment",x="Year",y="Percent")
 
 ```
 
-Note that 2015 and 2016 show no change in values. We also notice that there does not appear to be any pattern in the percent of youth experiencing a major depressive episode and not receiving treatment by state or time. This observation,
+Note that 2015 and 2016 show no change in values. We also notice that there does not appear to be any pattern in the percent of youth experiencing a major depressive episode and not receiving treatment by state or time. This observation, along with the lack of clarity on the appropiate survey years for the data and that two years' reports had the same values led us to conclude that this data should not be included in our models.
 
 # Model Fitting
 
