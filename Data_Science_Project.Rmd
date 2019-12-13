@@ -37,20 +37,20 @@ library(geepack)
 
 
 # Motivation and Objectives
-In September, 2014, the Federal Bureau of Investigation (FBI) published a report, “A Study of Active Shooter Incidents in the United States Between 2000 and 2013,” starting that the incidence of school and mass shooting incidents has been drastically increasing since the turn of the century $^{[1,2]}$. According to a recent study, on an average, the United States experiences approximately one mass killing every two weeks and one school shooting every month $^{[4]}$. In fact, just on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old opened fire at the school, killing 2 people and injuring 3 others $^{[3]}$. Such an increasing trend has raised serious public concerns about school safety and questions the efficacy of the existing gun laws in different states. To prevent such traumatic incidents, state legislators should consider implementing effective gun policies that would bring notable reduction in school shootings. We believe that an in-depth analysis of the impact of gun policies of every state on school shooting may help convince state legislators to push to establish appropriate interventions. Thus, the primary aim of this study is to investigate the association between the strength of state gun laws with the incidence of school shootings. 
+In September 2014, the Federal Bureau of Investigation (FBI) published a report, “A Study of Active Shooter Incidents in the United States Between 2000 and 2013,” stating that the incidence of school and mass shootings has been drastically increasing since the turn of the century $^{[1,2]}$. According to a recent study, on average, the United States experiences approximately one mass shooting every two weeks and one school shooting each month $^{[4]}$. In fact, just on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old opened fire at the school, killing 2 people and injuring 3 others $^{[3]}$. This troubling trend has raised serious public concerns about school safety and has brought gun regulation into the forefronnt of public awareness. We believe that an in-depth analysis of the impact of state gun policies on school shooting rates can inform state legislators about the effectiveness of gun policies. Thus, the primary aim of this study is to investigate the association between the strength of state gun laws and the incidence of school shootings. 
 
 # Related Work
-According to an analysis by *The Washington Post*, since the Columbine school shooting in 1999, almost 233,000 students have experienced gun violence and that number is still rising $^{[5]}$. Not only has this resulted in a huge unnecessary loss of life, experiencing such traumatic events also leaves a strong effect on the mental health of the survivors and their loved ones. Research indicates that experiencing assault and other violence, or knowing that a close friend or family member had to experience such violence, increases their chance of developing severe mental health problems such as post-traumatic stress disorder (PTSD) and major depression $^{[6,7]}$.
+According to an analysis by *The Washington Post*, since the Columbine school shooting in 1999, almost 233,000 students in the United States have experienced gun violence, and that number continues to rise $^{[5]}$. Not only has this resulted in a tragic loss of life, it has also left a lasting impact on the mental health of survivors and their loved ones. Research indicates that experiencing assault and other violence, or knowing that a close friend or family member has experienced such violence, leads to a higher risk in developing severe mental health problems such as post-traumatic stress disorder (PTSD) and major depression $^{[6,7]}$.
 
-In order to effectively address gun violence in schools, we should first acknowledge that this is, specifically, a gun violence problem. Though in the last two decades several school safety plans has been proposed, very few of them have exhaustively adjusted for the most crucial fact that was common almost in all school shooting incidents: the shooters did not have legal access to the firearms used. It was shocking to learn that almost two thirds of the shooters collected their firearms from their own home or from a relative's home $^{[8]}$. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[9]}$ as well as highest rate of firearm ownership among these countries $^{[10]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[11]}$. Though less than 5% of the world's children live in the Unites States $^{[12]}$, studies have found that almost 87% of the child deaths from firearms have occurred in the United States $^{[9]}$. Studies have confirmed that there has been a significant increase in the number of gun rights and gun crimes in the United States in recent years.
+This gun violence trend in the United States is not limited to only school shootings. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[9]}$ as well as highest rate of firearm ownership among these countries $^{[10]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[11]}$. Though less than 5% of the world's children live in the Unites States $^{[12]}$, almost 87% of the child deaths from firearms have occurred in the United States $^{[9]}$. Studies have found that there has been a significant increase in the number of both gun rights and gun crimes in the United States in recent years.
 
-While studying the dynamics of school shootings, student mental health must be considered. Studies show that about 50% of school shooters were diagnosed with a mental illness and almost 80% of the shooters had a record of attempting suicide or having suicidal thoughts before their attack $^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorded history of extreme depression, sadness, hopelessness and desperation before their attack $^{[15]}$. Mental health condition can also be closely related to financial stability. Economic insecurities can increase anxiety, frustration, depression, hopelessness and make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
+To study the trend of school shootings, student mental health must be considered. Studies show that about 50% of past school shooters were diagnosed with a mental illness and almost 80% had a record of attempting suicide or having suicidal thoughts before their attack $^{[14]}$. Studies have also indicated that around 60% of these shooters have a recorded history of extreme depression, sadness, hopelessness, or desperation before their attack $^{[15]}$. Mental health condition can also be closely related to financial stability. Economic insecurities can increase anxiety, frustration, depression, hopelessness and make a person feel more desperate. A recent study has determined that economic insecurity may link directly to gun violence in schools $^{[16]}$.
 
-Though it may come as a surprise, studies have found that media coverage of shooters inspire future school shooting events. A recent study found a positive association between media coverage of shooting events and subsequent shootings, with increased media coverage being associated with higher rates of a subsequent shooting lasting for a period of 4-10 days $^{[17]}$. University of Alabama criminology professor Adam Lankford corroborated that the media coverage of school shooters can encourage future shooters to attempt such an attack themselves $^{[17,18]}$.
+Though it may come as a surprise, studies have also found that media coverage of mass shooters may incite further shootings. In particular, media coverage of a mass shooting elevates the risk of a subsequent shooting for a period of 4-10 days $^{[17]}$. Research by University of Alabama criminology professor Adam Lankford extends these findings to school shootings in particular $^{[17,18]}$.
 
 
 # Hypothesis Questions
-School shootings are complex phenomena as they are intricately linked with various components such as: mental health, bullying, school safety measures, socioeconomic condition and, of course, availability of guns. The goal of the project is to investigate the impact of gun policies on the magnitude of school shooting rates in different states. The analysis is designed to provide valuable insights to state legislators about the impact of gun policies on school shooting incidents. In order to analyze school shooting in depth, we consider the following aspects of school shootings within each state over the time period: 
+School shootings are complex phenomena as they are intricately linked with a number of components such as: mental health, bullying, school safety measures, socioeconomic condition and, of course, availability of guns. The goal of the project is to investigate the impact of gun policies on the magnitude of school shooting rates in different states. The analysis is designed to provide valuable insights to state legislators about the impact of gun policies on school shooting incidents. In order to analyze school shooting in depth, we consider the following aspects of school shootings within each state over the time period: 
 
 1. Overall impacts of gun policies
 2. Affects of bullying laws and prevalence of bullying\
@@ -235,7 +235,7 @@ gpa_convert = data.frame(letter_grade = c("A","A-","B+","B","B-",
 
 
 ## Gun Laws
-This analysis also wishes to investigate the impact of specific types gun laws separately and thus also turned to the RAND dataset for more data. The dataset was obtained from the ______________ website. The data include information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables with information about the type of the law, whether the change was restrictive or permissive, effective date, and end date. There are total 14 types of laws and each change is designated as either restrictive or permissive. For our analysis we count the number of laws in effect in each state and year. As some of the laws change in the middle of a year, the years are rounded to the nearest year (cutoff point of July 1st). Each permissive law is assigned the value -1 and each restrictive law is assigned as +1. Then, for each category the total number of permissive and restrictive laws are summed to obtain a final score for each state in each year. The different types of laws are further combined into the following four categories:
+This analysis also wishes to investigate the impact of specific types gun laws separately and thus also turned to the RAND dataset for more data. The dataset was obtained from the [RAND State Firearm Law Database](https://www.rand.org/pubs/tools/TL283-1.html). The data include information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables with information about the type of the law, whether the change was restrictive or permissive, effective date, and end date. There are total 14 types of laws and each change is designated as either restrictive or permissive. For our analysis we count the number of laws in effect in each state and year. As some of the laws change in the middle of a year, the years are rounded to the nearest year (cutoff point of July 1st). Each permissive law is assigned the value -1 and each restrictive law is assigned as +1. Then, for each category the total number of permissive and restrictive laws are summed to obtain a final score for each state in each year. The different types of laws are further combined into the following four categories:
 
 1. Access laws: Minimum age, Prohibited Possessor, Child Access
 2. Screening law: Waiting period, Registration, Background checks, Dealer license, Safety training, permit, one gun per month
@@ -251,7 +251,7 @@ if(FALSE){
   # import the raw data
 data.rand=read.csv("rand.laws.database.csv",stringsAsFactors = FALSE)
 
-# combine law types by a simple set of phrases which all laws contain exactly one of 
+# combine law types by a simple set of phrases that all laws contain exactly one of 
 
 types=c("background check","carrying","castle doctrine","child access","dealer license","age","registration","waiting period","prohibited possessor","safety training","ban","permit","open carry","one gun per")
 match.df=as.data.frame(unique(data.rand$Type.of.Law))
@@ -281,13 +281,13 @@ names(data.rand)[5]="type"
 data.rand=left_join(data.rand,match.df,by="type")
 names(data.rand)[23]<-"type.of.law"
 
-# Only keep laws which have non-missing values for the type of change and effect, and remove DC
+# Only keep laws that have non-missing values for the type of change and effect, and remove DC
 
 data.rand=filter(data.rand,Type.of.Change=="Implement"|Type.of.Change=="Modify"|Type.of.Change=="Repeal")
 data.rand=filter(data.rand,Effect!="")
 data.rand=filter(data.rand,State!="District of Columbia"&State!="DIstrict of Columbia")
 
-# Determine the years in which the law is in effect by rounding the start and end dates to the nearest year. For laws which are not superceded by newer laws, set the end date to 2020 (our analyses do not extend to 2020 so this is equivalent to saying the law never ended).
+# Determine the years in which the law is in effect by rounding the start and end dates to the nearest year. For laws that are not superceded by newer laws, set the end date to 2020 (our analyses do not extend to 2020 so this is equivalent to saying the law never ended).
 
 data.rand$Supercession.Date[data.rand$Supercession.Date==""]="1/1/2020"
 data.rand$end.year=year(mdy(data.rand$Supercession.Date))
@@ -341,7 +341,7 @@ rand.count.data = read_csv("cleaned.rand.csv")%>%
 
 
 ## Mental Health 
-The literature review shows strong influence of mental illness on school shooting occurrences. Thus we collected a dataset that contains the prevalence of youths with severe mental disorder by state. The dataset was obtained from_____________. The dataset contains the percentage of youths who have been diagnosed with major depression but who did not receive any mental health treatment in each state over the years 2010 to 2016.  
+The literature review shows strong influence of mental illness on school shooting occurrences. Thus we collected a dataset that contains the prevalence of youths with severe mental disorder by state. The dataset was obtained from [Mental Health America](https://mhanational.org/issues/mental-health-america-youth-data). The dataset contains the percentage of youths who have been diagnosed with major depression but who did not receive any mental health treatment in each state over the years 2010 to 2016.  
 
 ```{r mental health data, message=FALSE, warning=FALSE}
 # cleaning mental health data. commented out because it is already saved as a csv file
@@ -624,7 +624,7 @@ survey_combined = survey_combined%>%
 ```
 
 ## Poverty
-The financial status of populations within each state may also have an influence on the number of school shootings that took place each year. Thus, to account for this, we include the poverty prevalence rate for each state over the study period measure by thee percent of the population living below the poverty line. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2007 to 2018. 
+The financial status of populations within each state may also have an influence on the number of school shootings that took place each year. Thus, to account for this, we include the poverty prevalence rate for each state over the study period measure by thee percent of the population living below the poverty line. The dataset was obtained from [The U.S. Census Bureau](https://www.census.gov/library/publications.html). The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2007 to 2018. 
 
 ```{r load and clean poverty data, message=FALSE, warning=FALSE}
 # read in poverty data
@@ -1112,7 +1112,7 @@ ggplot(data=mh.data,mapping=aes(x=year,y=percent,col=state))+
   labs(title="Percent of Youth Who Experienced an MDE \nand Did Not Receive Treatment",x="Year",y="Percent")+
   scale_color_discrete(name = "State")+
   theme_bw()+
-  theme(legend.text = element_text(size = 5), legend.key.size = unit(.5,"line"), legend.title.align = 0.5)
+  theme(legend.text = element_text(size = 5), legend.key.size = unit(.5,"line"), legend.title.align = 0.5, plot.title = element_text(hjust = 0.5))
 
 ```
 
@@ -1180,7 +1180,7 @@ From this model we predict that with a one unit change in GPA, a state would exp
 
 ## Model Checking
 
-To check the model we run a number of diagnostic tests. First we perform a deviance test and get a p-value of  $p=0.838$ against our null hypothesis that the model fits well (no evidence against model). We also test for any overdispersion and get a p-value of $p = 0.945$ against the null that there is no overdispersion (no evidence against the null) with an estimated dispersion parameter of -0.1. Lastly we plot diagnostic plots and see that the model fits relatively well.
+To check the model we run a number of diagnostic tests. First we perform a deviance test and get a p-value of  p=0.838 against our null hypothesis that the model fits well (no evidence against model). We also test for any overdispersion and get a p-value of p = 0.945 against the null that there is no overdispersion (no evidence against the null) with an estimated dispersion parameter of -0.1. Lastly we plot diagnostic plots and see that the model fits relatively well.
 
 ```{r check model fit, message=FALSE}
 #check model fit using deviance
@@ -1312,7 +1312,7 @@ kableExtra::kable(data.frame(Variable = c("Access Laws","Bans"), Estimate = c(ac
 ```
 
 ## Model Checking
-Again, we check our model fit using a variety of methods. For our deviance test we get no significant evidence against our model ($p = 0.9593$). We also do not get evidence of overdispesion ($p = 0.3599$) with an estimated dispersion parameter of 0.0181. The diagnostic plots show an even better fit than our first model (red lines look more horizontal than in previous model). 
+Again, we check our model fit using a variety of methods. For our deviance test we get no significant evidence against our model (p = 0.9593). We also do not get evidence of overdispesion (p = 0.3599) with an estimated dispersion parameter of 0.0181. The diagnostic plots show an even better fit than our first model (red lines look more horizontal than in previous model). 
 
 ```{r check law model fit, message=FALSE}
 #check model fit using deviance
@@ -1461,29 +1461,26 @@ kableExtra::kable(data.frame(Variable = c("Access Laws","Bans","Transport Laws",
 # Conclusions
 
 ## Recommendation
-The analysis showed explicit evidences that the states with more prohibitive gun laws policies had lesser number of school shooting experiences and thus leads us to suggest improving gun policies and imposing more restrictive gun laws may help to reduce the number of school shootings. The analysis of individual types of gun laws reveals that controlling the accessibility of guns and banning firearms may improve the prevalent school shooting rates. Based on the other findings of our primary analysis we would also suggest to pay more attention to the media coverage of the school shooting incidences. We would recommend media to not broadcast the name and details of the shooters rather focus more on the victims as often cases potential attackers may be motivated by the publicity. Youth mental health should given more priority and states can offer different behavioral interventions in schools to promote mental health.    
+The analysis shows strong evidence that states with more prohibitive gun laws experience fewer school shootings on average than states with weaker policies. Because of these findings, we suggest that state legislators repreal or modify permissive gun laws and impose new restrictive laws, focusing primarily on gun bans and laws that restrict access to firearms. States with weak gun laws should work to improve their policies and states that already have strong gun policies should work to maintain them.
 
 
 
 ## Limitations
 
-The gun law scores were assigned to each state based on the how restrictive and effective gun policies and laws the state implements, however there was not been much details provided in the website about the mechanism that was applied in the grading scores. The website does not clearly state which are the laws they have considered while grading the states and also how much weight each gun laws were assigned while calculating the score. Again the relative difference between two grades such as B to A and F to E, was been considered as equal change as in both cases the more gun policies or laws has been introduced and grades have improved by one scale but it ignores the fact that the state moving from F to E might had to struggle more to improve the situation than the state which already had a better judicial law about gun policies. 
+There are several limitations to the data and models used in this data analysis. The school shootings dataset relies on open source information such as news reports and police reports. These may contain inaccuracies and inconsistencies between sources. For the gun policy grade dataset, we relied upon determinations made by Giffords legal experts. This assumes the legal experts are unbiased and competent. Our analysis also assumes that the difference between grades is consistent; that is, the difference between an A and a B is the same as the difference between a C and a D, for example. The grade assignment also cannot determine an order among states with the same letter grade. 
 
-Similarly when we were investigating the effects of different gun laws separately, we assumed that the all the gun laws hold similar importance and we had assigned equal weights to all the laws. For all the different types of all, for each cases when there was a permissive law change we assigned -1 and for each restive law change we assigned +1. Again, as mentioned at the data section some of the laws were changed in the middle of the year and we decided to round the value to the nearest year which may cause some loss of information. In the dataset we have considered the law changes that took place after the year 2010. However, there can be some changes in the gun laws prior to 2010 which may still have some impact on the preceding years states gun policies and may have a confounding effect on our analysis and it is not possible to adjust for it. We are also aware of the fact that even if the laws were changed at a certain time point, it takes time for the changes to make a significant impact on  the overall gun prevalence and gun violence thus it is difficult to quantify the effect of gun policies on school shootings. 
+Similarly when investigating the effects of different gun laws, our method relied on the assumption that all gun laws within a catgeory are weighted equally. We also assumed, for each type of law that a restrictive law had the same magnitude as a permissive law, assigning weights +1 and -1, respectively. Again, as mentioned earlier, some of the laws changed in the middle of a year and, thus, we lost information by deciding to round the value to the nearest year. We also do not take into account potential delayed, downstream effects of policy changes. That is, we assume that laws impact the school shooting rates during the entire period in which they are in effect, and only in that time. We also did not take into account the school-going population within each state. Rather, we used the entire state population, assuming that the proportion of the population attending school is roughly the same across all states.
 
-<font color="red">
-It is ascertained that the state with higher population would have more number of schools and also might have more school shooting incidences and we wished to adjust for the population. Though we could have adjust the model only for the school going population but the dataset shows that there was a large number of shooters with age more than 18 years. Hence we decided to take into account the overall population of each state for each year instead of just the school going population. 
-</font>
+Our use of the CDC survey data may also be a limitation of this analysis, because, as we mentioned earlier, we had to impute many missing values in the data, both for years not recorded in the data and for states in which the survey was not conducted. Thus, we forced potentially unmet assumptions on the data in an effort to maximize usable data for our analysis.
 
+The main limitation of the models fit in this analysis is that they can only show evidence of association, not causation. This means that although states with stricter gun laws appear to have lower incidence rates of school shootings (after controlling for variables such as population, poverty rate, etc.), states with weak gun laws may not actually see a decrease in the number of school shootings by imposing stricter gun laws. We would need to incporporate additional data sourcesto test whether there is a causal link between gun policies and school shooting incidence rates.
 
-<font color="red">
-As the literature view suggested we wished to adjust for the prevalence of mental heath illness in each state over the study period and collected data on the prevalent rate of youths who were suffering from major depression but did not receive any mental health treatment. However the exploratory data analysis revealed that there were extreme inconsistency in the data. The documentation clearly did not specify the study years and though the report 2018 and 2019 mentioned that they have used survey data from the year 2014-2015, the values were different. Because of the reports did not explicitly defined the survey years we decided not to include the data in our analysis. However, if the dataset was persistent, it would have added more information to our analysis.  
-
-</font>
 
 ## Future Work
+In future analyses, one may want to consider state unemployment rate as another factor influencing school shooting incidence rates. Media coverage also seemed to play an important role in school shooting rates in this analysis. It would be interesting to look more closely at these and other data regarding media coverage of shooting events to see if it does in fact lead to more shootings. As mentioned above, other models and data that more readily lend themselves towards making causal claims regarding gun policies could be used to make more insightful recommmendations to state legislators.
 
-We selected the prevalent poverty rate as an indicator of the financial stability and economic condition of each state. As the literature review implies, we could have collected unemployment rate for each state and for each year but since the majority of the school shooters were students, it is coherent to assume that whether the students are coming from financially stable families or not would impact more on school shootings than employment rate. However, for future analysis we could account for unemployment rate, income per household and other economic variables to make the study more exhaustive.   
+
+
 
 
 Bullying at school is often considered as one of the crucial components of school shooting incidences and thus we wished to account for the variation in the existing bullying laws in different states. However the most credible dataset that was available for each state contained data only for the year 2010. So we included the variable to adjust for the variation in state laws assuming that the states maintained the same level of rigidity towards the bullying laws throughout the study period. The analysis  would have been more thorough if we had data for all the years.      
