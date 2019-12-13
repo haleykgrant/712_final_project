@@ -1460,9 +1460,10 @@ kableExtra::kable(data.frame(Variable = c("Access Laws","Bans","Transport Laws",
 
 # Conclusions
 
+This analysis found that gun policies are, in fact, associated with school shooting incident rates. Our models show an estimated 27.3% decrease (95% C.I.: (16.5%, 36.7%)) in the number of school shootings for every one unit change in state gun policy grade (change by one on 4.0 scale). We also found an estimated 22.9% decrease in the number of school shootings (95% C.I. (2.0%, 39.4%)) per additional ban implemented and a 6.4% decrease (95% C.I. (1.3%, 11.3%)) per additional access law. Secondary analysis showed an expected decrease of 19.1% in the number of victims of school shootings (95% C.I (-34.9%, 0.5%) change) for each one point increase in state gun policy grade (GPA) and an estaimeted 36.1% decrease (95% C.I. (-54.3%, -10.7%) change) per additional gun ban.
+
 ## Recommendation
 The analysis shows strong evidence that states with more prohibitive gun laws experience fewer school shootings on average than states with weaker policies. Because of these findings, we suggest that state legislators repeal or modify permissive gun laws and impose new restrictive laws, focusing primarily on gun bans and laws that restrict access to firearms. States with weak gun laws should work to improve their policies and states that already have strong gun policies should work to maintain them.
-
 
 
 ## Limitations
