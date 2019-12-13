@@ -42,7 +42,7 @@ In September, 2014, the Federal Bureau of Investigation (FBI) published a report
 # Related Work
 According to an analysis by *The Washington Post*, since the Columbine school shooting in 1999, almost 233,000 students have experienced gun violence and that number is still rising $^{[5]}$. Not only has this resulted in a huge unnecessary loss of life, experiencing such traumatic events also leaves a strong effect on the mental health of the survivors and their loved ones. Research indicates that experiencing assault and other violence, or knowing that a close friend or family member had to experience such violence, increases their chance of developing severe mental health problems such as post-traumatic stress disorder (PTSD) and major depression $^{[6,7]}$.
 
-In order to effectively address gun violence in schools, we should first acknowledge that this is, specifically, a gun violence problem. Though in the last two decades several school safety plans has been proposed, very few of them have exhaustively adjusted for the most crucial fact that was common almost in all school shooting incidents: the shooters did not have legal access to the firearms used. It was shocking to learn that almost two thirds of the shooters collected their firearms from their own home or from a relative's home $^{[8]}$. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[9]}$ as well as highest rate of firearm ownership among these countries $^{[10]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[11]}$. Though less than 5% of the world's children live in the Unites States $^{[12]}$, studies have found that almost 87% of the child deaths from firearms have occurred in the United States $^{[9]}$. <font color="red"> combine next two sentences: Studies have confirmed that there has been a significant increase in the number of gun rights and gun crimes in the United States in recent years. In addition, many gun victims are exposed to such violence in ways that are accidental, incidental, relational, or environmental $^{[13]}$. </font> This suggests that even when there is no intention of foul play, the high level of gun accessibility likely exacerbates the incidence of unnecessary and unintended injuries or deaths.
+In order to effectively address gun violence in schools, we should first acknowledge that this is, specifically, a gun violence problem. Though in the last two decades several school safety plans has been proposed, very few of them have exhaustively adjusted for the most crucial fact that was common almost in all school shooting incidents: the shooters did not have legal access to the firearms used. It was shocking to learn that almost two thirds of the shooters collected their firearms from their own home or from a relative's home $^{[8]}$. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[9]}$ as well as highest rate of firearm ownership among these countries $^{[10]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[11]}$. Though less than 5% of the world's children live in the Unites States $^{[12]}$, studies have found that almost 87% of the child deaths from firearms have occurred in the United States $^{[9]}$. Studies have confirmed that there has been a significant increase in the number of gun rights and gun crimes in the United States in recent years.
 
 While studying the dynamics of school shootings, student mental health must be considered. Studies show that about 50% of school shooters were diagnosed with a mental illness and almost 80% of the shooters had a record of attempting suicide or having suicidal thoughts before their attack $^{[14]}$. Studies have also indicated that around 61% of the shooters have a recorded history of extreme depression, sadness, hopelessness and desperation before their attack $^{[15]}$. Mental health condition can also be closely related to financial stability. Economic insecurities can increase anxiety, frustration, depression, hopelessness and make people more desperate. A recent study has confirmed that economic security, with lost hope and diminished prospects for a job, may link directly to gun violence in schools $^{[16]}$.
 
@@ -50,14 +50,14 @@ Though it may come as a surprise, studies have found that media coverage of shoo
 
 
 # Hypothesis Questions
-School shootings complex phenomena as they are connected with various complex components such as: mental health, bullying, school safety measures, socioeconomic condition and, of course, availability of guns. The goal of the project was to investigate the impact of gun policies on the school scooting incidences for different states. The analysis was designed to provide valuable insights to state legislators about the impact of gun policies on the school shooting incidents. In order to analyze school shooting in depth, we scrutinized the following aspects of school shootings within each state over the time period: 
+School shootings are complex phenomena as they are intricately linked with various components such as: mental health, bullying, school safety measures, socioeconomic condition and, of course, availability of guns. The goal of the project is to investigate the impact of gun policies on the magnitude of school shooting rates in different states. The analysis is designed to provide valuable insights to state legislators about the impact of gun policies on school shooting incidents. In order to analyze school shooting in depth, we consider the following aspects of school shootings within each state over the time period: 
 
 1. Overall impacts of gun policies
 2. Affects of bullying laws and prevalence of bullying\
 3. Prevalence of mental illness\
-4. Prevalence of  Bullying\
-5. School Safety Measures\
-6. Affects of Media coverage\
+4. Prevalence of  bullying\
+5. School environment\
+6. Affects of media coverage\
 7. Impact of hostility of school environment\
 8. Impact of poverty prevalence rate\
 9. Impact of specific gun laws\
@@ -66,7 +66,7 @@ School shootings complex phenomena as they are connected with various complex co
 # Data
 
 ## School Shootings
-The dataset was obtained from the [Center for Homeland Defense and Security website](https://www.chds.us/ssdb/dataset/). It contained details about the school shootings incidents that took place in the United States over the years 1970 to 2019. The data were gather from different sources such as: newspaper article, online news report, court records or police report, and hundreds of news sources, statement/interview from law enforcement official, news report on court ruling. Each row of the dataset indicated an incident that occur at a specific date and time. The dataset contained some insightful variables such as: 
+The main dataset used in this analysis was obtained from the [Center for Homeland Defense and Security website](https://www.chds.us/ssdb/dataset/). It contains details about the school shootings incidents occurring in the United States from the year 1970 to 2019. The data come are open-source and monitored by a research team at the CHDS. They were gathered from different sources such as: newspaper articles, online news reports, court records or police reports, and statement/interview from law enforcement officials. Each row of the dataset corresponds to one specific incident. The dataset contains variables such as: 
 
 * Location of incident
 * Age/gender/race of shooter
@@ -80,7 +80,7 @@ The dataset was obtained from the [Center for Homeland Defense and Security webs
 * Weapon type
 * etc. 
 
-The dataset also contained a variable named *Reliability Score* which indicated the of sources of about the incidents. Reliability was scored on a 5-point scale classified by where the data were obtained from with the following scoring assignment:
+The dataset also contains a variable named *Reliability Score*, corresponding to how the data were obtained. Reliability is scored on a 5-point scale classified by where the data were obtained from with the following scoring assignment:
 
 1. Independent Single Author/Moderator Blog, report/list lacking citations, or cited source cannot be located (e.g., newspaper headline title and story does not appear in searches)
 2. Single Newspaper Article, Online News Report (Network, Cable, Online)
@@ -89,7 +89,7 @@ The dataset also contained a variable named *Reliability Score* which indicated 
 5. Court Records or Police Report
 
 
-We determined that observations with a reliability score of 1 may not be accurate, and hence discarded these observations from further analysis. The dataset also had a variable indicating the categories of the shooting incidences. The category marked as "Accidental" was also removed from further analysis. As the study focuses on the number of incidences in each State, the total number of incidents that occurred in each State per year was calculated. 
+We determined that observations with a reliability score of 1 may not be accurate, and hence discarded these observations from further analysis. The dataset also has a variable indicating the categories/cause of the shooting incidences. The any observation marked as "Accidental" was also removed from the data before any subsequent analysis, though only a small proportion of the data fell into this category.
 
 ```{r read in and clean data, message=FALSE, warning=FALSE}
 # variable to indicate if raw data should be imported or (if false) cleaned csv should be used
@@ -144,7 +144,7 @@ st_yr = data.frame(state = rep(sts,length(yrs)), year = sort(rep(yrs,length(sts)
 
 
 ## State Grades (Gun Policy)
-The main purpose of this analysis was to quantify the effect of gun policies on the school shooting incidences for each state. We found a dataset that contains annual gun law score for each state over the years 2010 to 2018. The dataset was obtained from the [Gifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score was graded on an A to F scale with higher grade states having more restrictive gun policies. As we also wish to explore the effect of changes in the score, it might be more convenient to convert the grades into GPA scale. So the grades for each state was transformed into a GPA score using the school GPA grading scale (out of 4.00).  
+The main purpose of this analysis is to quantify the effect of gun policies on the number school shooting incidents for each state. We found a dataset that contains an annual gun law score for each state over the years 2012 to 2018. The dataset was obtained from the [Gifford Law Center](https://lawcenter.giffords.org/scorecard/). For each state the annual score is graded on an A to F scale with higher grade indicating a state with more restrictive/strong gun policies. We chose to transform these grades into a GPA on a 4.0 scale for later model fitting in which numerical values are more interpretable than categorical variables.  
 
 ```{r policy grade data, message=FALSE, warning=FALSE}
 
@@ -235,12 +235,12 @@ gpa_convert = data.frame(letter_grade = c("A","A-","B+","B","B-",
 
 
 ## Gun Laws
-The analysis also wished to investigate the impact of different gun laws separately and thus considered the RAND dataset. The dataset was obtained from the ______________ website. The dataset includes information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables which informs about the type of the law, whether the change was restrictive or permissive, effective date and end date. There are total 12 types of laws and each change was designated as either restrictive or permissive. As some of the laws change in the middle of a year, the year was rounded to the nearest year (cutoff point of July 1st). Each permissive law was assigned  the value -1 and each restrictive law was assigned as +1. Then, for each category and for each state the total number of permissive and restrictive laws were measured and a total score was calculated. The different types of laws were further merged and categorized in 4 categories into the following manner:
+This analysis also wishes to investigate the impact of specific types gun laws separately and thus also turned to the RAND dataset for more data. The dataset was obtained from the ______________ website. The data include information about the changes in laws regarding firearms for each state since the year 1979. The dataset contains variables with information about the type of the law, whether the change was restrictive or permissive, effective date, and end date. There are total 14 types of laws and each change is designated as either restrictive or permissive. For our analysis we count the number of laws in effect in each state and year. As some of the laws change in the middle of a year, the years are rounded to the nearest year (cutoff point of July 1st). Each permissive law is assigned the value -1 and each restrictive law is assigned as +1. Then, for each category the total number of permissive and restrictive laws are summed to obtain a final score for each state in each year. The different types of laws are further combined into the following four categories:
 
-1. Access: Minimum age, Prohibited Possessor, Child Access
-2. Screening: Waiting period, Registration, Background checks, Dealer license, Safety training, permit, one gun per month
+1. Access laws: Minimum age, Prohibited Possessor, Child Access
+2. Screening law: Waiting period, Registration, Background checks, Dealer license, Safety training, permit, one gun per month
 3. Ban: Firearm ban
-4. Transport: Castle Doctrine, Open carrying not restricted, Carrying a concealed weapon
+4. Transport laws: Castle Doctrine, Open carrying not restricted, Carrying a concealed weapon
 
 ```{r RAND data, message=FALSE, warning=FALSE}
 
@@ -319,9 +319,6 @@ write.csv(rand.count.data,"cleaned.rand.csv")
 }
 
 
-
-
-
 # data set to go from state names to abbreviations
 states = data.frame(state.name,state.abb)
 dc = data.frame(matrix(ncol= 2, nrow = 1))
@@ -344,7 +341,7 @@ rand.count.data = read_csv("cleaned.rand.csv")%>%
 
 
 ## Mental Health 
-The literature review shows strong influence of mental illness on school shooting incidences. Thus we collected a dataset that contains the prevalence rate of youth with severe mental disorder. The dataset was obtained from_____________. The dataset contained the percentage of youths who has been diagnosed with major depression but who did not receive any mental health treatment for each state over the years 2010 to 2016.  
+The literature review shows strong influence of mental illness on school shooting occurrences. Thus we collected a dataset that contains the prevalence of youths with severe mental disorder by state. The dataset was obtained from_____________. The dataset contains the percentage of youths who have been diagnosed with major depression but who did not receive any mental health treatment in each state over the years 2010 to 2016.  
 
 ```{r mental health data, message=FALSE, warning=FALSE}
 # cleaning mental health data. commented out because it is already saved as a csv file
@@ -393,8 +390,6 @@ write.csv(mh.data,"mh.data.csv")
 
 
 
-
-
 mh.data=read.csv("mh.data.csv",stringsAsFactors = FALSE)%>%
   clean_names()%>%
   select(-x)%>%
@@ -404,7 +399,7 @@ mh.data=read.csv("mh.data.csv",stringsAsFactors = FALSE)%>%
 ```
 
 ## CDC Survey 
-The literature reviews stipulates that mental health, school satiety and bullying all play a vital roles in school shooting incidences. To analyze the dynamics of school shootings, we gathered data from a CDC survey given to students in 37 states biannually from 1991 to 2015. The data were obtained from the R package [`yrbss`](https://github.com/hadley/yrbss). The dataset includes proportions of students answering "yes" to a number of questions. We selected and included in the analysis the following questions: 
+The literature reviews stipulate that mental health, school satiety and bullying all play a vital roles in school shootings. To analyze the dynamics of school shootings, we gathered data from a CDC survey given to students in 37 states biannually from 1991 to 2015. The data were obtained from the R package [`yrbss`](https://github.com/hadley/yrbss). The dataset includes proportions of students answering "yes" to a number of questions. We selected and include in the analysis the following questions: 
 
 1. Carried a weapon
 2. Carried a gun
@@ -424,7 +419,7 @@ The literature reviews stipulates that mental health, school satiety and bullyin
 16. Been teased because of weight in the past 12 months
 17. Been teased because of being labeled GLB in the past 12 months 
 
-Because many of these questions cover similar topics, we chose to combine the variables into four main categories and took weighted averages (weight by the number of respondents) to obtain a final score for each category. The categories are classified as follows:
+Because many of these questions cover similar topics, we choose to combine the variables into four main categories and take weighted averages (weight by the number of respondents) to obtain a final score for each category. The categories are classified as follows:
 
 1. __Suicidal thoughts or actions__ (measure of mental health):   
     + Felt sad or hopeless, Seriously considered attempting suicide
@@ -447,7 +442,7 @@ Because many of these questions cover similar topics, we chose to combine the va
     + Been teased b/c of weight past 12 months
     + Been teased b/c labeled GLB past 12 months
 
-Data for questions regarding bullying were not present in the dataset prior to 2010. We assume the surveys were updated to include measures of bullying after the initial writing of the survey. Thus we only included the data from the year 2010. The dataset also contains data for every other year. So for the interpolation, we imputed the missing observation with the mean of the previous and next year values. As the dataset contains data up to the year 2016 and our school shooting dataset contained data till 2018, we imputed the values for those years using the predicted values of the linear regression model. To get an overall score for each state over all the years, we calculated the median score for each state. Though the mean and the median score did not appear to be much different, the mean may be affected by extreme values. 
+Data for questions regarding bullying were not present in the dataset prior to 2010. We assume the surveys were updated to include measures of bullying after the initial writing of the survey. The dataset also only contains data for every other year. To get data for the missing years, we impute the missing observations with the mean of the values in years immediately preceding and following the missing observation. As the dataset only contains data up to the year 2015, we impute the values for the years after 2015 years by predicting a linear trajectory from 2014 and 2015. This was done after exploratory data analysis showed that proportions were relatively stable across years in a given state. To impute values for states not present in the dataset, we use the median score across all states accounted for in the data for each year (we chose to use the median after seeing that the mean and the median values in each year were nearly identical). 
 
 ```{r CDC survey data, message=FALSE, warning=FALSE}
 # questions 
@@ -629,7 +624,7 @@ survey_combined = survey_combined%>%
 ```
 
 ## Poverty
-The financial aspect of each state may have an influence on the number of school shootings that took place each year. Thus we decided to account for the state economic condition, we would include the poverty prevalence rate for each state over the study period. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2010 to 2016. 
+The financial status of populations within each state may also have an influence on the number of school shootings that took place each year. Thus, to account for this, we include the poverty prevalence rate for each state over the study period measure by thee percent of the population living below the poverty line. The dataset was obtained from __________________. The dataset contains poverty rate and 90% confidence interval of poverty rate for each state from the year 2007 to 2018. 
 
 ```{r load and clean poverty data, message=FALSE, warning=FALSE}
 # read in poverty data
@@ -664,7 +659,7 @@ names(pov)<-c("state","year","poverty")
 
 
 ## Bullying Laws
-Bullying in school has been identified one of the significant causes behind school shootings. Some of states addressed that issue and have implemented several judicial laws to prevent school bullying. Though almost all the states have laws to prevent bullying the degree of rigidity varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retrieved from [stopbullying.gov](https://www.stopbullying.gov/laws/index.html). The dataset mentions about 14 different components of Bullying laws that each state may or may not have. Thus out of the total score 14, we calculated a total score for each state based on how many components of bullying laws were present in each state. unfortunately the data was available only for the year 2010. Thus we have included the dataset in the analysis assuming that the score remains the same over the time period
+Bullying in school has been identified as playing a significant role in school shootings. Some states have addressed this issue by implementing policy to prevent bullying in schools. Though almost all states have some form of legislation aimed at preventing bullying, the strength of these laws varies from state to state. We obtained a dataset that indicates how restrictive the bullying laws are in different states. The dataset was retrieved from [stopbullying.gov](https://www.stopbullying.gov/laws/index.html). The dataset mentions 14 different components of anti-bullying laws that each state may or may not have incorporated into their legislation. Thus, we calculate a score  out of 14 for each state indicating how many components they have incorporated. Unfortunately, the data was available only for the year 2010. Thus we have included the dataset in the analysis as a state effect that does not vary over time (assuming it either stays the same or changes equally across states).
 
 ```{r bullying law data, message=FALSE, warning=FALSE}
 
@@ -676,7 +671,7 @@ bully = read_csv("State_bullying.csv")%>%
 
 ## Media
 
-As the literature review indicated, we wished to adjust for the impact of media coverage on the school shooting incidences. The dataset was retrieved from a [Nature article](https://www.nature.com/articles/s41562-019-0636-0?fbclid=IwAR2mCmg1gQ1OOccfjklm4HKzOMcpg24Oz2C8ZOebg12HaBWwr6Up1YxosF4#data-availability) about media coverage and firearm acquisition after mass shootings (data available on the following [GitHub repository](https://github.com/Causality-Research/Firearms)). The dataset contains the number of articles that has been published and number of mass shooting in a given month and year. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment"and "shootings excluding firearm laws and regulations". For each year, the total number of articles containing "shootings excluding firearm laws and regulations" and total number of mass shooting was calculated and number of article per incident was calculated from by dividing total number of articles by the total number of mass shooting. As there can be an school shooting in December whose effect can alter the incident count of the next year, to adjust the lag effect we created a new variable that accounts for the number of previous years articles. 
+As the literature review indicates, we also wish to consider the impact of media coverage on school shooting rates. A dataset was retrieved from a [Nature article](https://www.nature.com/articles/s41562-019-0636-0?fbclid=IwAR2mCmg1gQ1OOccfjklm4HKzOMcpg24Oz2C8ZOebg12HaBWwr6Up1YxosF4#data-availability), which details media coverage and firearm acquisition after mass shootings (data available on the following [GitHub repository](https://github.com/Causality-Research/Firearms)). The dataset reports the number of articles about shootings published in the Washington Post and The New York Times as well as the number of mass shootings in the U.S. for every month starting in January, 1999 and ending in December, 2017. The articles are further clustered on the basis of the topics the articles covered such as: "firearm laws and regulations", "unemployment," and "shootings excluding firearm laws and regulations". We use the number of articles about shootings excluding articles about laws and regulations as a variable in our analysis. In our analysis, we consider this variable with a time-lag, assuming (after our literature review) that the number of articles in the year leading up to an event may have had an influence on the occurrence of that event.
 
 
 ```{r load and clean media data, message=FALSE, warning=FALSE}
@@ -697,7 +692,7 @@ media = read_csv("media_data.csv")%>%
 ```
 
 ## Population 
-It is well known that states vary widely in terms of population size. Because of this--and because we are looking at event data with number of events as our outcome of interest--we must take population into account in any analysis we do, since states with much higher populations are far more likely to experience events than smaller states. We obtained state population data from the [U.S. Census Bureau](https://scholar.harvard.edu/files/awatanabe/files/us_state_population_estimate_technical_notev1.pdf?fbclid=IwAR2VQnO9wWk1dlJT01_8LTqdTP4qet8wACZTIBJ9NpFbkyn_3-o1yM1bGRw). The dataset contained populations by over the years 1970 to 2019. 
+It is well known that states vary widely in terms of population size. Because of this--and because we are looking at event data with number of events as our outcome of interest--we must take population into account in any analysis we do, since states with much higher populations are far more likely to experience ea higher number of vents than smaller states. We obtained state population data from the [U.S. Census Bureau](https://scholar.harvard.edu/files/awatanabe/files/us_state_population_estimate_technical_notev1.pdf?fbclid=IwAR2VQnO9wWk1dlJT01_8LTqdTP4qet8wACZTIBJ9NpFbkyn_3-o1yM1bGRw). The dataset contains the population of each state from 1970 to 2019. 
 ```{r load and clean population data, message=FALSE, warning=FALSE}
 
 
@@ -875,7 +870,7 @@ ss_counts = ss_counts%>%
 
 # EDA
 
-Once all data were obtained we next made exploratory plots to understand the nature of the data and look for trends that will be important in later modeling and statistical analysis. First, we looked at the trend of school shootings over time by plotting the number of incidents per year. We can see that the general trend is that school shooting incidents are increasing over time with a huge spike in the latter half of the past decade. *Note that the last date recorded in our data is November 11th, 2019 and hence we do not have a full year of data for 2019.
+Once all data have been obtained, cleaned, and merged, we next turn to making exploratory plots to understand the nature of the data and look for trends that will be important in later modeling and statistical analysis. First, we look at the trend of school shootings over time by plotting the number of incidents per year. We can see that the general trend is that school shooting incidents have been steadily increasing over time with a huge spike in the latter half of the past decade. *Note that the last date recorded in our data is November 11th, 2019 and hence we do not have a full year of data for 2019.
 
 ```{r shootings over time}
 ss_counts%>%
@@ -890,7 +885,7 @@ ss_counts%>%
 ```
 
 
-```{r warning=F}
+```{r warning=F, fig.height=4,fig.width=4.5, fig.align="center"}
 ss_counts%>%
   mutate(grade = substr(grade,1,1))%>% # get rid of plus/minus grades (round to letter grade)
   group_by(grade)%>%
@@ -1033,7 +1028,7 @@ anim_save("state_law_animation.GIF")
 
 ## Media Coverage
 
-Another variable we wished to control for was media coverage of shooting events in the United States. Below we see that as the years have progressed, there has been a general increase in the number of articles published about shootings. Here we are using the number of articles in the New York Times and Washington Post as a proxy for general media coverage trends. We hypothesize that the increase in media coverage of mass shootings may help explain the increase in school shootings, as increased public awareness of these shootings may unintentionally normalize these events or even inspire further violence. Hence we also plot the number of school shootings colored by the number of articles about shootings published in the previous year. If the aforementioned hypothesis is true, we would expect to see higher bars (indicating more school shootings) in years in which the previous year had a lot of articles published about shootings. While there does seem to be some trend in the data, it is not particularly clear if this is the case or not.
+Another variable we wish to control for is media coverage of shooting events in the United States. Below we see that as the years have progressed, there has been a general increase in the number of articles published about shootings. Here we are using the number of articles in the New York Times and Washington Post as a proxy for general media coverage trends. We hypothesize that the increase in media coverage of mass shootings may help explain the increase in school shootings, as increased public awareness of these shootings may unintentionally normalize these events or even inspire further violence, as is indicated in our literature review. Hence, we also plot the number of school shootings colored by the number of articles about shootings published in the previous year. If the aforementioned hypothesis is true, we would expect to see higher bars (indicating more school shootings) in years in which the previous year had a lot of articles published about shootings. While there does seem to be some trend in the data, it is not particularly clear if this is the case or not.
 
 
 ```{r media plots}
@@ -1107,20 +1102,25 @@ survey_combined_raw%>%
 
 ## Mental Health Data
 
-When we look further into the mental health data, we realize there are many issues with these data. For one, the survey years stated on the Mental Health America website for each year's report sometimes overlap, but do not share the same values. Further, the reported percentages do not always change from year to year. The below plot shows an example of this, using the year prior to the report as the survey year. 
+When we look further into the mental health dataset, we realize there are many issues with these data. For one, the survey years stated on the Mental Health America website for each year's report sometimes overlap, but do not share the same values. Further, the reported percentages do not always change from year to year. The below plot shows an example of this, using the year prior to the report as the survey year. 
 
 ```{r mental health data problems, message=FALSE, warning=FALSE}
 
 mh.data=mh.data%>%clean_names()
-ggplot(data=mh.data,mapping=aes(x=year,y=percent,col=state))+geom_line()+labs(title="Percent of Youth Who Experienced an MDE and Did Not Receive Treatment",x="Year",y="Percent")
+ggplot(data=mh.data,mapping=aes(x=year,y=percent,col=state))+
+  geom_line()+
+  labs(title="Percent of Youth Who Experienced an MDE \nand Did Not Receive Treatment",x="Year",y="Percent")+
+  scale_color_discrete(name = "State")+
+  theme_bw()+
+  theme(legend.text = element_text(size = 5), legend.key.size = unit(.5,"line"), legend.title.align = 0.5)
 
 ```
 
-Note that 2015 and 2016 show no change in values. We also notice that there does not appear to be any pattern in the percent of youth experiencing a major depressive episode and not receiving treatment by state or time. This observation, along with the lack of clarity on the appropiate survey years for the data and that two years' reports had the same values led us to conclude that this data should not be included in our models.
+Note that 2015 and 2016 show no change in values. We also notice that there does not appear to be any pattern in the percent of youth experiencing a major depressive episode and not receiving treatment by state or time. This observation, along with the lack of clarity on the appropriate survey years for the data and that two years' reports had the same values led us to conclude that this data should not be included in our models.
 
 # Model Fitting
 
-We next turn to fitting a model to explain the incidence of school shootings in the United States. We first choose to fit a Poisson generalized linear model (GLM) with school shooting count (by state and year) as the outcome of interest. Poisson GLMs are commonly-used for count data, which is why we started with these models. Our choice was then validated by a number of model diagnostic/goodness-of-fit tests (presented below).
+We next turn to fitting a model to explain the incidence of school shootings in the United States. We first choose to fit a Poisson generalized linear model (GLM) with school shooting count (by state and year) as the outcome of interest. Poisson GLMs are commonly-used for count data, which is why we began with these models. Our choice was then validated by a number of model diagnostic/goodness-of-fit tests (presented below).
 
 ## Model Using State Grades
 We include the following variables in the model (each varies by time and/or state):
@@ -1147,7 +1147,7 @@ where here for each state $s$ and year $t$ we have that $I_{t,s}$ is the school 
 
 
 ## Model Results
-Below we show the model output. One can see that the only significant covariate in this model is GPA (state gun policy grade). The estimate is negative, as we would hope, as higher GPA implied stricter gun laws and, hopefully, fewer school shootings. And in fact, this is what the model is showing.
+Below we show the model output. One can see that the only significant covariate in this model is GPA (state gun policy grade). The estimate is negative, as we would hope, indicating that higher GPA (stricter gun laws) is associated with fewer school shootings.
 
 ```{r}
 # fit model written above
@@ -1180,7 +1180,7 @@ From this model we predict that with a one unit change in GPA, a state would exp
 
 ## Model Checking
 
-To check the model we run a number of diagnostic tests. First we do a deviance test and get a p-value of  $p=0.838$ against our null hypothesis that the model fits well (no evidence against model). We also test for any overdispersion and get a p-value of $p = 0.945$ against the null that there is no overdispersion (no evidence against the null). Lastly we plot diagnostic plots and see that the model fits relatively well.
+To check the model we run a number of diagnostic tests. First we perform a deviance test and get a p-value of  $p=0.838$ against our null hypothesis that the model fits well (no evidence against model). We also test for any overdispersion and get a p-value of $p = 0.945$ against the null that there is no overdispersion (no evidence against the null) with an estimated dispersion parameter of -0.1. Lastly we plot diagnostic plots and see that the model fits relatively well.
 
 ```{r check model fit, message=FALSE}
 #check model fit using deviance
@@ -1198,7 +1198,7 @@ plot(DHARMa::simulateResiduals(fit_grade))
 
 ## GEE
 
-Finally, we wished to see if there was variability between states that we did not already account with significant effects on school shootings. We did this using Generalized Estimating Equations (GEE) taking state as the grouping factor. We used an autoregressive correlation structure within states to take into account fading lag effects across years. We can see below that even when taking state variation into account, GPA still has a significant effect in reducing school shootings. The results are very similar to our previous GLM results.
+Finally, we wish to see if there is variability between states that we did not already account for in the variables included in our previous model that could be effecting school shooting counts. To do this we apply Generalized Estimating Equations (GEE) taking state as the grouping factor. We use an autoregressive correlation structure within states to take into account the fading lag effects across years (with years closer in time assumed to be more highly correlated than distant years). We can see below that even when taking state variation into account, GPA still has a significant effect in reducing school shootings. The results are very similar to our previous GLM results.
 
 
 
@@ -1218,10 +1218,59 @@ kableExtra::kable( kbl_gee, align = "c" , digits = 4, caption = "GEE Output Usin
 
 ```
 
+Below we plot the predicted number of school shootings per year (summed over all states) based on our model fit compared to the actual data. We also plot (by color) the predicted number of school shootings based on the model if *all states* had gun laws of equal strength, ranging from all A's to all F's. We predict using the actual data for all other covariates and imposing, for each letter grade, that all states have the same gun policy grade to see the effect that these changes would have in our data. As we can see below, our model fits fairly well when comparing predicted to actual values. Unsurprisingly, we see that with each increase in letter grade, the estimated annual school shooting count increases.
+
+```{r}
+
+# plot predicted number of counts for different grades
+pred_a = predict(fit_grade, ss_counts%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%mutate(gpa = 4.0), type = "response")
+pred_b = predict(fit_grade, ss_counts%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%mutate(gpa = 3.0), type = "response")
+pred_c = predict(fit_grade, ss_counts%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%mutate(gpa = 2.0), type = "response")
+pred_d = predict(fit_grade, ss_counts%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%mutate(gpa = 1.0), type = "response")
+pred_f = predict(fit_grade, ss_counts%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%mutate(gpa = 0), type = "response")
+
+
+
+i = data.frame(model_fit = fit_grade$fitted.values, 
+               year = ss_counts%>%ungroup()%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%select(year), 
+  state = ss_counts%>%ungroup()%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%select(state), 
+  ss_counts%>%ungroup()%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%select(incident_count), 
+  grade = ss_counts%>%ungroup()%>%filter(!is.na(grade)&!is.na(prev_year_art))%>%select(grade),
+  A = pred_a,
+B = pred_b,
+C = pred_c,
+D = pred_d,
+`F` = pred_f
+)
+
+
+newdat = i%>%
+  gather(key = new_grade, value = pred, c(6:10))%>%
+  group_by(year, new_grade)%>%
+  summarise(inc = sum(incident_count),
+            pred_inc=sum(pred))
+
+
+i%>%
+  mutate(grade = substr(grade,1,1))%>%
+  group_by(year)%>%
+  summarise(inc = sum(incident_count),
+            pred_inc = sum(model_fit))%>%
+  ggplot(aes(x = year))+
+  geom_line(data = newdat, aes(x = year, y = pred_inc, color = new_grade))+
+  labs(x = "Year", y = "Number of School Shootings", title = "Number of School Shootings")+
+  scale_color_viridis_d(direction = -1, name = "Hypothetical \nGrade")+
+  geom_line(aes(y = inc, linetype = "Actual Events"), color = "grey47")+
+  geom_line(aes(y = pred_inc , linetype = "Model Predicted \nValues"), color = "grey47")+
+  scale_linetype_discrete(name = NULL)+
+  theme_bw()+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
 
 ## Model Using State Laws
 
-Because we found a statistically significant effect in the model using state gun policy grade, we wish to look further into this trend by looking specifically at which types of laws might be driving the differences in school shooting rates. Thus, we further remove the "grade" variable in the above model and instead use the combined law count variables described in an earlier section (4 categories : gun access laws, bans, screening laws, and transport laws). Recall that these variables are the difference in the sum of restrictive laws in effect minus the sum of permissive laws in effect for a given state and year (policies beginning or ending in the middle of the year are rounded to the nearest year). Thus, the model is the same except we now split the variable accounting for state gun policy into 4 variables (one for each of the law type categories) and estimate a separate coefficient for each. That is,
+Because we found a statistically significant effect in the model using state gun policy grade, we wish to look further into this trend by looking specifically at which types of laws might be driving the differences in school shooting rates. Thus, we substitute the "grade" variable in the above model with the combined law count variables described in an earlier section (4 categories : gun access laws, bans, screening laws, and transport laws). Recall that these variables are the difference in the sum of restrictive laws in effect minus the sum of permissive laws in effect for a given state and year (policies beginning or ending in the middle of the year are rounded to the nearest year). Thus, the model is the same except we now split the variable accounting for state gun policy into four more specific variables (one for each of the law type categories) and estimate a separate coefficient for each. That is,
 
 $$\log(E[I_{t,s}])=\beta_0+\beta_1 \cdot p_{t,s}+\beta_2\cdot l_{t,s}+\beta_3\cdot b_{s}+\beta_4\cdot s_{t,s}+\beta_5\cdot y_{t,s}+\beta_6\cdot f_{t,s}+ \beta_7\cdot t+ \beta_8 \cdot m_{t-1} +\\ \beta_9 \cdot al_{t,s}+\beta_{10} \cdot bl_{t,s}+\beta_{11} \cdot sl_{t,s} +\beta_{12} \cdot sl_{t,s}+  \log( n_{t,s}) $$
 
