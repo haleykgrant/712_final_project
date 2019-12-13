@@ -24,7 +24,7 @@ library(janitor)
 library(tidycensus)
 library(viridis) 
 library(tscount)
-library(yrbss)
+library(yrbss) #install using devtools::install_github("gsimchoni/yrbss")
 library(zoo)
 library(purrr)
 library(gganimate)
@@ -37,14 +37,14 @@ library(geepack)
 
 
 # Motivation and Objectives
-In September 2014, the Federal Bureau of Investigation (FBI) published a report, “A Study of Active Shooter Incidents in the United States Between 2000 and 2013,” stating that the incidence of school and mass shootings has been drastically increasing since the turn of the century $^{[1,2]}$. According to a recent study, on average, the United States experiences approximately one mass shooting every two weeks and one school shooting each month $^{[4]}$. In fact, just on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old opened fire at the school, killing 2 people and injuring 3 others $^{[3]}$. This troubling trend has raised serious public concerns about school safety and has brought gun regulation into the forefront of public awareness. We believe that an in-depth analysis of the impact of state gun policies on school shooting rates can inform state legislators about the effectiveness of gun policies. Thus, the primary aim of this study is to investigate the association between the strength of state gun laws and the incidence of school shootings. 
+In September 2014, the Federal Bureau of Investigation (FBI) published a report, “A Study of Active Shooter Incidents in the United States Between 2000 and 2013,” stating that the incidence of school and mass shootings has been drastically increasing since the turn of the century $^{[1,2]}$. According to a recent study, on average, the United States experiences approximately one mass shooting every two weeks and one school shooting each month $^{[3]}$. In fact, just on November 14th, 2019, there was a shooting at a high school in Santa Clarita, California where a 16-year-old opened fire at the school, killing 2 people and injuring 3 others $^{[4]}$. This troubling trend has raised serious public concerns about school safety and has brought gun regulation into the forefront of public awareness. We believe that an in-depth analysis of the impact of state gun policies on school shooting rates can inform state legislators about the effectiveness of gun policies. Thus, the primary aim of this study is to investigate the association between the strength of state gun laws and the incidence of school shootings. 
 
 # Related Work
 According to an analysis by *The Washington Post*, since the Columbine school shooting in 1999, almost 233,000 students in the United States have experienced gun violence, and that number continues to rise $^{[5]}$. Not only has this resulted in a tragic loss of life, it has also left a lasting impact on the mental health of survivors and their loved ones. Research indicates that experiencing assault and other violence, or knowing that a close friend or family member has experienced such violence, leads to a higher risk in developing severe mental health problems such as post-traumatic stress disorder (PTSD) and major depression $^{[6,7]}$.
 
-This gun violence trend in the United States is not limited to only school shootings. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[9]}$ as well as highest rate of firearm ownership among these countries $^{[10]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[11]}$. Though less than 5% of the world's children live in the Unites States $^{[12]}$, almost 87% of the child deaths from firearms have occurred in the United States $^{[9]}$. Studies have found that there has been a significant increase in the number of both gun rights and gun crimes in the United States in recent years.
+This gun violence trend in the United States is not limited to only school shootings. Studies have shown that the Unites States has the highest firearm homicide and suicide rates compared to all other industrialized countries in the world $^{[8]}$ as well as highest rate of firearm ownership among these countries $^{[9]}$. The United States also has a staggering five times higher pediatric firearm mortality rate than any other country $^{[10]}$. Though less than 5% of the world's children live in the Unites States $^{[11]}$, almost 87% of the child deaths from firearms have occurred in the United States $^{[8]}$. Studies have found that there has been a significant increase in the number of both gun rights and gun crimes in the United States in recent years$^{[12]}$.
 
-To study the trend of school shootings, student mental health must be considered. Studies show that about 50% of past school shooters were diagnosed with a mental illness and almost 80% had a record of attempting suicide or having suicidal thoughts before their attack $^{[14]}$. Studies have also indicated that around 60% of these shooters have a recorded history of extreme depression, sadness, hopelessness, or desperation before their attack $^{[15]}$. Mental health condition can also be closely related to financial stability. Economic insecurities can increase anxiety, frustration, depression, hopelessness and make a person feel more desperate. A recent study has determined that economic insecurity may link directly to gun violence in schools $^{[16]}$.
+To study the trend of school shootings, student mental health must be considered $^{[13]}$. Studies show that about 50% of past school shooters were diagnosed with a mental illness and almost 80% had a record of attempting suicide or having suicidal thoughts before their attack$^{[14]}$. Studies have also indicated that around 60% of these shooters have a recorded history of extreme depression, sadness, hopelessness, or desperation before their attack$^{[15]}$. Mental health condition can also be closely related to financial stability. Economic insecurities can increase anxiety, frustration, depression, hopelessness and make a person feel more desperate. A recent study has determined that economic insecurity may link directly to gun violence in schools $^{[16]}$.
 
 Though it may come as a surprise, studies have also found that media coverage of mass shooters may incite further shootings. In particular, media coverage of a mass shooting elevates the risk of a subsequent shooting for a period of 4-10 days $^{[17]}$. Research by University of Alabama criminology professor Adam Lankford extends these findings to school shootings in particular $^{[17,18]}$.
 
@@ -1485,14 +1485,15 @@ In future analyses, one may want to consider state unemployment rate as another 
 
 
 
+
 # References
 1. Walker C. (2019, July) 10 years. 180 school shootings. 356 victims. Retrieved from: https://www.cnn.com/interactive/2019/07/us/ten-years-of-school-shootings-trnd/ 
 
 2. Federal Bureau of Investigation. A Study of Active Shooter Incidents in the United States Between 2000 and 2013. 2014; Available at www.fbi.gov/news/stories/2014/september (accessed January 30, 2015).
 
-3. Knowles H (2019, November 15) 16-year-old shooter at California high school has died, authorities say. Retrieved from:https://www.washingtonpost.com/nation/2019/11/15/year-old-santa-clarita-high-school-shooting-suspect-has-died-authorities-say/
+3. Towers, S., Gomez-Lievano, A., Khan, M., Mubayi, A., & Castillo-Chavez, C. (2015). Contagion in mass killings and school shootings. PLoS one, 10(7), e0117259.
 
-4. Towers, S., Gomez-Lievano, A., Khan, M., Mubayi, A., & Castillo-Chavez, C. (2015). Contagion in mass killings and school shootings. PLoS one, 10(7), e0117259.
+4. Knowles H (2019, November 15) 16-year-old shooter at California high school has died, authorities say. Retrieved from:https://www.washingtonpost.com/nation/2019/11/15/year-old-santa-clarita-high-school-shooting-suspect-has-died-authorities-say/
 
 5. John Woodrow Cox, Steven Rich, Allyson Chiu, John Muyskens and Monica Ulmanu (Updated: 2019, November 14). More than 233,000 students have experienced gun violence at school since Columbine. Retrieved from: https://www.washingtonpost.com/graphics/2018/local/school-shootings-database/
 
@@ -1500,15 +1501,15 @@ In future analyses, one may want to consider state unemployment rate as another 
 
 7. Lowe, S. R., Blachman-Forshay, J., & Koenen, K. C. (2015). Epidemiology of trauma and trauma-related disorders: trauma as a public health issue. Evidence-based treatments for trauma-related psychological disorders: A practical guide for clinicians, 11-40.
 
-8. US Dept of Education. Final report and findings of the safe school initiative: Implications for the prevention of school attacks in the United States, 2004.
+8. Richardson EG, Hemenway D. Homicide, suicide, and unintentional firearm fatality: comparing the United States with other high-income countries, 2003. The Journal of Trauma and Acute Care Surgery. 2011; 70: 238–243.
 
-9. Richardson EG, Hemenway D. Homicide, suicide, and unintentional firearm fatality: comparing the United States with other high-income countries, 2003. The Journal of Trauma and Acute Care Surgery. 2011; 70: 238–243.
+9. Hemenway D, Miller M. Firearm availability and homicide rates across 26 high-income countries. Journal of Trauma and Acute Care Surgery. 2000; 49(6): 985–988.
 
-10. Hemenway D, Miller M. Firearm availability and homicide rates across 26 high-income countries. Journal of Trauma and Acute Care Surgery. 2000; 49(6): 985–988.
+10. Krug, E. G., Mercy, J. A., Dahlberg, L. L., & Powell, K. E. (1998). Firearm-and non-firearm-related homicide among children: an international comparison. Homicide Studies, 2(1), 83-95. 
 
-11. Krug, E. G., Mercy, J. A., Dahlberg, L. L., & Powell, K. E. (1998). Firearm-and non-firearm-related homicide among children: an international comparison. Homicide Studies, 2(1), 83-95. 
+11. CIA Factbook. The World Factbook; 2010. See also: http://www.ciagov/library/publications/the-world-factbook, accessed January 30, 2015.
 
-12. CIA Factbook. The World Factbook; 2010. See also: http://www.ciagov/library/publications/the-world-factbook, accessed January 30, 2015.
+12. Duggan, M. (2001). More guns, more crime. Journal of political Economy, 109(5), 1086-1114.
 
 13. Metzl, J. M., & MacLeish, K. T. (2015). Mental illness, mass shootings, and the politics of American firearms. American journal of public health, 105(2), 240-249.
 
@@ -1521,4 +1522,3 @@ In future analyses, one may want to consider state unemployment rate as another 
 17. Jetter, M., & Walker, J. (2018). The Effect of Media Coverage on Mass Shootings.
 
 18. Christensen, J. (2017). Why the US has the most mass shootings. CNN, published August 27, 2015.
-
