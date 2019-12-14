@@ -1,5 +1,6 @@
 ---
 title: "Data Science Project"
+author: "Haley Grant, Elizabeth Sarker, and Grant Schumock"
 output:
   html_document:
     highlight: tango
@@ -14,6 +15,16 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+[Link to project video](https://www.youtube.com/watch?v=rwyX9dr-9FA&fbclid=IwAR3Vib0xxFGBl3JbBmlFXy8sMGwRapV5oBgnYbfGdRE6t7TlsYzVy08_Qpc)
+
+[Link to project website](https://datasci.data.blog/2019/12/11/school-shootings-do-gun-laws-work/?fbclid=IwAR0VxPZ1eJsdJFoDK6notJQMcWZn3GBkezulPZRE35hHcJgzn4O5RX8G9Lo)
+
+[Link to GitHub Repository](https://github.com/haleykgrant/712_final_project)
+
+__Data are all included (in cleaned format) in the GitHub repository. We also include links to all sources of data in the [data](#data) section of this HTML file.__
+
+
 
 ```{r message=FALSE, include=FALSE}
 
@@ -32,7 +43,6 @@ library(usmap)
 library(maps)
 library(geepack)
 ```
-
 
 
 
@@ -62,8 +72,10 @@ School shootings are complex phenomena as they are intricately linked with a num
 8. Impact of poverty prevalence rate\
 9. Impact of specific gun laws\
 
-
 # Data
+
+<a name="data">
+</a>
 
 ## School Shootings
 The main dataset used in this analysis was obtained from the [Center for Homeland Defense and Security website](https://www.chds.us/ssdb/dataset/). It contains details about the school shootings incidents occurring in the United States from the year 1970 to 2019. The data are open-source and monitored by a research team at the CHDS. They were gathered from different sources such as: newspaper articles, online news reports, court records or police reports, and statement/interview from law enforcement officials. Each row of the dataset corresponds to one specific incident. The dataset contains variables such as: 
